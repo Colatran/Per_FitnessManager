@@ -1,48 +1,68 @@
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleSheet, View, Text, TextInput } from "react-native";
 import { useState } from "react";
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-import { android_ripple_style, styles_text } from "../utils/styles";
+import Button from "./ButtonRitch";
+import { styles_text } from "../utils/styles";
 
 
 
 export default function Item_ExerciseManage(props) {
   const [editing, setEditing] = useState(false);
+  const [name, setName] = useState(props.item.name);
 
   const item = props.item;
   const onPressDelete = props.onPressDelete;
-  const onPressEdit = props.onPressEdit;
+  const onChangeName = props.onChangeName;
+
+
+
+  const onPressEdit = () => {
+    setEditing(true);
+  }
+  const onPressSave = () => {
+    setEditing(false);
+    onChangeName(item, name);
+  }
+
+
 
   return (
     <View style={styles.container}>
-      <View style={styles.section_text}>
-        <Text style={styles_text.common}>{item.name}</Text>
-      </View>
-      <View style={styles.section_buttons}>
-        <Button 
-          icon={"edit"}
-          onPress={() => onPressEdit(item)}
-        />
-        <Button 
-          icon={"delete-forever"}
-          onPress={() => onPressDelete(item)}
-        />
-      </View>
+      {
+        editing ?
+        <>
+          <View style={styles.section_text}>
+            <TextInput
+              value={name}
+              onChangeText={text => setName(text)}
+              color={'#fff'}
+            />
+          </View>
+          <View style={styles.section_buttons}>
+            <Button 
+              icon={"check"}
+              onPress={() => onPressSave()}
+            />
+          </View>
+        </>
+        :
+        <>
+          <View style={styles.section_text}>
+            <Text style={styles_text.common}>{name}</Text>
+          </View>
+          <View style={styles.section_buttons}>
+            <Button 
+              icon={"edit"}
+              onPress={() => onPressEdit()}
+            />
+            <Button 
+              icon={"delete-forever"}
+              onPress={() => onPressDelete(item)}
+            />
+          </View>
+        </>
+      }
     </View> 
-  );
-}
-
-function Button(props) {
-  const icon = props.icon;
-  const onPress = props.onPress;
-
-  return (
-    <Pressable style={styles.pressable}
-      android_ripple={android_ripple_style}
-      onPress={onPress}
-    >
-      <MaterialIcons name={icon} size={30} color='white' />
-    </Pressable>
   );
 }
 
@@ -65,11 +85,4 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end'
   },
-
-  pressable: {
-    borderWidth: 1,
-    borderRadius: 4,
-    borderColor: '#fff',
-    margin: 2,
-  }
 });

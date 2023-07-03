@@ -1,40 +1,77 @@
-import { StyleSheet, FlatList, Text, View } from "react-native";
+import { StyleSheet, FlatList, View, TextInput } from "react-native";
 import { useEffect, useState } from "react";
-import { collection, onSnapshot } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
 import { db, exercises } from '../firebase.config';
 
-import { styles_text } from "../utils/styles";
 import Item_ExerciseManage from "../components/Item_ExerciseManage";
+import Button from "../components/ButtonRitch";
 
 
 
 export default function ExercisesList() {
   const [docs, setDocs] = useState([]);
+  const [toAdd, setToAdd] = useState();
 
   const ref_exercises = collection(db, exercises);
 
   useEffect(() => {
     return onSnapshot(ref_exercises, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({ name: doc.data().name }));
+      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      data.sort((a, b) => {
+        const nameA = a.name.toUpperCase();
+        const nameB = b.name.toUpperCase();
+      
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      });
       setDocs(data);
     });
   }, []);
 
 
 
-  const onPressDelete = (item) => {
-    console.log(`${item.name} onPressDelete`);
+  const onPressAdd = async () => {
+    await addDoc(ref_exercises, {
+      name: toAdd
+    });
   }
-  const onPressEdit = (item) => {
-    console.log(`${item.name} onPressEdit`);
+  const onPressDelete = async (item) => {
+    const docRef = doc(ref_exercises, item.id);
+    await deleteDoc(docRef);
+  }
+  const onChangeName = async (item, name) => {
+    const docRef = doc(ref_exercises, item.id);
+    await deleteDoc(docRef);
+    await addDoc(ref_exercises, {
+      name: name
+    });
   }
 
 
 
   return (
-    <View style={{flex:1}}>
+    <View style={styles.container}>
+
       <View style={styles.container_exercise_add}>
-        <Text style={styles_text.common}>ASDF</Text>
+        <View style={styles.add_section_text}>
+          <TextInput
+            style={styles.input_add}
+            value={toAdd}
+            onChangeText={text => setToAdd(text)}
+            placeHolder={"Exercise"}
+          />
+        </View>
+        <View style={styles.add_section_buttons}>
+          <Button 
+            icon={"add"}
+            onPress={() => onPressAdd()}
+          />
+        </View>
       </View>
 
       <View style={styles.container_exercise_list}>
@@ -44,11 +81,12 @@ export default function ExercisesList() {
             <Item_ExerciseManage 
               item={item}
               onPressDelete={() => onPressDelete(item)}
-              onPressEdit={() => onPressEdit(item)}
+              onChangeName={onChangeName}
             />
           }
         />
       </View>
+
     </View>
   );
 }
@@ -57,13 +95,29 @@ export default function ExercisesList() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#000',
   },
 
   container_exercise_add: {
-    flex: 1
+    flex: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   container_exercise_list: {
     flex: 9
+  },
+
+  input_add: {
+    marginLeft: 4,
+    paddingLeft: 10,
+    backgroundColor: "#fff"
+  },
+  add_section_text: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  add_section_buttons: {
+    alignItems: 'flex-end'
   },
 });
