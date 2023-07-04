@@ -1,23 +1,24 @@
-import { StyleSheet, View, Text, TextInput } from "react-native";
+import { View, Text, TextInput } from "react-native";
 import { useState } from "react";
 
 import Button from "./ButtonRitch";
-import { styles_text } from "../utils/styles";
+import { styles_item, styles_text } from "../utils/styles";
 
 
 
-export default function Item_ExerciseManage(props) {
+export default function ItemList(props) {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(props.item.name);
 
   const item = props.item;
-  const onPressDelete = props.onPressDelete;
   const onChangeName = props.onChangeName;
+  const onEdit = props.onEdit;
 
 
 
   const onPressEdit = () => {
-    setEditing(true);
+    if(onEdit) onEdit(item);
+    else setEditing(true);
   }
   const onPressSave = () => {
     setEditing(false);
@@ -27,18 +28,18 @@ export default function Item_ExerciseManage(props) {
 
 
   return (
-    <View style={styles.container}>
+    <View style={styles_item.container}>
       {
         editing ?
         <>
-          <View style={styles.section_text}>
+          <View style={styles_item.section_text}>
             <TextInput
               value={name}
               onChangeText={text => setName(text)}
               color={'#fff'}
             />
           </View>
-          <View style={styles.section_buttons}>
+          <View style={styles_item.section_buttons}>
             <Button 
               icon={"check"}
               onPress={() => onPressSave()}
@@ -47,17 +48,13 @@ export default function Item_ExerciseManage(props) {
         </>
         :
         <>
-          <View style={styles.section_text}>
+          <View style={styles_item.section_text}>
             <Text style={styles_text.common}>{name}</Text>
           </View>
-          <View style={styles.section_buttons}>
+          <View style={styles_item.section_buttons}>
             <Button 
               icon={"edit"}
               onPress={() => onPressEdit()}
-            />
-            <Button 
-              icon={"delete-forever"}
-              onPress={() => onPressDelete(item)}
             />
           </View>
         </>
@@ -65,24 +62,3 @@ export default function Item_ExerciseManage(props) {
     </View> 
   );
 }
-
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#fff',
-  },
-
-  section_text: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingLeft: 10,
-  },
-  section_buttons: {
-    flexDirection: 'row',
-    alignItems: 'flex-end'
-  },
-});

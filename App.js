@@ -1,13 +1,12 @@
 import { StyleSheet, View } from 'react-native';
-
-import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import ExercisesList from './screens/ExercisesList';
-
+import WorkoutList from './screens/WorkoutList';
+import WorkoutExerciseList from './screens/WorkoutExerciseList';
 
 
 const Stack = createStackNavigator();
@@ -18,13 +17,18 @@ export default function App() {
     <View style={styles.container}>
       <NavigationContainer>
         <Tab.Navigator
-          initialRouteName='Exercises'
+          initialRouteName='Tab_Workouts'
           screenOptions={TabScreenOptions()}
         >
           <Tab.Screen 
             name="Tab_Exercises"
-            options={TabOptions("Exercises", "home")}
-            component={ExercisesList}
+            options={TabOptions("Exercises", "fitness-center")}
+            component={Stack_Exercises}
+          />
+          <Tab.Screen 
+            name="Tab_Workouts"
+            options={TabOptions("Workouts", "fitness-center")}
+            component={Stack_Workouts}
           />
         </Tab.Navigator>
       </NavigationContainer>
@@ -34,6 +38,18 @@ export default function App() {
 
 
 
+const StackOptions = (title) => {
+  return {
+    title: title,
+    headerStyle: {
+      backgroundColor: "#000",
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+  }
+}
 const TabScreenOptions = () => {
   return { 
     headerShown: false,
@@ -51,6 +67,34 @@ const TabOptions = (title, icon) => {
     ),
   }
 }
+
+
+
+function Stack_Exercises() {
+  return (
+    <Stack.Navigator initialRouteName='Exercises'>
+      <Stack.Screen
+        name='Exercises'
+        component={ExercisesList}
+        options={StackOptions("  Exercises  ")}/>
+    </Stack.Navigator>
+  );
+}
+function Stack_Workouts() {
+  return (
+    <Stack.Navigator initialRouteName='Workouts'>
+      <Stack.Screen 
+        name='Workouts'
+        component={WorkoutList}
+        options={StackOptions("  Workouts  ")}/>
+      <Stack.Screen
+        name='Exercises'
+        component={WorkoutExerciseList}
+        options={StackOptions("  Editing  ")}/>
+    </Stack.Navigator>
+  );
+}
+
 
 
 const styles = StyleSheet.create({
