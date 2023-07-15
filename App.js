@@ -6,7 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import ExercisesList from './screens/ExercisesList';
 import WorkoutList from './screens/WorkoutList';
-import WorkoutExerciseList from './screens/WorkoutExerciseList';
+import WorkoutEdit from './screens/WorkoutEdit';
 
 
 const Stack = createStackNavigator();
@@ -89,7 +89,7 @@ function Stack_Workouts() {
         options={StackOptions("  Workouts  ")}/>
       <Stack.Screen
         name='Exercises'
-        component={WorkoutExerciseList}
+        component={WorkoutEdit}
         options={StackOptions("  Editing  ")}/>
     </Stack.Navigator>
   );

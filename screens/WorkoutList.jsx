@@ -1,10 +1,10 @@
-import { StyleSheet, FlatList, View, TextInput } from "react-native";
+import { StyleSheet, FlatList, View } from "react-native";
 import { useEffect, useState } from "react";
-import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
 import { db, workouts } from '../firebase.config';
 
 import ItemList from "../components/ItemList";
-import Button from "../components/ButtonRitch";
+import Field_Text from "../components/Field_Text";
 
 
 
@@ -40,7 +40,7 @@ export default function WorkoutList({ navigation }) {
 
 
   const onPressAdd = async () => {
-    if(myString.trim().length === 0) return;
+    if(toAdd.trim().length === 0) return;
     await addDoc(ref_workouts, {
       name: toAdd
     });
@@ -61,24 +61,14 @@ export default function WorkoutList({ navigation }) {
   return (
     <View style={styles.container}>
 
-      <View style={styles.container_exercise_add}>
-        <View style={styles.add_section_text}>
-          <TextInput
-            style={styles.input_add}
-            value={toAdd}
-            onChangeText={text => setToAdd(text)}
-            placeHolder={"Exercise"}
-          />
-        </View>
-        <View style={styles.add_section_buttons}>
-          <Button 
-            icon={"add"}
-            onPress={() => onPressAdd()}
-          />
-        </View>
-      </View>
+      <Field_Text
+        value={toAdd}
+        setValue={setToAdd}
+        onPress={onPressAdd}
+        icon={"add"}
+      />
 
-      <View style={styles.container_exercise_list}>
+      <View>
         <FlatList
           data={docs}
           renderItem={({item}) =>
@@ -101,27 +91,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-  },
-
-  container_exercise_add: {
-    flex: 2,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  container_exercise_list: {
-    flex: 10
-  },
-
-  input_add: {
-    marginLeft: 4,
-    paddingLeft: 10,
-    backgroundColor: "#fff"
-  },
-  add_section_text: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  add_section_buttons: {
-    alignItems: 'flex-end'
   },
 });

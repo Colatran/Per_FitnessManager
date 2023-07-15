@@ -1,8 +1,9 @@
-import { View, Text, TextInput } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { useState } from "react";
 
 import Button from "./ButtonRitch";
-import { styles_item, styles_text } from "../utils/styles";
+import { styles_text } from "../utils/styles";
+import Field_Text from "./Field_Text";
 
 
 
@@ -28,37 +29,54 @@ export default function ItemList(props) {
 
 
   return (
-    <View style={styles_item.container}>
+    <>
       {
         editing ?
-        <>
-          <View style={styles_item.section_text}>
-            <TextInput
-              value={name}
-              onChangeText={text => setName(text)}
-              color={'#fff'}
-            />
-          </View>
-          <View style={styles_item.section_buttons}>
-            <Button 
-              icon={"check"}
-              onPress={() => onPressSave()}
-            />
-          </View>
-        </>
+          <Field_Text
+            value={name}
+            setValue={setName}
+            onPress={onPressSave}
+            icon={"check"}
+            styles={styles.constainer_editing}
+          />
         :
-        <>
-          <View style={styles_item.section_text}>
-            <Text style={styles_text.common}>{name}</Text>
+          <View style={styles.container}>
+            <View style={styles.container_text}>
+              <Text style={styles_text.common}>{name}</Text>
+            </View>
+            <View style={styles.container_button}>
+              <Button 
+                icon={"edit"}
+                onPress={() => onPressEdit()}
+              />
+            </View>
           </View>
-          <View style={styles_item.section_buttons}>
-            <Button 
-              icon={"edit"}
-              onPress={() => onPressEdit()}
-            />
-          </View>
-        </>
       }
-    </View> 
+    </> 
   );
 }
+
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#fff',
+  },
+  constainer_editing: {
+    marginTop: 0,
+    marginBottom: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: '#fff',
+  },
+  container_text: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingLeft: 10,
+  },
+  container_button: {
+    alignItems: 'flex-end'
+  },
+});
