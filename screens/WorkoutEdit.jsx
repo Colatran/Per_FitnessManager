@@ -5,8 +5,9 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db, exercises, workouts } from "../firebase.config";
 
-import { styles_text } from "../utils/styles";
+import Button from "../components/ButtonRitch";
 import Field_Text from "../components/Field_Text";
+import { styles_text } from "../utils/styles";
 
 
 
@@ -16,7 +17,11 @@ export default function WorkoutEdit({route}) {
   const [newName, setNewName] = useState(name);
   const [docsExercises, setDocsExercises] = useState([]);
   const [exerciseId, setExerciseId] = useState("");
-  const [targetReps, setTargetReps] = useState([{reps: 0, load: 0.0}]);
+
+  const [target, setTarget] = useState([]);
+  const [targetReps, setTargetReps] = useState(0);
+  const [targetLoad, setTargetLoad] = useState(0.0);
+  
   const [restTime, setRestTime] = useState(0);
   const [sided, setSided] = useState(false);
   const [imbalance, setImbalance] = useState(0);
@@ -52,22 +57,11 @@ export default function WorkoutEdit({route}) {
     await updateDoc(docRef, {name: newName});
   }
 
-  const onChangeReps = async (text, index) => {
-    var newTarget = targetReps;
-    newTarget[index].reps = parseInt(text);
-    setTargetReps(newTarget);
-    
-    console.log(newTarget);
+  const addSet = () => {
+    if(targetReps === 0) return;
+    const newTarget = [...target, { reps: targetReps, load: targetLoad }];
+    setTarget(newTarget);
   }
-  
-  const onChangeLoad = async (text, index) => {
-    var newTarget = targetReps;
-    newTarget[index].load = parseFloat(text);
-    setTargetReps(newTarget);
-
-    console.log(newTarget);
-  }
-
 
 
 
@@ -84,62 +78,94 @@ export default function WorkoutEdit({route}) {
       <View style={styles.container_exercise}>
         <View style={styles.exercise_item}>
           <Text style={styles_text.common}>Exercise</Text>
-          <SelectList 
-            setSelected={(val) => setExerciseId(val)} 
-            data={docsExercises} 
-            save="key"
-            search={true}
-            searchicon={<MaterialIcons name={"search"} size={30} color='white'/>}
-            arrowicon={<MaterialIcons name={"arrow-right"} size={30} color='white'/>}
-            closeicon={<MaterialIcons name={"arrow-drop-down"} size={30} color='white'/>}
-            searchPlaceholder="Exercise"
-            notFoundText="Not Found"
-            boxStyles={{alignItems:"center", backgroundColor:"black"}}
-            inputStyles={{color:'white'}}
-            dropdownStyles={{backgroundColor: 'black'}}
-            dropdownTextStyles={{color:'white'}}
-          />
+          <View style={styles.exercise_item_container}>
+            <SelectList 
+              setSelected={(val) => setExerciseId(val)} 
+              data={docsExercises} 
+              save="key"
+              search={true}
+              searchicon={<MaterialIcons name={"search"} size={30} color='white'/>}
+              arrowicon={<MaterialIcons name={"arrow-right"} size={30} color='white'/>}
+              closeicon={<MaterialIcons name={"arrow-drop-down"} size={30} color='white'/>}
+              searchPlaceholder="Exercise"
+              notFoundText="Not Found"
+              boxStyles={{alignItems:"center", backgroundColor:"black"}}
+              inputStyles={{color:'white'}}
+              dropdownStyles={{backgroundColor: 'black'}}
+              dropdownTextStyles={{color:'white'}}
+            />
+          </View>
         </View>
 
         <View style={styles.exercise_item}>
           <Text style={styles_text.common}>Target</Text>
-          <View style={{flexDirection: "row"}}>
 
-            <View style={{justifyContent: "space-evenly"}}>
-              <Text style={styles_text.common}>Reps </Text>
-              <Text style={styles_text.common}>Load </Text>
-            </View>
+          <View style={[styles.exercise_item_container, {flexDirection: "row", height: 70}]}>
 
-            <FlatList
-              horizontal={true}
-              data={targetReps}
-              renderItem={({item, index}) =>
+            <View style={{flex:1}}>
+              <View style={{flexDirection: "row"}}>
+                <View style={{justifyContent: "space-evenly"}}>
+                  <Text style={styles_text.common}>Reps </Text>
+                  <Text style={styles_text.common}>Load </Text>
+                </View>
+
                 <View>
                   <TextInput
-                    style={styles.target_item}
+                    style={styles.input}
                     keyboardType={"numeric"}
-                    value={item.reps.toString()}
-                    onChangeText={(text) => onChangeReps(text, index)}
+                    value={targetReps.toString()}
+                    onChangeText={(text) => setTargetReps(text)}
                   />
                   <TextInput
-                    style={styles.target_item}
+                    style={styles.input}
                     keyboardType={"numeric"}
-                    value={item.load.toString()}
-                    onChangeText={(text) => onChangeLoad(text, index)}
+                    value={targetLoad.toString()}
+                    onChangeText={(text) => setTargetLoad(text)}
                   />
                 </View>
-              }
-            />
-          </View>
-          
-        </View>
+
+                <View style={{justifyContent: "space-evenly"}}>
+                  <Text style={styles_text.common}></Text>
+                  <Text style={styles_text.common}> Kgs </Text>
+                </View>
+
+                <View style={{justifyContent: "center"}}>
+                  <Button
+                    icon={"add"}
+                    onPress={addSet}
+                  />
+                </View>
+              </View>
+
+              <View style={{flex:1}}/>
+            </View>
         
+            <View style={{flex:1}}>
+              <FlatList
+                data={target}
+                renderItem={({item}) => 
+                  <Text style={styles_text.common}>
+                    {item.reps}r {item.load === 0.0 ? "" : `+ ${item.load}kg`}
+                  </Text>
+                }
+              />
+            </View>
+
+          </View>
+
+        </View>
+
+        <View style={styles.exercise_item}>
+          <Text style={styles_text.common}>Rest Time</Text>
+        </View>
 
       </View>
 
     </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -151,8 +177,26 @@ const styles = StyleSheet.create({
     flex: 10,
   },
   exercise_item: {
-    marginBottom: 10,
+    marginBottom: 20,
   },
+
+  exercise_item_container: {
+    paddingHorizontal: 10,
+  },
+
+
+
+  input: {
+    minWidth: 50,
+    margin: 2,
+    paddingLeft: 4,
+    paddingRight: 4,
+    backgroundColor: "#fff",
+    justifyContent: "space-evenly"
+  },
+
+
+
 
 
   target_item: {
@@ -161,5 +205,4 @@ const styles = StyleSheet.create({
     margin: 2,
     padding: 2,
   }
-
 });
