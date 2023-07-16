@@ -8,6 +8,7 @@ import { android_ripple_style } from "../utils/styles";
 export default function Button(props) {
   const icon = props.icon;
   const onPress = props.onPress;
+  const size = props.size;
 
   return (
     <View style={styles.container}>
@@ -15,7 +16,7 @@ export default function Button(props) {
         android_ripple={android_ripple_style}
         onPress={onPress}
       >
-        <MaterialIcons name={icon} size={30} color='white' />
+        <MaterialIcons name={icon} size={size ? size : 30} color='white' />
       </Pressable>
     </View>
   );

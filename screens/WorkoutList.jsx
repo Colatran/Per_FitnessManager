@@ -52,8 +52,8 @@ export default function WorkoutList({ navigation }) {
       name: name
     });
   }
-  const onEdit = (item) => {
-    navigation.navigate('Exercises', item);
+  const onPressEdit = (item) => {
+    navigation.navigate('Edit', item);
   }
 
 
@@ -75,7 +75,7 @@ export default function WorkoutList({ navigation }) {
             <ItemList 
               item={item}
               onChangeName={onChangeName}
-              onEdit={() => onEdit(item)}
+              onEdit={() => onPressEdit(item)}
             />
           }
         />
