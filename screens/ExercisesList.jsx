@@ -4,7 +4,7 @@ import { addDoc, collection, deleteDoc, doc, onSnapshot, updateDoc } from 'fireb
 import { db, exercises } from '../firebase.config';
 
 import ItemList from "../components/ItemList";
-import Field_Text from "../components/Field_Text";
+import Field_TextButton from "../components/Field_TextButton";
 
 
 
@@ -57,7 +57,7 @@ export default function ExercisesList() {
   return (
     <View style={styles.container}>
 
-      <Field_Text
+      <Field_TextButton
         value={toAdd}
         setValue={setToAdd}
         onPress={onPressAdd}

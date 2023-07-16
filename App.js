@@ -85,15 +85,15 @@ function Stack_Workouts() {
   return (
     <Stack.Navigator initialRouteName='Workouts'>
       <Stack.Screen 
-        name='Workouts'
+        name='WorkoutList'
         component={WorkoutList}
         options={StackOptions("  Workouts  ")}/>
       <Stack.Screen
-        name='Edit'
+        name='WorkoutEdit'
         component={WorkoutEdit}
         options={StackOptions("  Editing  ")}/>
       <Stack.Screen
-        name='Edit_Exercise'
+        name='WorkoutEdit_Exercise'
         component={WorkoutEdit_Exercise}
         options={StackOptions("  Exercise  ")}/>
     </Stack.Navigator>

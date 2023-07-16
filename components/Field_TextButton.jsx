@@ -2,7 +2,7 @@ import { StyleSheet, View, TextInput } from "react-native";
 import Button from "./ButtonRitch";
 
 
-export default function Field_Text(props) {
+export default function Field_TextButton(props) {
   const value = props.value;
   const setValue = props.setValue;
   const onPress = props.onPress;

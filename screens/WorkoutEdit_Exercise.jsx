@@ -6,14 +6,13 @@ import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db, exercises, workouts } from "../firebase.config";
 
 import Button from "../components/ButtonRitch";
-import Field_Text from "../components/Field_Text";
+import Field_TextButton from "../components/Field_TextButton";
 import { styles_text } from "../utils/styles";
+import Field_Boolean from "../components/Field_Boolean";
 
 
 
-export default function WorkoutEdit_Exercise({navigation, route}) {
-  const { id, name } = route.params;
-
+export default function WorkoutEdit_Exercise({navigation}) {
   const [docsExercises, setDocsExercises] = useState([]);
   const [exerciseId, setExerciseId] = useState("");
 
@@ -90,7 +89,7 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
             <View style={{flexDirection: "row"}}>
               <View style={{justifyContent: "space-evenly"}}>
                 <Text style={styles_text.common}>Reps </Text>
-                <Text style={styles_text.common}>Load </Text>
+                <Text style={styles_text.common}>Load (Kg) </Text>
               </View>
 
               <View>
@@ -106,11 +105,6 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
                   value={targetLoad.toString()}
                   onChangeText={(text) => setTargetLoad(text === "" ? 0.0 : parseFloat(text))}
                 />
-              </View>
-
-              <View style={{justifyContent: "space-evenly"}}>
-                <Text style={styles_text.common}></Text>
-                <Text style={styles_text.common}> Kg </Text>
               </View>
 
               <View style={{justifyContent: "center"}}>
@@ -155,11 +149,39 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
       </FormSection>
 
       <FormSection title={"Sided"}>
+        <Field_Boolean on={sided} onPress={() => setSided(!sided)}/>
       </FormSection>
 
+      <FormSection title={"Imbalance"}>
+        <View style={{flexDirection: "row"}}>
+          <ImbalanceItem 
+            title={"Left"}
+            on={imbalance == -1}
+            onPress={() => setImbalance(-1)}
+          />
+          <ImbalanceItem 
+            title={"None"}
+            on={imbalance == 0}
+            onPress={() => setImbalance(0)}
+          />
+          <ImbalanceItem 
+            title={"Right"}
+            on={imbalance == 1}
+            onPress={() => setImbalance(1)}
+          />
+        </View>
+      </FormSection>
+
+      <View style={{flex: 1, justifyContent: "flex-end"}}>
+        <Button 
+          icon={"add"}
+          onPress={() => {}}
+        />
+      </View>
     </View>
   );
 }
+
 
 
 function FormSection(props) {
@@ -168,13 +190,26 @@ function FormSection(props) {
   return (
     <View style={styles.container_formSection}>
       <Text style={styles_text.common}>{title}</Text>
-  
       <View style={styles.container_formSection_container}>
         {props.children}
       </View>
     </View>
   );
 }
+
+function ImbalanceItem(props) {
+  const title = props.title;
+  const on = props.on;
+  const onPress = props.onPress;
+
+  return (
+    <View style={{alignItems: "center"}}>
+      <Text style={styles_text.common}>{title}</Text>
+      <Field_Boolean on={on} onPress={onPress}/>
+    </View>
+  );
+}
+
 
 
 const styles = StyleSheet.create({

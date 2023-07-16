@@ -6,7 +6,7 @@ import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db, exercises, workouts } from "../firebase.config";
 
 import Button from "../components/ButtonRitch";
-import Field_Text from "../components/Field_Text";
+import Field_TextButton from "../components/Field_TextButton";
 import { styles_text } from "../utils/styles";
 
 
@@ -26,7 +26,7 @@ export default function WorkoutEdit({navigation, route}) {
   }
 
   const onPressAddExercise = (item) => {
-    navigation.navigate('Edit_Exercise', item);
+    navigation.navigate('WorkoutEdit_Exercise');
   }
 
 
@@ -34,7 +34,7 @@ export default function WorkoutEdit({navigation, route}) {
   return (
     <View style={styles.container}>
 
-      <Field_Text
+      <Field_TextButton
         value={newName}
         setValue={setNewName}
         onPress={onPressSaveName}
@@ -49,6 +49,7 @@ export default function WorkoutEdit({navigation, route}) {
     </View>
   );
 }
+
 
 
 const styles = StyleSheet.create({

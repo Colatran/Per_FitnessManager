@@ -5,19 +5,18 @@ import { android_ripple_style } from "../utils/styles";
 
 
 
-export default function Button(props) {
-  const icon = props.icon;
+export default function Field_Boolean(props) {
+  const on = props.on;
   const onPress = props.onPress;
-  const size = props.size;
 
   return (
     <View style={styles.container}>
       <Pressable
-        style={styles.pressable}
+        style={on ? styles.pressable_on : styles.pressable_off}
         android_ripple={android_ripple_style}
         onPress={onPress}
       >
-        <MaterialIcons name={icon} size={size ? size : 30} color='white' />
+        <MaterialIcons name={"check"} size={30}/>
       </Pressable>
     </View>
   );
@@ -27,14 +26,22 @@ export default function Button(props) {
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: "center",
+    justifyContent: "center",
     borderWidth: 1,
     borderRadius: 4,
     borderColor: '#fff',
     margin: 2,
+    width: 31,
+    height: 31,
   },
 
-  pressable: {
-    alignItems: "center",
-    justifyContent: "center",
+  pressable_on: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+  pressable_off: {
+    flex: 1,
+    backgroundColor: "black",
   }
 });

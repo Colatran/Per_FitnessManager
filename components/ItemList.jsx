@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import Button from "./ButtonRitch";
 import { styles_text } from "../utils/styles";
-import Field_Text from "./Field_Text";
+import Field_TextButton from "./Field_TextButton";
 
 
 
@@ -32,7 +32,7 @@ export default function ItemList(props) {
     <>
       {
         editing ?
-          <Field_Text
+          <Field_TextButton
             value={name}
             setValue={setName}
             onPress={onPressSave}
