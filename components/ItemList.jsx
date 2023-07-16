@@ -1,9 +1,9 @@
 import { StyleSheet, View, Text } from "react-native";
 import { useState } from "react";
 
-import Button from "./ButtonRitch";
-import { styles_text } from "../utils/styles";
+import Button from "./Ritch_Button";
 import Field_TextButton from "./Field_TextButton";
+import { styles_text } from "../utils/styles";
 
 
 

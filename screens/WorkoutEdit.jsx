@@ -1,11 +1,11 @@
-import { StyleSheet, View, Text, TextInput, FlatList } from "react-native";
+import { StyleSheet, View, Text, FlatList } from "react-native";
 import { useEffect, useState } from "react";
 import { SelectList } from "react-native-dropdown-select-list";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db, exercises, workouts } from "../firebase.config";
 
-import Button from "../components/ButtonRitch";
+import Button from "../components/Ritch_Button";
 import Field_TextButton from "../components/Field_TextButton";
 import { styles_text } from "../utils/styles";
 

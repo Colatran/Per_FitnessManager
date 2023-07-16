@@ -1,14 +1,15 @@
-import { StyleSheet, View, Text, TextInput, FlatList } from "react-native";
+import { StyleSheet, View, Text, FlatList } from "react-native";
 import { useEffect, useState } from "react";
 import { SelectList } from "react-native-dropdown-select-list";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db, exercises, workouts } from "../firebase.config";
 
-import Button from "../components/ButtonRitch";
+import Button from "../components/Ritch_Button";
+import TextInput from "../components/Ritch_TextInput";
 import Field_TextButton from "../components/Field_TextButton";
-import { styles_text } from "../utils/styles";
 import Field_Boolean from "../components/Field_Boolean";
+import { styles_text } from "../utils/styles";
 
 
 
@@ -64,6 +65,8 @@ export default function WorkoutEdit_Exercise({navigation}) {
 
   return (
     <View style={styles.container}>
+      <View style={{marginTop: 20}}/>
+
       <FormSection title={"Rest Time (min)"}>
         <SelectList 
           setSelected={(val) => setExerciseId(val)} 
@@ -85,37 +88,33 @@ export default function WorkoutEdit_Exercise({navigation}) {
       <FormSection title={"Target"}>
         <View style={{flexDirection: "row", height: 100}}>
 
-          <View style={{flex:1}}>
+          <View style={{flex:1, marginRight: 5}}>
             <View style={{flexDirection: "row"}}>
               <View style={{justifyContent: "space-evenly"}}>
                 <Text style={styles_text.common}>Reps </Text>
                 <Text style={styles_text.common}>Load (Kg) </Text>
               </View>
 
-              <View>
+              <View style={{flex: 1}}>
                 <TextInput
-                  style={styles.input}
                   keyboardType={"numeric"}
                   value={targetReps.toString()}
                   onChangeText={(text) => setTargetReps(text === "" ? 0 : parseInt(text))}
                 />
                 <TextInput
-                  style={styles.input}
                   keyboardType={"numeric"}
                   value={targetLoad.toString()}
                   onChangeText={(text) => setTargetLoad(text === "" ? 0.0 : parseFloat(text))}
                 />
               </View>
-
-              <View style={{justifyContent: "center"}}>
-                <Button
-                  icon={"add"}
-                  onPress={addSet}
-                />
-              </View>
             </View>
 
-            <View style={{flex:1}}/>
+            <View style={{flex:1, justifyContent: "center"}}>
+              <Button
+                icon={"add"}
+                onPress={addSet}
+              />
+            </View>
           </View>
       
           <View style={styles.target_list}>
@@ -140,12 +139,13 @@ export default function WorkoutEdit_Exercise({navigation}) {
       </FormSection>
 
       <FormSection title={"Rest Time (min)"}>
-        <TextInput
-          style={styles.input}
-          keyboardType={"numeric"}
-          value={restTime.toString()}
-          onChangeText={(text) => setRestTime(text === "" ? 0 : parseInt(text))}
-        />
+        <View style={{minHeight: 30}}>
+          <TextInput
+            keyboardType={"numeric"}
+            value={restTime.toString()}
+            onChangeText={(text) => setRestTime(text === "" ? 0 : parseInt(text))}
+          />
+        </View>
       </FormSection>
 
       <FormSection title={"Sided"}>
@@ -203,7 +203,7 @@ function ImbalanceItem(props) {
   const onPress = props.onPress;
 
   return (
-    <View style={{alignItems: "center"}}>
+    <View style={{alignItems: "center", marginRight: 10}}>
       <Text style={styles_text.common}>{title}</Text>
       <Field_Boolean on={on} onPress={onPress}/>
     </View>

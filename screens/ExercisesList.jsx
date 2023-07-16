@@ -10,7 +10,7 @@ import Field_TextButton from "../components/Field_TextButton";
 
 export default function ExercisesList() {
   const [docs, setDocs] = useState([]);
-  const [toAdd, setToAdd] = useState();
+  const [toAdd, setToAdd] = useState("");
 
   const ref_exercises = collection(db, exercises);
 
@@ -38,7 +38,7 @@ export default function ExercisesList() {
 
 
   const onPressAdd = async () => {
-    console.log("onPressAdd");
+    if(toAdd.trim().length === 0) return;
     await addDoc(ref_exercises, {
       name: toAdd
     });
