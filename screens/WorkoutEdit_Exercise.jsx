@@ -50,15 +50,41 @@ export default function WorkoutEdit_Exercise({navigation}) {
 
 
 
-  const addSet = () => {
+  const onPressSetAdd = () => {
     if(targetReps === 0) return;
     const newTarget = [...target, { reps: targetReps, load: targetLoad }];
     setTarget(newTarget);
   }
-  const removeSet = (index) => {
+  const onPressSetRemove = (index) => {
     const newTarget = [...target];
-    newTarget.pop(index);
+    newTarget.splice(index, 1);
     setTarget(newTarget);
+  }
+  const onPressSetMoveUp = (index) => {
+    const item = target[index];
+    const newTarget = [...target];
+    newTarget.splice(index, 1);
+    newTarget.splice(index - 1, 0, item);
+    setTarget(newTarget);
+  }
+  const onPressSetMoveDown = (index) => {
+    const item = target[index];
+    const newTarget = [...target];
+    newTarget.splice(index, 1);
+    newTarget.splice(index + 1, 0, item);
+    setTarget(newTarget);
+  }
+
+  const onPressAddExercise = () => {
+    const exercise = {
+      exerciseId: exerciseId,
+      target: target,
+      restTime: restTime,
+      sided: sided,
+      imbalance: imbalance,
+    }
+
+    
   }
 
 
@@ -112,7 +138,7 @@ export default function WorkoutEdit_Exercise({navigation}) {
             <View style={{flex:1, justifyContent: "center"}}>
               <Button
                 icon={"add"}
-                onPress={addSet}
+                onPress={onPressSetAdd}
               />
             </View>
           </View>
@@ -125,10 +151,31 @@ export default function WorkoutEdit_Exercise({navigation}) {
                   <Text style={[styles_text.common, {flex:1}]}>
                     {item.reps}r {item.load === 0.0 ? "" : `+ ${item.load}kg`}
                   </Text>
+                  { 
+                    (index == 0) ?
+                    <></>
+                    :
+                    <Button
+                      icon={"keyboard-arrow-up"}
+                      size={30}
+                      onPress={() => onPressSetMoveUp(index)}
+                    />
+                  }
+                  {
+                    (index == target.length-1) ?
+                    <></>
+                    :
+                    <Button
+                      icon={"keyboard-arrow-down"}
+                      size={30}
+                      onPress={() => onPressSetMoveDown(index)}
+                    />
+                  }
+                  
                   <Button
                     icon={"delete"}
-                    size={20}
-                    onPress={() => removeSet(index)}
+                    size={30}
+                    onPress={() => onPressSetRemove(index)}
                   />
                 </View>
               }
@@ -175,7 +222,7 @@ export default function WorkoutEdit_Exercise({navigation}) {
       <View style={{flex: 1, justifyContent: "flex-end"}}>
         <Button 
           icon={"add"}
-          onPress={() => {}}
+          onPress={() => onPressAddExercise()}
         />
       </View>
     </View>
