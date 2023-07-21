@@ -2,12 +2,11 @@ import { StyleSheet, View, Text, FlatList } from "react-native";
 import { useEffect, useState } from "react";
 import { SelectList } from "react-native-dropdown-select-list";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { addDoc, collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
-import { db, exercises, workout_exercises, workouts } from "../firebase.config";
+import { addDoc, collection, onSnapshot } from "firebase/firestore";
+import { db, exercises, workout_exercises } from "../firebase.config";
 
 import Button from "../components/Ritch_Button";
 import TextInput from "../components/Ritch_TextInput";
-import Field_TextButton from "../components/Field_TextButton";
 import Field_Boolean from "../components/Field_Boolean";
 import { styles_text } from "../utils/styles";
 
@@ -17,6 +16,9 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
   const { workoutId } = route.params;
 
   const [saveLock, setSaveLock] = useState(false);
+  const [error_exercise, setError_exercise] = useState(false);
+  const [error_target, setError_target] = useState(false);
+  const [error_rest, setError_rest] = useState(false);
 
   const [docsExercises, setDocsExercises] = useState([]);
   const [exerciseId, setExerciseId] = useState("");
@@ -25,7 +27,7 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
   const [targetReps, setTargetReps] = useState(0);
   const [targetLoad, setTargetLoad] = useState(0.0);
   
-  const [restTime, setRestTime] = useState(0);
+  const [restTime, setRestTime] = useState(1);
   const [sided, setSided] = useState(false);
   const [imbalance, setImbalance] = useState(0);
 
@@ -81,9 +83,12 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
   }
 
   const onPressAddExercise = async () => {
-    if(exerciseId === "") return;
-    if(target.length === 0) return;
-    if(restTime === 0) return;
+    setError_exercise(false);
+    setError_target(false);
+    setError_rest(false);
+    if(exerciseId === "") {setError_exercise(true); return;}
+    if(target.length === 0) {setError_target(true); return;}
+    if(restTime === 0) {setError_rest(true); return;}
 
     if(saveLock) return;
     setSaveLock(true);
@@ -106,9 +111,9 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
 
   return (
     <View style={styles.container}>
-      <View style={{marginTop: 20}}/>
+      <View style={{marginTop: 10}}/>
 
-      <FormSection title={"Rest Time (min)"}>
+      <FormSection title={"Rest Time (min)"} error={error_exercise}>
         <SelectList 
           setSelected={(val) => setExerciseId(val)} 
           data={docsExercises} 
@@ -126,7 +131,7 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
         />
       </FormSection>
 
-      <FormSection title={"Target"}>
+      <FormSection title={"Target"} error={error_target}>
         <View style={{flexDirection: "row", height: 100}}>
 
           <View style={{flex:1, marginRight: 5}}>
@@ -152,6 +157,7 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
 
             <View style={{flex:1, justifyContent: "center"}}>
               <Button
+                style={{backgroundColor: "#000"}}
                 icon={"add"}
                 onPress={onPressSetAdd}
               />
@@ -200,7 +206,7 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
         </View>
       </FormSection>
 
-      <FormSection title={"Rest Time (min)"}>
+      <FormSection title={"Rest Time (min)"} error={error_rest}>
         <View style={{minHeight: 30}}>
           <TextInput
             keyboardType={"numeric"}
@@ -248,9 +254,10 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
 
 function FormSection(props) {
   const title = props.title;
-  
+  const error = props.error;
+
   return (
-    <View style={styles.container_formSection}>
+    <View style={(error) ? styles.container_formSection_error : styles.container_formSection}>
       <Text style={styles_text.common}>{title}</Text>
       <View style={styles.container_formSection_container}>
         {props.children}
@@ -281,7 +288,14 @@ const styles = StyleSheet.create({
   },  
 
   container_formSection: {
-    marginBottom: 20,
+    marginBottom: 15,
+    padding: 5,
+    backgroundColor: "#222",
+  },
+  container_formSection_error: {
+    marginBottom: 15,
+    padding: 5,
+    backgroundColor: "#400",
   },
   container_formSection_container: {
     paddingHorizontal: 10,

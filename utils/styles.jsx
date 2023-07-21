@@ -9,6 +9,10 @@ export const styles_text = StyleSheet.create({
   common: {
     color:'#fff'
   },
+  bold: {
+    color:'#fff',
+    fontWeight: 'bold',
+  },
 
   black_bold: {
     fontWeight: 'bold',

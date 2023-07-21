@@ -11,7 +11,7 @@ export default function Button(props) {
   const size = props.size;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, props.style]}>
       <Pressable
         style={styles.pressable}
         android_ripple={android_ripple_style}
