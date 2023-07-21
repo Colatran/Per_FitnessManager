@@ -20,3 +20,4 @@ export const db  = getFirestore(app);
 
 export const exercises = "exercises";
 export const workouts = "workouts";
+export const workout_exercises = "workout_exercises";

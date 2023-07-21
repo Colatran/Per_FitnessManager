@@ -26,7 +26,7 @@ export default function WorkoutEdit({navigation, route}) {
   }
 
   const onPressAddExercise = (item) => {
-    navigation.navigate('WorkoutEdit_Exercise');
+    navigation.navigate('WorkoutEdit_Exercise', {workoutId: id});
   }
 
 

@@ -2,8 +2,8 @@ import { StyleSheet, View, Text, FlatList } from "react-native";
 import { useEffect, useState } from "react";
 import { SelectList } from "react-native-dropdown-select-list";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
-import { db, exercises, workouts } from "../firebase.config";
+import { addDoc, collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { db, exercises, workout_exercises, workouts } from "../firebase.config";
 
 import Button from "../components/Ritch_Button";
 import TextInput from "../components/Ritch_TextInput";
@@ -13,7 +13,11 @@ import { styles_text } from "../utils/styles";
 
 
 
-export default function WorkoutEdit_Exercise({navigation}) {
+export default function WorkoutEdit_Exercise({navigation, route}) {
+  const { workoutId } = route.params;
+
+  const [saveLock, setSaveLock] = useState(false);
+
   const [docsExercises, setDocsExercises] = useState([]);
   const [exerciseId, setExerciseId] = useState("");
 
@@ -26,6 +30,7 @@ export default function WorkoutEdit_Exercise({navigation}) {
   const [imbalance, setImbalance] = useState(0);
 
   const ref_exercises = collection(db, exercises);
+  const ref_workout_exercises = collection(db, workout_exercises);
 
 
 
@@ -75,8 +80,16 @@ export default function WorkoutEdit_Exercise({navigation}) {
     setTarget(newTarget);
   }
 
-  const onPressAddExercise = () => {
+  const onPressAddExercise = async () => {
+    if(exerciseId === "") return;
+    if(target.length === 0) return;
+    if(restTime === 0) return;
+
+    if(saveLock) return;
+    setSaveLock(true);
+
     const exercise = {
+      workoutId: workoutId,
       exerciseId: exerciseId,
       target: target,
       restTime: restTime,
@@ -84,7 +97,9 @@ export default function WorkoutEdit_Exercise({navigation}) {
       imbalance: imbalance,
     }
 
-    
+    await addDoc(ref_workout_exercises, exercise)
+    .then(() => {navigation.goBack()})
+    .catch(() => {setSaveLock(false)});
   }
 
 
