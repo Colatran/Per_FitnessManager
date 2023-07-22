@@ -62,25 +62,6 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
     const newTarget = [...target, { reps: targetReps, load: targetLoad }];
     setTarget(newTarget);
   }
-  const onPressSetRemove = (index) => {
-    const newTarget = [...target];
-    newTarget.splice(index, 1);
-    setTarget(newTarget);
-  }
-  const onPressSetMoveUp = (index) => {
-    const item = target[index];
-    const newTarget = [...target];
-    newTarget.splice(index, 1);
-    newTarget.splice(index - 1, 0, item);
-    setTarget(newTarget);
-  }
-  const onPressSetMoveDown = (index) => {
-    const item = target[index];
-    const newTarget = [...target];
-    newTarget.splice(index, 1);
-    newTarget.splice(index + 1, 0, item);
-    setTarget(newTarget);
-  }
 
   const onPressAddExercise = async () => {
     setError_exercise(false);
@@ -168,37 +149,12 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
             <FlatList
               data={target}
               renderItem={({item, index}) => 
-                <View style={{flexDirection: "row", alignItems: "center"}}>
-                  <Text style={[styles_text.common, {flex:1}]}>
-                    {item.reps}r {item.load === 0.0 ? "" : `+ ${item.load}kg`}
-                  </Text>
-                  { 
-                    (index == 0) ?
-                    <></>
-                    :
-                    <Button
-                      icon={"keyboard-arrow-up"}
-                      size={30}
-                      onPress={() => onPressSetMoveUp(index)}
-                    />
-                  }
-                  {
-                    (index == target.length-1) ?
-                    <></>
-                    :
-                    <Button
-                      icon={"keyboard-arrow-down"}
-                      size={30}
-                      onPress={() => onPressSetMoveDown(index)}
-                    />
-                  }
-                  
-                  <Button
-                    icon={"delete"}
-                    size={30}
-                    onPress={() => onPressSetRemove(index)}
-                  />
-                </View>
+                <TargetItem 
+                  item={item}
+                  index={index}
+                  target={target}
+                  setTarget={setTarget}
+                />
               }
             />
           </View>
@@ -275,6 +231,95 @@ function ImbalanceItem(props) {
     <View style={{alignItems: "center", marginRight: 10}}>
       <Text style={styles_text.common}>{title}</Text>
       <Field_Boolean on={on} onPress={onPress}/>
+    </View>
+  );
+}
+
+function TargetItem(props) {
+  const item = props.item;
+  const index = props.index;
+  const target = props.target;
+  const setTarget = props.setTarget;
+
+  const [deleteConf, setDeleteConf] = useState(false);
+
+
+
+  const onPressMoveUp = () => {
+    const item = target[index];
+    const newTarget = [...target];
+    newTarget.splice(index, 1);
+    newTarget.splice(index - 1, 0, item);
+    setTarget(newTarget);
+  }
+  const onPressMoveDown = () => {
+    const item = target[index];
+    const newTarget = [...target];
+    newTarget.splice(index, 1);
+    newTarget.splice(index + 1, 0, item);
+    setTarget(newTarget);
+  }
+  const onPressRemove = () => {
+    const newTarget = [...target];
+    newTarget.splice(index, 1);
+    setTarget(newTarget);
+    setDeleteConf(false);
+  }
+
+
+
+  return (
+    <View style={{flexDirection: "row", alignItems: "center"}}>
+      <Text style={[styles_text.common, {flex:1}]}>
+        {item.reps}r {item.load === 0.0 ? "" : `+ ${item.load}kg`}
+      </Text>
+      { deleteConf ? 
+        <>
+          <Button
+            style={{backgroundColor: "#000", marginRight: 38}}
+            icon={"check"}
+            size={30}
+            onPress={() => onPressRemove()}
+          />
+          <Button
+            style={{backgroundColor: "#000"}}
+            icon={"close"}
+            size={30}
+            onPress={() => setDeleteConf(false)}
+          />
+        </>
+        :
+        <>
+          { 
+            (index == 0) ?
+            <></>
+            :
+            <Button
+              style={{backgroundColor: "#000"}}
+              icon={"keyboard-arrow-up"}
+              size={30}
+              onPress={() => onPressMoveUp()}
+            />
+          }
+          {
+            (index == target.length-1) ?
+            <></>
+            :
+            <Button
+              style={{backgroundColor: "#000"}}
+              icon={"keyboard-arrow-down"}
+              size={30}
+              onPress={() => onPressMoveDown()}
+            />
+          }
+          <Button
+            style={{backgroundColor: "#000"}}
+            icon={"delete"}
+            size={30}
+            onPress={() => setDeleteConf(true)}
+          />
+        </>
+      }
     </View>
   );
 }

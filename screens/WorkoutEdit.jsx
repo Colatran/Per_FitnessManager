@@ -60,7 +60,7 @@ export default function WorkoutEdit({navigation, route}) {
 
       <FlatList
         data={exerciseDocs}
-        renderItem={({item}) => <ExerciseList_Item exercise={item}/>}
+        renderItem={({item}) => <ExerciseListItem exercise={item}/>}
       />
     
     </View>
@@ -69,10 +69,11 @@ export default function WorkoutEdit({navigation, route}) {
 
 
 
-function ExerciseList_Item(props) {
+function ExerciseListItem(props) {
   const exercise = props.exercise;
   
   const [name, setName] = useState("");
+  const [deleteConf, setDeleteConf] = useState(false);
 
 
 
@@ -85,15 +86,49 @@ function ExerciseList_Item(props) {
     f();
   }, []);
 
+  
+
+  const onPressMoveUp = () => {
+    
+  }
+  const onPressMoveDown = () => {
+
+  } 
+  const onPressEdit = () => {
+
+  }
+  const onPressDelete = () => {
+    console.log(exercise);
+  }
+
 
 
   return (
     <View style={{borderBottomColor: "#fff", borderBottomWidth: 1, marginBottom: 10}}>
-      <View>
-        <Text style={styles_text.bold}>{name}</Text>
+      <View style={{flexDirection: "row"}}>
+        <View style={{flex: 1}}>
+          <Text style={styles_text.bold}>{name}</Text>
+        </View>
+
+        <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
+          {
+            deleteConf ? 
+            <>
+              <Button icon={"check"} onPress={() => onPressDelete()} style={{marginRight: 74}}/>
+              <Button icon={"close"} onPress={() => setDeleteConf(false)}/>
+            </>
+            :
+            <>
+              <Button icon={"keyboard-arrow-up"}    onPress={() => onPressMoveUp()}/>
+              <Button icon={"keyboard-arrow-down"}  onPress={() => onPressMoveDown()}/>
+              <Button icon={"edit"}                 onPress={() => onPressEdit()}/>
+              <Button icon={"delete"}               onPress={() => setDeleteConf(true)}/>
+            </>
+          }
+        </View>
       </View>
 
-      <View style={{marginHorizontal: 10, marginVertical: 5}}>
+      <View style={{marginHorizontal: 10, marginBottom: 5}}>
         <FlatList 
           data={exercise.target}
           renderItem={({item}) => 
@@ -102,7 +137,7 @@ function ExerciseList_Item(props) {
             </Text>
           }
         />
-      </View>      
+      </View>
     </View>
   );
 }
