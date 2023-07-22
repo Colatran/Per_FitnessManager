@@ -115,39 +115,61 @@ function ExerciseListItem(props) {
 
 
   return (
-    <View style={{borderBottomColor: "#fff", borderBottomWidth: 1, marginBottom: 10}}>
-      <View style={{flexDirection: "row"}}>
-        <View style={{flex: 1}}>
-          <Text style={styles_text.bold}>{name}</Text>
-        </View>
+    <View style={{flexDirection: "row", borderBottomColor: "#fff", borderBottomWidth: 1, marginBottom: 10}}>
 
-        <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
-          {
-            deleteConf ? 
-            <>
-              <Button icon={"check"} onPress={() => onPressDelete()} style={{marginRight: 74}}/>
-              <Button icon={"close"} onPress={() => setDeleteConf(false)}/>
-            </>
-            :
-            <>
-              <Button icon={"keyboard-arrow-up"}    onPress={() => onPressMoveUp()}/>
-              <Button icon={"keyboard-arrow-down"}  onPress={() => onPressMoveDown()}/>
-              <Button icon={"edit"}                 onPress={() => onPressEdit()}/>
-              <Button icon={"delete"}               onPress={() => setDeleteConf(true)}/>
-            </>
-          }
+      <View style={{flex: 2}}>
+        <Text style={styles_text.bold}>{name}</Text>
+
+        <View style={{marginHorizontal: 10, marginBottom: 5, flexDirection:"row"}}>
+          <View style={{flex: 1}}>
+            <FlatList 
+              data={exercise.target}
+              renderItem={({item}) => 
+                <Text style={styles_text.common}>
+                  {`${item.reps}r${exercise.sided ? '/s' : ''}${(item.load==0) ? '': ` + ${item.load}kg`}`}
+                </Text>
+              }
+            />
+          </View>
+        
+          <View style={{flex: 1}}>
+            <View style={{flexDirection:"row"}}>
+              <Text style={styles_text.bold}>Rest: </Text>
+              <Text style={styles_text.common}>{exercise.restTime}min</Text>
+            </View>
+            {
+              (exercise.imbalance === 0) ?
+              <></>
+              :
+              <View style={{flexDirection:"row"}}>
+                <Text style={styles_text.bold}>Imbalance: </Text>
+                {
+                  (exercise.imbalance === 1) ?
+                  <Text style={styles_text.common}>R</Text>
+                  :
+                  <Text style={styles_text.common}>L</Text>
+                }
+              </View>
+            }
+          </View>
         </View>
       </View>
-
-      <View style={{marginHorizontal: 10, marginBottom: 5}}>
-        <FlatList 
-          data={exercise.target}
-          renderItem={({item}) => 
-            <Text style={styles_text.common}>
-              {`${item.reps}r${exercise.sided ? '/s' : ''}${(item.load==0) ? '': ` + ${item.load}kg`}`}
-            </Text>
-          }
-        />
+      
+      <View style={{flex: 1, flexDirection: "row", alignItems: "flex-start", justifyContent: "flex-end"}}>
+        {
+          deleteConf ? 
+          <>
+            <Button icon={"check"} onPress={() => onPressDelete()} style={{marginRight: 74}}/>
+            <Button icon={"close"} onPress={() => setDeleteConf(false)}/>
+          </>
+          :
+          <>
+            <Button icon={"keyboard-arrow-up"}    onPress={() => onPressMoveUp()}/>
+            <Button icon={"keyboard-arrow-down"}  onPress={() => onPressMoveDown()}/>
+            <Button icon={"edit"}                 onPress={() => onPressEdit()}/>
+            <Button icon={"delete"}               onPress={() => setDeleteConf(true)}/>
+          </>
+        }
       </View>
     </View>
   );
