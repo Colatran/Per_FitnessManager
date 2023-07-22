@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text, FlatList } from "react-native";
 import { useEffect, useState } from "react";
-import { collection, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db, exercises, workout_exercises, workouts } from "../firebase.config";
 
 import Button from "../components/Ritch_Button";
@@ -9,6 +9,8 @@ import { styles_text } from "../utils/styles";
 
 
 
+const ref_workout_exercises = collection(db, workout_exercises);
+
 export default function WorkoutEdit({navigation, route}) {
   const { id, name } = route.params;
 
@@ -16,7 +18,6 @@ export default function WorkoutEdit({navigation, route}) {
   const [exerciseDocs, setExerciseDocs] = useState([]);
 
   const ref_workouts = collection(db, workouts);
-  const ref_workout_exercises = collection(db, workout_exercises);
 
 
 
@@ -95,10 +96,11 @@ function ExerciseListItem(props) {
 
   } 
   const onPressEdit = () => {
-
+    
   }
   const onPressDelete = () => {
-    console.log(exercise);
+    const docRef = doc(ref_workout_exercises, exercise.id);
+    deleteDoc(docRef);
   }
 
 
