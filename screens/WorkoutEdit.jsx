@@ -40,6 +40,9 @@ export default function WorkoutEdit({navigation, route}) {
   const onPressAddExercise = (item) => {
     navigation.navigate('WorkoutEdit_Exercise', {workoutId: id});
   }
+  const onPressExerciseEdit = (exercise) => {
+    navigation.navigate('WorkoutEdit_Exercise', {workoutId: id, exercise: exercise});
+  }
 
 
 
@@ -61,7 +64,12 @@ export default function WorkoutEdit({navigation, route}) {
 
       <FlatList
         data={exerciseDocs}
-        renderItem={({item}) => <ExerciseListItem exercise={item}/>}
+        renderItem={({item}) => 
+          <ExerciseListItem 
+            exercise={item} 
+            onEdit={() => onPressExerciseEdit(item)}
+          />
+        }
       />
     
     </View>
@@ -72,6 +80,7 @@ export default function WorkoutEdit({navigation, route}) {
 
 function ExerciseListItem(props) {
   const exercise = props.exercise;
+  const onEdit = props.onEdit;
   
   const [name, setName] = useState("");
   const [deleteConf, setDeleteConf] = useState(false);
@@ -94,9 +103,9 @@ function ExerciseListItem(props) {
   }
   const onPressMoveDown = () => {
 
-  } 
+  }
   const onPressEdit = () => {
-    
+    onEdit(exercise);
   }
   const onPressDelete = () => {
     const docRef = doc(ref_workout_exercises, exercise.id);

@@ -2,7 +2,7 @@ import { StyleSheet, View, Text, FlatList } from "react-native";
 import { useEffect, useState } from "react";
 import { SelectList } from "react-native-dropdown-select-list";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { addDoc, collection, onSnapshot } from "firebase/firestore";
+import { addDoc, collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db, exercises, workout_exercises } from "../firebase.config";
 
 import Button from "../components/Ritch_Button";
@@ -13,7 +13,7 @@ import { styles_text } from "../utils/styles";
 
 
 export default function WorkoutEdit_Exercise({navigation, route}) {
-  const { workoutId } = route.params;
+  const { workoutId, exercise } = route.params;
 
   const [saveLock, setSaveLock] = useState(false);
   const [error_exercise, setError_exercise] = useState(false);
@@ -21,20 +21,20 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
   const [error_rest, setError_rest] = useState(false);
 
   const [docsExercises, setDocsExercises] = useState([]);
-  const [exerciseId, setExerciseId] = useState("");
+  const [exerciseId, setExerciseId] = useState(exercise ? exercise.exerciseId : "");
 
-  const [target, setTarget] = useState([]);
+  const [target, setTarget] = useState(exercise ? exercise.target : []);
   const [targetReps, setTargetReps] = useState(0);
   const [targetLoad, setTargetLoad] = useState(0.0);
   
-  const [restTime, setRestTime] = useState(1);
-  const [sided, setSided] = useState(false);
-  const [imbalance, setImbalance] = useState(0);
+  const [restTime, setRestTime] = useState(exercise ? exercise.restTime : 1);
+  const [sided, setSided] = useState(exercise ? exercise.sided : false);
+  const [imbalance, setImbalance] = useState(exercise ? exercise.imbalance : 0);
 
   const ref_exercises = collection(db, exercises);
   const ref_workout_exercises = collection(db, workout_exercises);
 
-
+  
 
   useEffect(() => {
     return onSnapshot(ref_exercises, (snapshot) => {
@@ -57,24 +57,32 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
 
 
 
+  const isFormNotValid = () => {
+    setError_exercise(false);
+    setError_target(false);
+    setError_rest(false);
+
+    if(exerciseId === "") {setError_exercise(true); return true;}
+    if(target.length === 0) {setError_target(true); return true;}
+    if(restTime === 0) {setError_rest(true); return true;}
+
+    return false;
+  }
+
+
+
   const onPressSetAdd = () => {
     if(targetReps === 0) return;
     const newTarget = [...target, { reps: targetReps, load: targetLoad }];
     setTarget(newTarget);
   }
 
-  const onPressAddExercise = async () => {
-    setError_exercise(false);
-    setError_target(false);
-    setError_rest(false);
-    if(exerciseId === "") {setError_exercise(true); return;}
-    if(target.length === 0) {setError_target(true); return;}
-    if(restTime === 0) {setError_rest(true); return;}
-
+  const onPressExerciseAdd = async () => {
+    if(isFormNotValid()) return;
     if(saveLock) return;
     setSaveLock(true);
 
-    const exercise = {
+    const data = {
       workoutId: workoutId,
       exerciseId: exerciseId,
       target: target,
@@ -83,9 +91,31 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
       imbalance: imbalance,
     }
 
-    await addDoc(ref_workout_exercises, exercise)
+    await addDoc(ref_workout_exercises, data)
     .then(() => {navigation.goBack()})
     .catch(() => {setSaveLock(false)});
+  }
+  const onPressExerciseSave = async () => {
+    if(isFormNotValid()) return;
+    if(saveLock) return;
+    setSaveLock(true);
+
+    const data = {
+      workoutId: workoutId,
+      exerciseId: exerciseId,
+      target: target,
+      restTime: restTime,
+      sided: sided,
+      imbalance: imbalance,
+    }
+
+    const docRef = doc(ref_workout_exercises, exercise.id);
+    await updateDoc(docRef, data)
+    .then(() => {navigation.goBack()})
+    .catch(() => {setSaveLock(false)});
+  }
+  const onPressExerciseCancel = () => {
+    navigation.goBack();
   }
 
 
@@ -96,6 +126,7 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
 
       <FormSection title={"Rest Time (min)"} error={error_exercise}>
         <SelectList 
+          defaultOption={exercise ? docsExercises.find((item) => item.key === exerciseId) : {}}
           setSelected={(val) => setExerciseId(val)} 
           data={docsExercises} 
           save="key"
@@ -105,10 +136,10 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
           closeicon={<MaterialIcons name={"arrow-drop-down"} size={30} color='white'/>}
           searchPlaceholder="Exercise"
           notFoundText="Not Found"
-          boxStyles={{alignItems:"center", backgroundColor:"black"}}
-          inputStyles={{color:'white'}}
-          dropdownStyles={{backgroundColor: 'black'}}
-          dropdownTextStyles={{color:'white'}}
+          boxStyles={{alignItems:'center', backgroundColor:'black', borderRadius: 4, borderColor: 'white'}}
+          inputStyles={{color: "white"}}
+          dropdownStyles={{backgroundColor: 'black', borderRadius: 4}}
+          dropdownTextStyles={{ color:'white'}}
         />
       </FormSection>
 
@@ -197,10 +228,28 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
       </FormSection>
 
       <View style={{flex: 1, justifyContent: "flex-end"}}>
-        <Button 
-          icon={"add"}
-          onPress={() => onPressAddExercise()}
-        />
+        {
+          exercise ?
+          <View style={{flexDirection: "row"}}>
+            <View style={{flex: 1}}>
+              <Button 
+                icon={"check"}
+                onPress={() => onPressExerciseSave()}
+              />
+            </View>
+            <View style={{flex: 1}}>
+              <Button 
+                icon={"close"}
+                onPress={() => onPressExerciseCancel()}
+              />
+            </View>
+          </View>
+          :
+          <Button 
+            icon={"add"}
+            onPress={() => onPressExerciseAdd()}
+          />
+        }
       </View>
     </View>
   );
