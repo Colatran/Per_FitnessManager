@@ -13,7 +13,7 @@ import { styles_text } from "../utils/styles";
 
 
 export default function WorkoutEdit_Exercise({navigation, route}) {
-  const { workoutId, exercise } = route.params;
+  const { workoutId, exerciseCount, exercise } = route.params;
 
   const [saveLock, setSaveLock] = useState(false);
   const [error_exercise, setError_exercise] = useState(false);
@@ -64,7 +64,7 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
 
     if(exerciseId === "") {setError_exercise(true); return true;}
     if(target.length === 0) {setError_target(true); return true;}
-    if(restTime === 0) {setError_rest(true); return true;}
+    if(restTime < 1) {setError_rest(true); return true;}
 
     return false;
   }
@@ -89,6 +89,7 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
       restTime: restTime,
       sided: sided,
       imbalance: imbalance,
+      index: exerciseCount,
     }
 
     await addDoc(ref_workout_exercises, data)

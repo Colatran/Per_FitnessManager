@@ -10,6 +10,7 @@ import { styles_text } from "../utils/styles";
 
 
 const ref_workout_exercises = collection(db, workout_exercises);
+const ref_workouts = collection(db, workouts);
 
 export default function WorkoutEdit({navigation, route}) {
   const { id, name } = route.params;
@@ -17,8 +18,8 @@ export default function WorkoutEdit({navigation, route}) {
   const [newName, setNewName] = useState(name);
   const [exerciseDocs, setExerciseDocs] = useState([]);
 
-  const ref_workouts = collection(db, workouts);
-
+  const [changed, setChanged] = useState(false);
+  const [lockChanged, setLockChanged] = useState(false);
 
 
   useEffect(() => {
@@ -26,6 +27,20 @@ export default function WorkoutEdit({navigation, route}) {
       const data = snapshot.docs
       .map((doc) => ({ id: doc.id, ...doc.data() }))
       .filter((doc) => doc.workoutId === id);
+
+      data.sort((a, b) => {
+        const indexA = a.index;
+        const indexB = b.index;
+      
+        if (indexA < indexB) {
+          return -1;
+        }
+        if (indexA > indexB) {
+          return 1;
+        }
+        return 0;
+      });
+
       setExerciseDocs(data);
     });
   }, []);
@@ -36,12 +51,44 @@ export default function WorkoutEdit({navigation, route}) {
     const docRef = doc(ref_workouts, id);
     await updateDoc(docRef, {name: newName});
   }
-
-  const onPressAddExercise = (item) => {
-    navigation.navigate('WorkoutEdit_Exercise', {workoutId: id});
+  const onPressAddExercise = () => {
+    navigation.navigate('WorkoutEdit_Exercise', {workoutId: id, exerciseCount: exerciseDocs.length});
   }
   const onPressExerciseEdit = (exercise) => {
-    navigation.navigate('WorkoutEdit_Exercise', {workoutId: id, exercise: exercise});
+    navigation.navigate('WorkoutEdit_Exercise', {workoutId: id, exerciseCount: exerciseDocs.length, exercise: exercise});
+  }
+  const onPressExerciseMoveUp = (index) => {
+    const previousItem = exerciseDocs[index - 1];
+    const item = exerciseDocs[index];
+    const newDocs = [...exerciseDocs];
+    previousItem.index = index;
+    item.index = index - 1;
+    newDocs.splice(index - 1, 2, item, previousItem);
+    setExerciseDocs(newDocs);
+    setChanged(true);
+  }
+  const onPressExerciseMoveDown = (index) => {
+    const nextItem = exerciseDocs[index + 1];
+    const item = exerciseDocs[index];
+    const newDocs = [...exerciseDocs];
+    nextItem.index = index;
+    item.index = index + 1;
+    newDocs.splice(index, 2, nextItem, item);
+    setExerciseDocs(newDocs);
+    setChanged(true);
+  }
+  const onPressSaveExercises = () => {
+    if(lockChanged) return;
+    setLockChanged(true);
+
+    exerciseDocs.forEach(async (element, index) => {
+      const docRef = doc(ref_workout_exercises, element.id);
+      await updateDoc(docRef, {index: element.index});
+    });
+    
+    setExerciseDocs([]);
+    setLockChanged(false);
+    setChanged(false);
   }
 
 
@@ -64,14 +111,28 @@ export default function WorkoutEdit({navigation, route}) {
 
       <FlatList
         data={exerciseDocs}
-        renderItem={({item}) => 
+        renderItem={({item, index}) => 
           <ExerciseListItem 
-            exercise={item} 
+            exercise={item}
+            index={index}
+            length={exerciseDocs.length}
             onEdit={() => onPressExerciseEdit(item)}
+            onMoveUp={() => onPressExerciseMoveUp(index)}
+            onMoveDown={() => onPressExerciseMoveDown(index)}
           />
         }
       />
     
+      {
+        changed ?
+          <Button
+            icon={"check"}
+            onPress={onPressSaveExercises}
+          />
+        :
+        <></>
+      }
+
     </View>
   );
 }
@@ -80,8 +141,12 @@ export default function WorkoutEdit({navigation, route}) {
 
 function ExerciseListItem(props) {
   const exercise = props.exercise;
+  const index = props.index;
+  const length = props.length;
   const onEdit = props.onEdit;
-  
+  const onMoveUp = props.onMoveUp;
+  const onMoveDown = props.onMoveDown;
+
   const [name, setName] = useState("");
   const [deleteConf, setDeleteConf] = useState(false);
 
@@ -99,10 +164,10 @@ function ExerciseListItem(props) {
   
 
   const onPressMoveUp = () => {
-    
+    onMoveUp(exercise);
   }
   const onPressMoveDown = () => {
-
+    onMoveDown(exercise);
   }
   const onPressEdit = () => {
     onEdit(exercise);
@@ -164,8 +229,18 @@ function ExerciseListItem(props) {
           </>
           :
           <>
-            <Button icon={"keyboard-arrow-up"}    onPress={() => onPressMoveUp()}/>
-            <Button icon={"keyboard-arrow-down"}  onPress={() => onPressMoveDown()}/>
+            {
+              index === 0 ?
+              <></>
+              :
+              <Button icon={"keyboard-arrow-up"}    onPress={() => onPressMoveUp()}/>
+            }
+            {
+              index === length - 1 ?
+              <></>
+              :
+              <Button icon={"keyboard-arrow-down"}  onPress={() => onPressMoveDown()}/>
+            }
             <Button icon={"edit"}                 onPress={() => onPressEdit()}/>
             <Button icon={"delete"}               onPress={() => setDeleteConf(true)}/>
           </>
