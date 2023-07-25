@@ -1,16 +1,14 @@
 import { StyleSheet, FlatList, View } from "react-native";
 import { useEffect, useState } from "react";
-import { addDoc, collection, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 import { db, workouts } from '../firebase.config';
 
-import ItemList from "../components/ItemList";
-import Field_TextButton from "../components/Field_TextButton";
+import ListItem_Play from "../components/ListItem_Play";
 
 
 
-export default function WorkoutList({ navigation }) {
+export default function WorkoutList_Practice({ navigation }) {
   const [docs, setDocs] = useState([]);
-  const [toAdd, setToAdd] = useState();
 
   const ref_workouts = collection(db, workouts);
 
@@ -39,48 +37,25 @@ export default function WorkoutList({ navigation }) {
 
 
 
-  const onPressAdd = async () => {
-    if(toAdd.trim().length === 0) return;
-    await addDoc(ref_workouts, {
-      name: toAdd
-    });
-  }
-  const onChangeName = async (item, name) => {
-    const docRef = doc(ref_workouts, item.id);
-    await deleteDoc(docRef);
-    await addDoc(ref_workouts, {
-      name: name
-    });
-  }
-  const onPressEdit = (item) => {
-    navigation.navigate('WorkoutEdit', item);
+  const onPressPlay = (item) => {
+    navigation.navigate('Practice', {workout: item});
   }
 
 
 
   return (
     <View style={styles.container}>
-
-      <Field_TextButton
-        value={toAdd}
-        setValue={setToAdd}
-        onPress={onPressAdd}
-        icon={"add"}
-      />
-
-      <View>
+      <View style={{marginTop: 20}}>
         <FlatList
           data={docs}
           renderItem={({item}) =>
-            <ItemList 
+            <ListItem_Play 
               item={item}
-              onChangeName={onChangeName}
-              onEdit={() => onPressEdit(item)}
+              onPlay={() => onPressPlay(item)}
             />
           }
         />
       </View>
-
     </View>
   );
 }

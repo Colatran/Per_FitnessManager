@@ -7,7 +7,7 @@ import { styles_text } from "../utils/styles";
 
 
 
-export default function ItemList(props) {
+export default function ListItem_EditableName(props) {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(props.item.name);
 

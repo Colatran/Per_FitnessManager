@@ -5,9 +5,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import ExercisesList from './screens/ExercisesList';
-import WorkoutList from './screens/WorkoutList';
+import WorkoutList_Practice from './screens/WorkoutList_Practice';
+import WorkoutList_Manage from './screens/WorkoutList_Manage';
 import WorkoutEdit from './screens/WorkoutEdit';
 import WorkoutEdit_Exercise from './screens/WorkoutEdit_Exercise';
+import WorkoutPractice from './screens/WorkoutPractice';
 
 
 const Stack = createStackNavigator();
@@ -18,18 +20,28 @@ export default function App() {
     <View style={styles.container}>
       <NavigationContainer>
         <Tab.Navigator
-          initialRouteName='Tab_Workouts'
+          initialRouteName='Tab_Practice'
           screenOptions={TabScreenOptions()}
         >
           <Tab.Screen 
+            name="Tab_Practice"
+            options={TabOptions("Practice", "play-arrow")}
+            component={Stack_Practice}
+          />
+          <Tab.Screen 
             name="Tab_Exercises"
-            options={TabOptions("Exercises", "fitness-center")}
+            options={TabOptions("Exercises", "list")}
             component={Stack_Exercises}
           />
           <Tab.Screen 
             name="Tab_Workouts"
             options={TabOptions("Workouts", "fitness-center")}
             component={Stack_Workouts}
+          />
+          <Tab.Screen 
+            name="Tab_History"
+            options={TabOptions("History", "history")}
+            component={Stack_Exercises}
           />
         </Tab.Navigator>
       </NavigationContainer>
@@ -70,7 +82,20 @@ const TabOptions = (title, icon) => {
 }
 
 
-
+function Stack_Practice() {
+  return (
+    <Stack.Navigator initialRouteName='WorkoutList'>
+      <Stack.Screen
+        name='WorkoutList'
+        component={WorkoutList_Practice}
+        options={StackOptions("  Select a Workout  ")}/>
+      <Stack.Screen
+        name='Practice'
+        component={WorkoutPractice}
+        options={StackOptions("  Practice  ")}/>
+    </Stack.Navigator>
+  );
+}
 function Stack_Exercises() {
   return (
     <Stack.Navigator initialRouteName='Exercises'>
@@ -86,7 +111,7 @@ function Stack_Workouts() {
     <Stack.Navigator initialRouteName='Workouts'>
       <Stack.Screen 
         name='WorkoutList'
-        component={WorkoutList}
+        component={WorkoutList_Manage}
         options={StackOptions("  Workouts  ")}/>
       <Stack.Screen
         name='WorkoutEdit'
