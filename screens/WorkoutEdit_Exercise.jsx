@@ -8,6 +8,7 @@ import { db, exercises, workout_exercises } from "../firebase.config";
 import Button from "../components/Ritch_Button";
 import TextInput from "../components/Ritch_TextInput";
 import Field_Boolean from "../components/Field_Boolean";
+import Set from "../components/Set";
 import { styles_text } from "../utils/styles";
 
 
@@ -28,7 +29,8 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
   const [targetLoad, setTargetLoad] = useState(0.0);
   
   const [restTime, setRestTime] = useState(exercise ? exercise.restTime : 1);
-  const [sided, setSided] = useState(exercise ? exercise.sided : false);
+  const [sidedReps, setSidedReps] = useState(exercise ? exercise.sidedReps : false);
+  const [sidedLoad, setSidedLoad] = useState(exercise ? exercise.sidedLoad : false);
   const [imbalance, setImbalance] = useState(exercise ? exercise.imbalance : 0);
 
   const ref_exercises = collection(db, exercises);
@@ -87,7 +89,8 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
       exerciseId: exerciseId,
       target: target,
       restTime: restTime,
-      sided: sided,
+      sidedReps: sidedReps,
+      sidedLoad: sidedLoad,
       imbalance: imbalance,
       index: exerciseCount,
     }
@@ -106,7 +109,8 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
       exerciseId: exerciseId,
       target: target,
       restTime: restTime,
-      sided: sided,
+      sidedReps: sidedReps,
+      sidedLoad: sidedLoad,
       imbalance: imbalance,
     }
 
@@ -145,7 +149,7 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
       </FormSection>
 
       <FormSection title={"Target"} error={error_target}>
-        <View style={{flexDirection: "row", height: 100}}>
+        <View style={{flexDirection: "row", height: 80}}>
 
           <View style={{flex:1, marginRight: 5}}>
             <View style={{flexDirection: "row"}}>
@@ -205,22 +209,33 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
       </FormSection>
 
       <FormSection title={"Sided"}>
-        <Field_Boolean on={sided} onPress={() => setSided(!sided)}/>
+        <View style={{flexDirection: "row"}}>
+          <CheckboxLabel 
+            title={"Reps"}
+            on={sidedReps}
+            onPress={() => setSidedReps(!sidedReps)}
+          />
+          <CheckboxLabel 
+            title={"Load"}
+            on={sidedLoad}
+            onPress={() => setSidedLoad(!sidedLoad)}
+          />
+        </View>
       </FormSection>
 
       <FormSection title={"Imbalance"}>
         <View style={{flexDirection: "row"}}>
-          <ImbalanceItem 
+          <CheckboxLabel 
             title={"Left"}
             on={imbalance == -1}
             onPress={() => setImbalance(-1)}
           />
-          <ImbalanceItem 
+          <CheckboxLabel 
             title={"None"}
             on={imbalance == 0}
             onPress={() => setImbalance(0)}
           />
-          <ImbalanceItem 
+          <CheckboxLabel 
             title={"Right"}
             on={imbalance == 1}
             onPress={() => setImbalance(1)}
@@ -272,7 +287,7 @@ function FormSection(props) {
   );
 }
 
-function ImbalanceItem(props) {
+function CheckboxLabel(props) {
   const title = props.title;
   const on = props.on;
   const onPress = props.onPress;
@@ -292,6 +307,8 @@ function TargetItem(props) {
   const setTarget = props.setTarget;
 
   const [deleteConf, setDeleteConf] = useState(false);
+
+  const buttonSize = 25;
 
 
 
@@ -320,21 +337,23 @@ function TargetItem(props) {
 
   return (
     <View style={{flexDirection: "row", alignItems: "center"}}>
-      <Text style={[styles_text.common, {flex:1}]}>
-        {item.reps}r {item.load === 0.0 ? "" : `+ ${item.load}kg`}
-      </Text>
+
+      <View style={{flex: 1}}>
+        <Set reps={item.reps} load={item.load} sidedReps={false} sidedLoad={false}/>
+      </View>
+
       { deleteConf ? 
         <>
           <Button
-            style={{backgroundColor: "#000", marginRight: 38}}
+            style={{backgroundColor: "#000", marginRight: buttonSize + 8}}
             icon={"check"}
-            size={30}
+            size={buttonSize}
             onPress={() => onPressRemove()}
           />
           <Button
             style={{backgroundColor: "#000"}}
             icon={"close"}
-            size={30}
+            size={buttonSize}
             onPress={() => setDeleteConf(false)}
           />
         </>
@@ -347,7 +366,7 @@ function TargetItem(props) {
             <Button
               style={{backgroundColor: "#000"}}
               icon={"keyboard-arrow-up"}
-              size={30}
+              size={buttonSize}
               onPress={() => onPressMoveUp()}
             />
           }
@@ -358,14 +377,14 @@ function TargetItem(props) {
             <Button
               style={{backgroundColor: "#000"}}
               icon={"keyboard-arrow-down"}
-              size={30}
+              size={buttonSize}
               onPress={() => onPressMoveDown()}
             />
           }
           <Button
             style={{backgroundColor: "#000"}}
             icon={"delete"}
-            size={30}
+            size={buttonSize}
             onPress={() => setDeleteConf(true)}
           />
         </>

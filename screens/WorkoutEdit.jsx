@@ -6,6 +6,7 @@ import { db, exercises, workout_exercises, workouts } from "../firebase.config";
 import Button from "../components/Ritch_Button";
 import Field_TextButton from "../components/Field_TextButton";
 import { styles_text } from "../utils/styles";
+import Set from "../components/Set";
 
 
 
@@ -21,6 +22,7 @@ export default function WorkoutEdit({navigation, route}) {
   const [changed, setChanged] = useState(false);
   const [lockChanged, setLockChanged] = useState(false);
 
+  
 
   useEffect(() => {
     return onSnapshot(ref_workout_exercises, (snapshot) => {
@@ -190,9 +192,7 @@ function ExerciseListItem(props) {
             <FlatList 
               data={exercise.target}
               renderItem={({item}) => 
-                <Text style={styles_text.common}>
-                  {`${item.reps}r${exercise.sided ? '/s' : ''}${(item.load==0) ? '': ` + ${item.load}kg`}`}
-                </Text>
+                <Set reps={item.reps} load={item.load} sidedReps={exercise.sidedReps} sidedLoad={exercise.sidedLoad}/>
               }
             />
           </View>
