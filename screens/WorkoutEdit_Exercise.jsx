@@ -8,7 +8,7 @@ import { db, exercises, workout_exercises } from "../firebase.config";
 import Button from "../components/Ritch_Button";
 import TextInput from "../components/Ritch_TextInput";
 import Field_Boolean from "../components/Field_Boolean";
-import Set from "../components/Set";
+import Display_Set from "../components/Display_Set";
 import { styles_text } from "../utils/styles";
 
 
@@ -339,7 +339,7 @@ function TargetItem(props) {
     <View style={{flexDirection: "row", alignItems: "center"}}>
 
       <View style={{flex: 1}}>
-        <Set reps={item.reps} load={item.load} sidedReps={false} sidedLoad={false}/>
+        <Display_Set reps={item.reps} load={item.load} sidedReps={false} sidedLoad={false}/>
       </View>
 
       { deleteConf ? 

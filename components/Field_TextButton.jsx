@@ -17,7 +17,6 @@ export default function Field_TextButton(props) {
   return (
     <View style={[_styles.container, styles]}>
       <TextInput
-        style={_styles.input}
         value={value}
         onChangeText={text => setValue(text)}
       />

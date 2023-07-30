@@ -5,8 +5,8 @@ import { db, exercises, workout_exercises, workouts } from "../firebase.config";
 
 import Button from "../components/Ritch_Button";
 import Field_TextButton from "../components/Field_TextButton";
+import Display_Set from "../components/Display_Set";
 import { styles_text } from "../utils/styles";
-import Set from "../components/Set";
 
 
 
@@ -192,7 +192,12 @@ function ExerciseListItem(props) {
             <FlatList 
               data={exercise.target}
               renderItem={({item}) => 
-                <Set reps={item.reps} load={item.load} sidedReps={exercise.sidedReps} sidedLoad={exercise.sidedLoad}/>
+                <Display_Set
+                  reps={item.reps}
+                  load={item.load}
+                  sidedReps={exercise.sidedReps}
+                  sidedLoad={exercise.sidedLoad}
+                />
               }
             />
           </View>
