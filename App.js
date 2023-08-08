@@ -10,6 +10,7 @@ import WorkoutList_Manage from './screens/WorkoutList_Manage';
 import WorkoutEdit from './screens/WorkoutEdit';
 import WorkoutEdit_Exercise from './screens/WorkoutEdit_Exercise';
 import WorkoutPractice from './screens/WorkoutPractice';
+import { UserProvider } from './utils/UserContext';
 
 
 const Stack = createStackNavigator();
@@ -17,35 +18,37 @@ const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <NavigationContainer>
-        <Tab.Navigator
-          initialRouteName='Tab_Practice'
-          screenOptions={TabScreenOptions()}
-        >
-          <Tab.Screen 
-            name="Tab_Practice"
-            options={TabOptions("Practice", "play-arrow")}
-            component={Stack_Practice}
-          />
-          <Tab.Screen 
-            name="Tab_Exercises"
-            options={TabOptions("Exercises", "list")}
-            component={Stack_Exercises}
-          />
-          <Tab.Screen 
-            name="Tab_Workouts"
-            options={TabOptions("Workouts", "fitness-center")}
-            component={Stack_Workouts}
-          />
-          <Tab.Screen 
-            name="Tab_History"
-            options={TabOptions("History", "history")}
-            component={Stack_Exercises}
-          />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </View>
+    <UserProvider>
+      <View style={styles.container}>
+        <NavigationContainer>
+          <Tab.Navigator
+            initialRouteName='Tab_Practice'
+            screenOptions={TabScreenOptions()}
+          >
+            <Tab.Screen 
+              name="Tab_Practice"
+              options={TabOptions("Practice", "play-arrow")}
+              component={Stack_Practice}
+            />
+            <Tab.Screen 
+              name="Tab_Exercises"
+              options={TabOptions("Exercises", "list")}
+              component={Stack_Exercises}
+            />
+            <Tab.Screen 
+              name="Tab_Workouts"
+              options={TabOptions("Workouts", "fitness-center")}
+              component={Stack_Workouts}
+            />
+            <Tab.Screen 
+              name="Tab_History"
+              options={TabOptions("History", "history")}
+              component={Stack_Exercises}
+            />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </View>
+    </UserProvider>
   );
 }
 

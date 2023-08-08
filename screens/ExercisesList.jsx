@@ -1,39 +1,20 @@
 import { StyleSheet, FlatList, View } from "react-native";
-import { useEffect, useState } from "react";
-import { addDoc, collection, deleteDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { useContext, useState } from "react";
+import { addDoc, collection, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db, exercises } from '../firebase.config';
 
 import ListItem_EditableName from "../components/ListItem_EditableName";
 import Field_TextButton from "../components/Field_TextButton";
+import { UserContext } from "../utils/UserContext";
 
 
+
+const ref_exercises = collection(db, exercises);
 
 export default function ExercisesList() {
-  const [docs, setDocs] = useState([]);
+  const { exerciseDocs } = useContext(UserContext);
+
   const [toAdd, setToAdd] = useState("");
-
-  const ref_exercises = collection(db, exercises);
-
-
-  
-  useEffect(() => {
-    return onSnapshot(ref_exercises, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      data.sort((a, b) => {
-        const nameA = a.name.toUpperCase();
-        const nameB = b.name.toUpperCase();
-      
-        if (nameA < nameB) {
-          return -1;
-        }
-        if (nameA > nameB) {
-          return 1;
-        }
-        return 0;
-      });
-      setDocs(data);
-    });
-  }, []);
 
 
 
@@ -64,18 +45,16 @@ export default function ExercisesList() {
         icon={"add"}
       />
 
-      <View>
-        <FlatList
-          data={docs}
-          renderItem={({item}) =>
-            <ListItem_EditableName 
-              item={item}
-              onPressDelete={() => onPressDelete(item)}
-              onChangeName={onChangeName}
+      <FlatList
+        data={exerciseDocs}
+        renderItem={({item}) =>
+          <ListItem_EditableName 
+            item={item}
+            onPressDelete={() => onPressDelete(item)}
+            onChangeName={onChangeName}
             />
-          }
-        />
-      </View>
+        }
+      />
 
     </View>
   );

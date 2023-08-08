@@ -23,10 +23,10 @@ export default function WorkoutPractice({ navigation, route }) {
   const [exerciseIndex, setExerciseIndex] = useState(0);
   const [setIndex, setSetIndex] = useState(0);
   const [history, setHistory] = useState([]);
-  
   const [achievedReps, setAchievedReps] = useState(0);
   const [achievedLoad, setAchievedLoad] = useState(0.0);
 
+  
 
 
   useEffect(() => {
@@ -88,7 +88,6 @@ export default function WorkoutPractice({ navigation, route }) {
     setAchievedLoad(exerciseHistory.set_achieved[0].load);
     setStarted(true);
   }
-
   const SaveCurrentSet = () => {
     const exerciseHistory = {...history[exerciseIndex]};
     exerciseHistory.set_achieved[setIndex] = {
@@ -104,7 +103,6 @@ export default function WorkoutPractice({ navigation, route }) {
     setAchievedReps(exercise.set_achieved[setIndex].reps);
     setAchievedLoad(exercise.set_achieved[setIndex].load);
   }
-
   const NextSet = () => {
     if(setIndex < docs[exerciseIndex].target.length - 1) {
       SaveCurrentSet();
@@ -124,7 +122,6 @@ export default function WorkoutPractice({ navigation, route }) {
       PreviousExercise();
     }
   }
-
   const NextExercise = () => {
     SaveCurrentSet();
     if(exerciseIndex < docs.length - 1) {
@@ -136,8 +133,8 @@ export default function WorkoutPractice({ navigation, route }) {
     }
   }
   const PreviousExercise = () => {
+    SaveCurrentSet();
     if(exerciseIndex > 0) {
-      SaveCurrentSet();
       const newExerciseIndex = exerciseIndex - 1;
       const newSetIndex = 0;
       setSetIndex(newSetIndex);
@@ -149,6 +146,7 @@ export default function WorkoutPractice({ navigation, route }) {
 
 
   const onPressStartWorkout = () => { StartWorkout(); }
+  const onPressFinishWorkout = () => {}
   const onPressSetNext = () => { NextSet(); }
   const onPressSetPrevious = () => { PreviousSet(); }
   const onPressExerciseNext = () => { NextExercise(); }
@@ -161,7 +159,7 @@ export default function WorkoutPractice({ navigation, route }) {
       {
         started ? 
         <>
-          <View style={{margin: 10}}>
+          <View style={{marginTop: 20, marginBottom: 20}}>
             <Text style={styles.text_title}>{names[exerciseIndex]}</Text>
             {
               docs[exerciseIndex].imbalance === 0 ?
@@ -250,7 +248,7 @@ export default function WorkoutPractice({ navigation, route }) {
                 {
                   setIndex === docs[exerciseIndex].target.length - 1 ?
                     exerciseIndex === docs.length - 1 ?
-                    <Button icon={"check"} onPress={() => {}}/>
+                    <Button icon={"check"} onPress={() => onPressFinishWorkout()}/>
                     :
                     <Button icon={"arrow-forward"} onPress={() => onPressExerciseNext()}/>
                   :
@@ -261,12 +259,16 @@ export default function WorkoutPractice({ navigation, route }) {
             </View>
           </View>
 
-          <View style={{flexDirection: "row", backgroundColor: "#f00"}}>
+          <View style={{borderColor: "#fff", borderTopWidth: 1, borderBottomWidth: 1, marginBottom: 20, height: 100}}>
+
+          </View>
+
+          <View style={{flexDirection: "row"}}>
             <View style={{flex:1}}>
-              <Button icon={"keyboard-arrow-left"} onPress={() => onPressExercisePrevious()}/>
+              <Button icon={"arrow-back"} onPress={() => onPressExercisePrevious()}/>
             </View>
             <View style={{flex:1}}>
-              <Button icon={"keyboard-arrow-right"} onPress={() => onPressExerciseNext()}/>
+              <Button icon={"arrow-forward"} onPress={() => onPressExerciseNext()}/>
             </View>
           </View>
         </>
@@ -324,6 +326,7 @@ const SetList = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: 5,
     backgroundColor: '#000',
   },
 
