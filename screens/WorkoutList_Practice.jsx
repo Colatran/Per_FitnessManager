@@ -8,6 +8,7 @@ import ListItem_Play from "../components/ListItem_Play";
 
 
 export default function WorkoutList_Practice({ navigation }) {
+
   const [docs, setDocs] = useState([]);
 
   const ref_workouts = collection(db, workouts);

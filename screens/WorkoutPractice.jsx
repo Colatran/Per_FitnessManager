@@ -1,8 +1,9 @@
 import { StyleSheet, View, Text, FlatList } from "react-native";
-import { useEffect, useState } from "react";
-import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
-import { db, exercises, workout_exercises } from "../firebase.config";
+import { useContext, useEffect, useState } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { db, exercises, workout_exercises } from "../firebase.config";
+import { UserContext } from "../utils/UserContext";
 
 import Button from "../components/Ritch_Button";
 import Display_Set from "../components/Display_Set";
@@ -14,12 +15,11 @@ import { styles_text } from "../utils/styles";
 const ref_workout_exercises = collection(db, workout_exercises);
 
 export default function WorkoutPractice({ navigation, route }) {
+  const { getExerciseName } = useContext(UserContext);
   const { workout } = route.params;
   
   const [started, setStarted] = useState(false);
-
   const [docs, setDocs] = useState([]);
-  const [names, setNames] = useState([]);
   const [exerciseIndex, setExerciseIndex] = useState(0);
   const [setIndex, setSetIndex] = useState(0);
   const [history, setHistory] = useState([]);
@@ -28,12 +28,11 @@ export default function WorkoutPractice({ navigation, route }) {
 
   
 
-
   useEffect(() => {
     return onSnapshot(ref_workout_exercises, (snapshot) => {
       //Set Docs
       const data = snapshot.docs
-      .map((doc) => ({ id: doc.id, ...doc.data() }))
+      .map((doc) => ({ id: doc.id, name: getExerciseName(doc.data().exerciseId), ...doc.data() }))
       .filter((doc) => doc.workoutId === workout.id)
       .sort((a, b) => {
         const indexA = a.index;
@@ -48,32 +47,25 @@ export default function WorkoutPractice({ navigation, route }) {
         return 0;
       });
 
-      //Set Name docs
-      const names = [];
-      data.forEach(async (e, i) => {
-        const docRef = doc(db, exercises, e.exerciseId);
-        await getDoc(docRef)
-        .then((nameDoc) => {
-          names.push(nameDoc.data().name);
-        });
-      });
-
       //Set History docs
       const historyData = data.map((o) => ({
         exerciseId:   o.exerciseId,
         imbalance:    o.imbalance,
         index:        o.index,
+        name:         o.name,
         restTime:     o.restTime,
         sidedReps:    o.sidedReps,
         sidedLoad:    o.sidedLoad,
-        set_target:   o.target.map((oo) => ({...oo})),
-        set_achieved: o.target.map((oo) => ({reps: 0, load: oo.load})),
+        //set_target:   o.target.map((oo) => ({...oo})),
+        //set_achieved: o.target.map((oo) => ({reps: 0, load: oo.load})),
+        set_target:   o.target.map((oo) => ({reps: 20, load: 200})),
+        set_achieved: o.target.map((oo) => ({reps: 20, load: 200})),
+
         workoutId:    o.workoutId,
         date:         new Date()
       }));
-      
+
       setDocs(data);
-      setNames(names);
       setHistory(historyData);
     });
   }, []);
@@ -104,7 +96,7 @@ export default function WorkoutPractice({ navigation, route }) {
     setAchievedLoad(exercise.set_achieved[setIndex].load);
   }
   const NextSet = () => {
-    if(setIndex < docs[exerciseIndex].target.length - 1) {
+    if(setIndex < currentExerciseTEMP.target.length - 1) {
       SaveCurrentSet();
       const newSetIndex = setIndex + 1;
       SetCurrentSet(exerciseIndex, newSetIndex);
@@ -151,6 +143,9 @@ export default function WorkoutPractice({ navigation, route }) {
   const onPressSetPrevious = () => { PreviousSet(); }
   const onPressExerciseNext = () => { NextExercise(); }
   const onPressExercisePrevious = () => { PreviousExercise(); }
+  const currentExercise = history[exerciseIndex];
+
+  const currentExerciseTEMP = docs[exerciseIndex];
 
 
 
@@ -159,59 +154,69 @@ export default function WorkoutPractice({ navigation, route }) {
       {
         started ? 
         <>
-          <View style={{marginTop: 20, marginBottom: 20}}>
-            <Text style={styles.text_title}>{names[exerciseIndex]}</Text>
+          <View style={{marginTop: 10, marginBottom: 20}}>
+            <Text style={styles.text_title}>{workout.name}</Text>
+
+            <View style={{flexDirection: "row"}}>
+              <View style={{flex: 1}}>
+                <FlatList
+                  data={docs}
+                  renderItem={({item, index}) =>
+                    <ItemWithCursor
+                      condition={index === exerciseIndex}
+                      child_true={<Text style={styles_text.bold}>{item.name}</Text>}
+                      child_false={<Text style={styles_text.common}>{item.name}</Text>}
+                    />
+                  }
+                />
+              </View>
+
+              <View style={{flex: 1}}>
+                <FlatList
+                  data={currentExercise.set_target}
+                  renderItem={({index}) =>
+                    <ItemWithCursor
+                      condition={index === setIndex}
+                      child_true={
+                        <SetHistory
+                          style={{borderWidth: 1, borderColor: "#fff", paddingHorizontal: 4}}
+                          exercise={currentExercise}
+                          index={index}
+                        />
+                      }
+                      child_false={
+                        <SetHistory
+                          style={{}}
+                          exercise={currentExercise}
+                          index={index}
+                        />
+                      }
+                    />
+                  }
+                />
+              </View>
+            </View>
+          </View>
+
+
+            <View style={{borderColor: "#fff", borderTopWidth: 1, borderBottomWidth: 1, marginBottom: 20, height: 100}}/>
+
+
+
+
+
+            <Text style={styles.text_title}>{currentExerciseTEMP.name}</Text>
             {
-              docs[exerciseIndex].imbalance === 0 ?
+              currentExerciseTEMP.imbalance === 0 ?
               <></>
               :
               <View style={{flexDirection: "row", alignItems: "center"}}>
                 <MaterialIcons name={"warning"} size={30} color='yellow' />
-                <Text style={styles.text_warning}>  Weak {docs[exerciseIndex].imbalance === -1 ? "Left" : "Right"}</Text>
+                <Text style={styles.text_warning}>  Weak {currentExerciseTEMP.imbalance === -1 ? "Left" : "Right"}</Text>
               </View>
             }
-          </View>
           
           <View style={{flexDirection: "row", marginBottom: 20}}>
-            <View style={{flex: 2}}>              
-              <FlatList
-                data={docs[exerciseIndex].target}
-                renderItem={({item, index}) =>
-                  <View style={{flexDirection: "row", alignItems: "center"}}>
-                    {
-                      index === setIndex ?
-                      <MaterialIcons name={"keyboard-arrow-right"} size={30} color='white' />
-                      :
-                      <View style={{width: 30}}/>
-                    }
-                    <View style={{flex: 1}}>
-                      <Display_Set
-                        style={index === setIndex ? styles_text.bold : styles_text.common}
-                        reps={item.reps}
-                        load={item.load}
-                        sidedReps={docs[exerciseIndex].sidedReps}
-                        sidedLoad={docs[exerciseIndex].sidedLoad}
-                      />
-                    </View>
-                    <View style={{flex: 1}}>
-                    {
-                      history[exerciseIndex].set_achieved[index].reps === 0 ?
-                      <></>
-                      :
-                      <Display_Set
-                        style={index === setIndex ? styles_text.bold : styles_text.common}
-                        reps={history[exerciseIndex].set_achieved[index].reps}
-                        load={history[exerciseIndex].set_achieved[index].load}
-                        sidedReps={docs[exerciseIndex].sidedReps}
-                        sidedLoad={docs[exerciseIndex].sidedLoad}
-                      />
-                    }
-                    </View>
-                  </View>
-                }
-              />
-            </View>
-
             <View style={{flex: 1, height: 100}}>
               <View style={{flex: 1, flexDirection: "row"}}>
                 <View style={{justifyContent: "space-evenly"}}>
@@ -246,7 +251,7 @@ export default function WorkoutPractice({ navigation, route }) {
                 </View>
                 <View style={{flex: 1}}>
                 {
-                  setIndex === docs[exerciseIndex].target.length - 1 ?
+                  setIndex === currentExerciseTEMP.target.length - 1 ?
                     exerciseIndex === docs.length - 1 ?
                     <Button icon={"check"} onPress={() => onPressFinishWorkout()}/>
                     :
@@ -257,10 +262,6 @@ export default function WorkoutPractice({ navigation, route }) {
                 </View>
               </View>
             </View>
-          </View>
-
-          <View style={{borderColor: "#fff", borderTopWidth: 1, borderBottomWidth: 1, marginBottom: 20, height: 100}}>
-
           </View>
 
           <View style={{flexDirection: "row"}}>
@@ -285,7 +286,7 @@ export default function WorkoutPractice({ navigation, route }) {
               data={docs}
               renderItem={({item, index}) => 
                 <View>
-                  <Text style={styles_text.common}>{names[index]}</Text>
+                  <Text style={styles_text.common}>{docs[index].name}</Text>
                   <SetList target={item.target} sidedReps={item.sidedReps} sidedLoad={item.sidedLoad}/>
                 </View>
               }
@@ -320,6 +321,67 @@ const SetList = (props) => {
     </View>
   );
 }
+
+const ItemWithCursor = (props) => {
+  const condition = props.condition;
+  const child_true = props.child_true;
+  const child_false = props.child_false;
+
+  return (
+    <>
+      {
+        condition ?
+        <View style={{flexDirection: "row", alignItems: "center"}}>
+          <MaterialIcons name={"keyboard-arrow-right"} size={30} color='white' />
+          {child_true}
+        </View>
+        :
+        <View style={{flexDirection: "row", alignItems: "center"}}>
+          <View style={{width: 30}}/>
+          {child_false}
+        </View>
+      }
+    </>
+  )
+}
+
+const SetHistory = (props) => {
+  const style = props.style;
+  const exercise = props.exercise;
+  const index = props.index;
+
+  return (
+    <View style={style}>
+      <View style={{flex: 1}}>
+        <Display_Set
+          style={styles_text.common}
+          reps={exercise.set_target[index].reps}
+          load={exercise.set_target[index].load}
+          sidedReps={exercise.sidedReps}
+          sidedLoad={exercise.sidedLoad}
+        />
+      </View>
+      <View style={{flex: 1}}>
+      {
+        exercise.set_achieved[index].reps === 0 ?
+        <></>
+        :
+        <View style={{alignItems: "flex-end"}}>
+          <Display_Set
+            style={{color:'#fff', fontSize: 10}}
+            reps={exercise.set_achieved[index].reps}
+            load={exercise.set_achieved[index].load}
+            sidedReps={exercise.sidedReps}
+            sidedLoad={exercise.sidedLoad}
+          />
+
+        </View>
+      }
+      </View>
+    </View>
+  );
+}
+
 
 
 

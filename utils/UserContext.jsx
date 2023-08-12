@@ -13,8 +13,6 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [exerciseDocs, setExerciseDocs] = useState([]);
 
-
-
   useEffect(() => {
     return onSnapshot(ref_exercises, (snapshot) => {
       const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -36,10 +34,18 @@ export const UserProvider = ({ children }) => {
 
 
 
+  const getExerciseName = (key) => {
+    const foundObject = exerciseDocs.find(obj => obj.id === key);
+    return foundObject.name;
+  }
+
+
+
   return (
     <UserContext.Provider
       value={{
         exerciseDocs,   setExerciseDocs,
+        getExerciseName,
       }}
     >
       {children}
