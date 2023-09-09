@@ -1,14 +1,14 @@
 import { StyleSheet, View, Text, FlatList } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { db, exercises, workout_exercises } from "../firebase.config";
 import { UserContext } from "../utils/UserContext";
 
 import Button from "../components/Ritch_Button";
 import Display_Set from "../components/Display_Set";
 import TextInput from "../components/Ritch_TextInput";
-import { styles_text } from "../utils/styles";
+import { styles_text } from "../styles/styles";
 
 
 
@@ -171,7 +171,7 @@ export default function WorkoutPractice({ navigation, route }) {
                 />
               </View>
 
-              <View style={{flex: 1}}>
+              <View style={{flex: 1, alignItems: "flex-end"}}>
                 <FlatList
                   data={currentExercise.set_target}
                   renderItem={({index}) =>
@@ -179,7 +179,8 @@ export default function WorkoutPractice({ navigation, route }) {
                       condition={index === setIndex}
                       child_true={
                         <SetHistory
-                          style={{borderWidth: 1, borderColor: "#fff", paddingHorizontal: 4}}
+                          style={{fontWeight: "bold"}}
+                          viewStyle={{marginRight:20}}
                           exercise={currentExercise}
                           index={index}
                         />
@@ -187,6 +188,7 @@ export default function WorkoutPractice({ navigation, route }) {
                       child_false={
                         <SetHistory
                           style={{}}
+                          viewStyle={{marginRight:0}}
                           exercise={currentExercise}
                           index={index}
                         />
@@ -199,7 +201,7 @@ export default function WorkoutPractice({ navigation, route }) {
           </View>
 
 
-            <View style={{borderColor: "#fff", borderTopWidth: 1, borderBottomWidth: 1, marginBottom: 20, height: 100}}/>
+          <View style={{borderColor: "#fff", borderTopWidth: 1, borderBottomWidth: 1, marginBottom: 20, height: 100}}/>
 
 
 
@@ -211,7 +213,7 @@ export default function WorkoutPractice({ navigation, route }) {
               <></>
               :
               <View style={{flexDirection: "row", alignItems: "center"}}>
-                <MaterialIcons name={"warning"} size={30} color='yellow' />
+                <Icon name={"warning"} size={30} color='yellow' />
                 <Text style={styles.text_warning}>  Weak {currentExerciseTEMP.imbalance === -1 ? "Left" : "Right"}</Text>
               </View>
             }
@@ -332,7 +334,7 @@ const ItemWithCursor = (props) => {
       {
         condition ?
         <View style={{flexDirection: "row", alignItems: "center"}}>
-          <MaterialIcons name={"keyboard-arrow-right"} size={30} color='white' />
+          <Icon name={"keyboard-arrow-right"} size={30} color='white' />
           {child_true}
         </View>
         :
@@ -347,14 +349,15 @@ const ItemWithCursor = (props) => {
 
 const SetHistory = (props) => {
   const style = props.style;
+  const viewStyle= props.viewStyle;
   const exercise = props.exercise;
   const index = props.index;
 
   return (
-    <View style={style}>
+    <View style={viewStyle}>
       <View style={{flex: 1}}>
         <Display_Set
-          style={styles_text.common}
+          style={[styles_text.common, style]}
           reps={exercise.set_target[index].reps}
           load={exercise.set_target[index].load}
           sidedReps={exercise.sidedReps}
@@ -368,13 +371,12 @@ const SetHistory = (props) => {
         :
         <View style={{alignItems: "flex-end"}}>
           <Display_Set
-            style={{color:'#fff', fontSize: 10}}
+            style={[{color:'#fff', fontSize: 10}, style]}
             reps={exercise.set_achieved[index].reps}
             load={exercise.set_achieved[index].load}
             sidedReps={exercise.sidedReps}
             sidedLoad={exercise.sidedLoad}
           />
-
         </View>
       }
       </View>

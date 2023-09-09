@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import Button from "./Ritch_Button";
 import Field_TextButton from "./Field_TextButton";
-import { styles_text } from "../utils/styles";
+import { styles_text } from "../styles/styles";
 
 
 

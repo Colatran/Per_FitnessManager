@@ -6,7 +6,7 @@ import { db, exercises, workout_exercises, workouts } from "../firebase.config";
 import Button from "../components/Ritch_Button";
 import Field_TextButton from "../components/Field_TextButton";
 import Display_Set from "../components/Display_Set";
-import { styles_text } from "../utils/styles";
+import { styles_text } from "../styles/styles";
 
 
 

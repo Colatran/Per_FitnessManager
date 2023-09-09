@@ -1,7 +1,7 @@
 import { StyleSheet, Pressable, View } from "react-native";
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { android_ripple_style } from "../utils/styles";
+import { android_ripple_style } from "../styles/styles";
 
 
 
@@ -16,7 +16,7 @@ export default function Field_Boolean(props) {
         android_ripple={android_ripple_style}
         onPress={onPress}
       >
-        <MaterialIcons name={"check"} size={30}/>
+        <Icon name={"check"} size={30}/>
       </Pressable>
     </View>
   );

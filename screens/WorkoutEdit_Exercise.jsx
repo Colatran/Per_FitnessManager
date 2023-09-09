@@ -1,7 +1,7 @@
 import { StyleSheet, View, Text, FlatList } from "react-native";
 import { useEffect, useState } from "react";
 import { SelectList } from "react-native-dropdown-select-list";
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { addDoc, collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db, exercises, workout_exercises } from "../firebase.config";
 
@@ -9,7 +9,7 @@ import Button from "../components/Ritch_Button";
 import TextInput from "../components/Ritch_TextInput";
 import Field_Boolean from "../components/Field_Boolean";
 import Display_Set from "../components/Display_Set";
-import { styles_text } from "../utils/styles";
+import { styles_text } from "../styles/styles";
 
 
 
@@ -136,9 +136,9 @@ export default function WorkoutEdit_Exercise({navigation, route}) {
           data={docsExercises} 
           save="key"
           search={true}
-          searchicon={<MaterialIcons name={"search"} size={30} color='white'/>}
-          arrowicon={<MaterialIcons name={"arrow-right"} size={30} color='white'/>}
-          closeicon={<MaterialIcons name={"arrow-drop-down"} size={30} color='white'/>}
+          searchicon={<Icon name={"search"} size={30} color='white'/>}
+          arrowicon={<Icon name={"arrow-right"} size={30} color='white'/>}
+          closeicon={<Icon name={"arrow-drop-down"} size={30} color='white'/>}
           searchPlaceholder="Exercise"
           notFoundText="Not Found"
           boxStyles={{alignItems:'center', backgroundColor:'black', borderRadius: 4, borderColor: 'white'}}

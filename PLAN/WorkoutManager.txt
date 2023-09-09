@@ -1,0 +1,40 @@
+-Set
+	-Int:		TargetReps
+	-Float:		Load
+
+
+
+-Exercise
+	-String:	Name
+	
+-Workout
+	-String:	Name
+	
+-WorkoutExercise
+	-WorkoutId
+	-ExerciseId
+	-Set[]:		Target
+	-Int:		RestTime
+	-Bool:		Sided
+	-Int:		Imbalance
+
+
+
+-HistoryWorkout
+	-WorkoutId
+	-Date:		Date
+
+-HistoryWorkoutExercise
+	-HistoryWorkoutId
+	-ExerciseId
+	-Set[]:		Target
+	-Set[]:		Achived
+
+
+
+-Week
+	-WeekDay
+	-WorkoutId[]
+	
+-Month
+	-WeekId[]

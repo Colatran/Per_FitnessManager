@@ -1,5 +1,5 @@
 import { Text } from "react-native";
-import { styles_text } from "../utils/styles";
+import { styles_text } from "../styles/styles";
 
 export default function Display_Set(props) {
   const reps = props.reps;
