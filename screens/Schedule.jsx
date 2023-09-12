@@ -1,20 +1,73 @@
 import { StyleSheet, FlatList, View, Text } from "react-native";
-import { useEffect, useState } from "react";
-//import Slider from 'react-native-slider';
-import { collection, onSnapshot } from 'firebase/firestore';
-import { db, workouts } from '../firebase.config';
+import { useContext, useState } from "react";
+import { addDoc, collection, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { db, exercises, schedules } from '../firebase.config';
 
-import { styles_common, styles_text } from "../styles/styles";
+import { color_background_light, styles_common, styles_text } from "../styles/styles";
+import Button_Icon from "../components/Button_Icon";
+import Slider from "../components/Slider";
 
 
 
 const minSize = 50;
-const maxSize = 200;
 const alpha = "4";
 const borderAlpha = "6";
+const marginBetweenBlocks = 1;
 
 export default function Schedule({ navigation }) {
+  const [blocks, setBlocks] = useState([]);
   const [zoom, setZoom] = useState(1.0);
+
+
+
+
+
+  const test = {
+    title: "WeekDay",
+    blocks: [
+      {label: "Dormir",   start: 0, size: 360, color: "#0f0", },
+      {label: "Trabalho", start: 540, size: 240, color: "#33f", },
+      {label: "Intervalo", start: 780, size: 60, color: "#fff", },
+      {label: "Trabalho", start: 840, size: 240, color: "#33f", },
+      {label: "Trabalho", start: 1200, size: 15, color: "#3ff", },
+      {label: "Dormir", start: 1320, size: 120, color: "#0f0", },
+    ],
+    points: [
+      {label: "Almoço 1", point: 540},
+      {label: "Almoço 2", point: 1200}
+    ]
+  };
+
+
+
+  const setFixedBlocks = (currentBlocks) => {
+    let newBlocks = [];
+
+    for (let i = 0; i < currentBlocks.length; i++) {
+      const item = currentBlocks[i];
+      const nextStart = item.start + item.size;
+      newBlocks.push(item);
+  
+      if(i + 1 === currentBlocks.length) {
+        if(nextStart < 1440) {
+          newBlocks.push({label: " ", start: nextStart, size: 1440 - nextStart, color: "#fff"});
+        }
+      }
+      else {
+        const nextItem = currentBlocks[i + 1];
+        if(nextStart < nextItem.start) {
+          newBlocks.push({label: " ", start: nextStart, size: nextItem.start - nextStart, color: "#fff"});
+        }
+      }
+    }
+
+    setBlocks(newBlocks);
+  }
+
+  
+
+
+
 
   const handleZoomChange = (value) => {
     setZoom(value);
@@ -22,92 +75,45 @@ export default function Schedule({ navigation }) {
 
 
 
-  const block = [
-    {label: "Dormir",   start: 0, size: 360, color: "#0f0", },
-    {label: "Trabalho", start: 540, size: 240, color: "#33f", },
-    {label: "Intervalo", start: 780, size: 60, color: "#fff", },
-    {label: "Trabalho", start: 840, size: 240, color: "#33f", },
-    {label: "Trabalho", start: 1200, size: 20, color: "#3ff", },
-    {label: "Dormir", start: 1320, size: 120, color: "#0f0", },
-  ];
-
-
-
-  const newBlock = [];  
-  for (let i = 0; i < block.length; i++) {
-    const item = block[i];
-    const nextStart = item.start + item.size;
-    newBlock.push(item);
-
-    if(i + 1 === block.length) {
-      if(nextStart < 1440) {
-        newBlock.push({label: "", start: nextStart, size: 1440 - nextStart, color: "#fff"});
-      }
-    }
-    else {
-      const nextItem = block[i + 1];
-      if(nextStart < nextItem.start) {
-        newBlock.push({label: "", start: nextStart, size: nextItem.start - nextStart, color: "#fff"});
-      }
-    }
-    
-  }
-
-  
-
   return (
     <View style={styles_common.container}>
-      {/*
-      <View>
-        <Text style={styles_text.common}>Zoom: {zoom.toFixed(2)}</Text>
-        <Slider
-          value={zoom}
-          onValueChange={handleZoomChange}
-          minimumValue={0}
-          maximumValue={1}
-          step={0.01}
-          style={{ width: 300 }}
-          thumbTintColor="#007AFF"
-          minimumTrackTintColor="#007AFF"
-          maximumTrackTintColor="#000000"
-        />
-  </View>*/}
 
-      <View style={{flexDirection: "row"}}>
+      <View style={{margin: 15, justifyContent: "center", alignItems: "center"}}>
+        <Text style={styles_text.title}>Title</Text>
+      </View>
+    
+      <View style={{flex:1, flexDirection: "row"}}>
         <View style={{flex:1}}>
           <FlatList
-            data={newBlock}
+            data={test.blocks}
             renderItem={({item}) => {
-              const size = item.size;
+              const size = item.size * zoom;
               return(
                 <View style={{
-                  //height: size < minSize ? minSize : size > maxSize ? maxSize : size,
-                  height: size * zoom,
+                  height: size < minSize ? minSize : size,
                   backgroundColor: item.color + alpha,
                   borderColor: item.color + borderAlpha,
                   borderWidth: 1,
                   borderRadius: 10,
-                  margin: 1,
+                  margin: marginBetweenBlocks,
                   paddingHorizontal: 5,
+                  paddingVertical: 3
                 }}>
-                  <View style={{flexDirection: "row"}}>
+                  
+                  <View style={{flexDirection: "row", flex: 1}}>
                     <View style={{flex: 1}}>
-                      <Text style={styles_text.common}>{getTimeFromMinutes(item.start)}</Text>
+                      <Text style={styles_text.common}>{getTimeFromMinutes(item.start)} - {item.label}</Text>
+                      <Text style={styles_text.common}>{getDurationFromMinuts(item.size)}</Text>
+                      <View style={{flex: 1, justifyContent: "flex-end"}}>
+                        <Text style={styles_text.common}>{getTimeFromMinutes(item.start + item.size)}</Text>
+                      </View>
                     </View>
-                    
-                    <View style={{flex: 1, alignItems: "center"}}>
-                      <Text style={styles_text.common}>{getTimeFromMinutes(item.size)}</Text>
-                    </View>
-
-                    <View style={{flex: 1, alignItems: "flex-end"}}>
-                      <Text style={styles_text.common}>{item.label}</Text>
+                    <View>
+                      <Button_Icon icon="pencil"/>
                     </View>
                   </View>
-
-                  <View style={{flex: 1, justifyContent: "flex-end"}}>
-                    <Text style={styles_text.common}>{getTimeFromMinutes(item.start + item.size)}</Text>
-                  </View>
-                </View>
+                  
+              </View>
               );
             }}
           />
@@ -118,18 +124,39 @@ export default function Schedule({ navigation }) {
         </View>
       </View>
 
+      <View style={{marginTop: 10, justifyContent: "center"}}>
+        <View style={{alignItems: "center"}}>
+          <Text style={styles_text.common}>Zoom: {zoom.toFixed(2)}</Text>
+        </View>
+        <Slider value={zoom} onValueChange={(value) => handleZoomChange(value)} />
+      </View>
+
     </View>
   );
 }
 
 
 
+function getHoursNMinutsFromMinutes(minutes) {
+  return {
+    h: parseInt(minutes/60),
+    m: parseInt(minutes%60),
+  }
+}
 function getTimeFromMinutes(minutes) {
-  const h = parseInt(minutes/60).toString().padStart(2, '0');
-  const m = parseInt(minutes%60).toString().padStart(2, '0');
+  const hm = getHoursNMinutsFromMinutes(minutes);
+  const h = hm.h.toString().padStart(2, '0');
+  const m = hm.m.toString().padStart(2, '0');
   return `${h}:${m}`;
 }
+function getDurationFromMinuts(minutes) {
+  const hm = getHoursNMinutsFromMinutes(minutes);
 
+  let h = hm.h === 0 ? "" : hm.h.toString() + "h";
+  let m = hm.m === 0 ? "" : hm.m.toString() + "min";
+
+  return `${h}${m}`;
+}
 
 
 

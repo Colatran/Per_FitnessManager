@@ -3,15 +3,17 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { UserProvider } from './utils/UserContext';
 
+/*
 import ExercisesList from './screens/ExercisesList';
 import WorkoutList_Practice from './screens/WorkoutList_Practice';
 import WorkoutList_Manage from './screens/WorkoutList_Manage';
 import WorkoutEdit from './screens/WorkoutEdit';
 import WorkoutEdit_Exercise from './screens/WorkoutEdit_Exercise';
-import WorkoutPractice from './screens/WorkoutPractice';
-import { UserProvider } from './utils/UserContext';
+import WorkoutPractice from './screens/WorkoutPractice';*/
 import Schedule from './screens/Schedule';
+import ScheduleList from './screens/ScheduleList';
 import { color_background_light } from './styles/styles';
 
 
@@ -43,7 +45,7 @@ export default function App() {
               }
             }}
           >
-            <Tab.Screen 
+            {/*<Tab.Screen 
               name="Tab_Practice"
               options={TabOptions("Practice", "play")}
               component={Stack_Practice}
@@ -62,7 +64,7 @@ export default function App() {
               name="Tab_History"
               options={TabOptions("History", "history")}
               component={Stack_Exercises}
-            />
+            />*/}
             <Tab.Screen 
               name="Tab_Schedule"
               options={TabOptions("Schedule", "calendar-month")}
@@ -102,7 +104,7 @@ const TabOptions = (title, icon) => {
 }
 
 
-
+/*
 function Stack_Practice() {
   return (
     <Stack.Navigator initialRouteName='WorkoutList'>
@@ -144,12 +146,16 @@ function Stack_Workouts() {
         options={StackOptions("Exercise")}/>
     </Stack.Navigator>
   );
-}
+}*/
 function Stack_Schedule() {
   return (
-    <Stack.Navigator initialRouteName='Workouts'>
+    <Stack.Navigator initialRouteName='ScheduleList'>
       <Stack.Screen 
-        name='WorkoutList'
+        name='ScheduleList'
+        component={ScheduleList}
+        options={StackOptions("Schedules")}/>
+      <Stack.Screen 
+        name='Schedule'
         component={Schedule}
         options={StackOptions("Schedule")}/>
     </Stack.Navigator>

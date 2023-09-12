@@ -14,6 +14,12 @@ export const styles_common = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 5,
     backgroundColor: background_dark,
+  },
+
+  container_front: {
+    borderRadius: 10,
+    backgroundColor: color_background_light,
+    elevation: 4
   }
 });
 
@@ -21,11 +27,26 @@ export const styles_common = StyleSheet.create({
 
 export const styles_text = StyleSheet.create({
   common: {
-    color:'#fff'
+    color:"#fff",
+    shadowColor: "#000",
+    textShadowColor: '#0005',
+    textShadowOffset: {width: 1, height: 1},
+    textShadowRadius: 5
   },
   bold: {
     color:'#fff',
     fontWeight: 'bold',
+    textShadowColor: '#0005',
+    textShadowOffset: {width: 1, height: 1},
+    textShadowRadius: 5
+  },
+  title: {
+    color: "#fff",
+    fontWeight: 'bold',
+    fontSize: 20,
+    textShadowColor: '#000',
+    textShadowOffset: {width: 1, height: 1},
+    textShadowRadius: 10,
   },
 
   black_bold: {
