@@ -1,72 +1,28 @@
-import { StyleSheet, FlatList, View, Text } from "react-native";
-import { useContext, useState } from "react";
+import { StyleSheet, View, Text, FlatList, ScrollView} from "react-native";
+import { useContext, useEffect, useState } from "react";
 import { addDoc, collection, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db, exercises, schedules } from '../firebase.config';
 
 import { color_background_light, styles_common, styles_text } from "../styles/styles";
 import Button_Icon from "../components/Button_Icon";
 import Slider from "../components/Slider";
+import Block from "../components/screen_Schedule/Block";
+import Pin from "../components/screen_Schedule/Pin";
 
 
 
-const minSize = 50;
-const alpha = "4";
-const borderAlpha = "6";
-const marginBetweenBlocks = 1;
+const block_minSize = 50;
+const block_alpha = "4";
+const block_borderAlpha = "6";
+const block_marginBetween = 1;
+const pin_height = 20;
 
-export default function Schedule({ navigation }) {
-  const [blocks, setBlocks] = useState([]);
+export default function Schedule({ navigation, route }) {
+  const { item } = route.params;
+
   const [zoom, setZoom] = useState(1.0);
-
-
-
-
-
-  const test = {
-    title: "WeekDay",
-    blocks: [
-      {label: "Dormir",   start: 0, size: 360, color: "#0f0", },
-      {label: "Trabalho", start: 540, size: 240, color: "#33f", },
-      {label: "Intervalo", start: 780, size: 60, color: "#fff", },
-      {label: "Trabalho", start: 840, size: 240, color: "#33f", },
-      {label: "Trabalho", start: 1200, size: 15, color: "#3ff", },
-      {label: "Dormir", start: 1320, size: 120, color: "#0f0", },
-    ],
-    points: [
-      {label: "Almoço 1", point: 540},
-      {label: "Almoço 2", point: 1200}
-    ]
-  };
-
-
-
-  const setFixedBlocks = (currentBlocks) => {
-    let newBlocks = [];
-
-    for (let i = 0; i < currentBlocks.length; i++) {
-      const item = currentBlocks[i];
-      const nextStart = item.start + item.size;
-      newBlocks.push(item);
-  
-      if(i + 1 === currentBlocks.length) {
-        if(nextStart < 1440) {
-          newBlocks.push({label: " ", start: nextStart, size: 1440 - nextStart, color: "#fff"});
-        }
-      }
-      else {
-        const nextItem = currentBlocks[i + 1];
-        if(nextStart < nextItem.start) {
-          newBlocks.push({label: " ", start: nextStart, size: nextItem.start - nextStart, color: "#fff"});
-        }
-      }
-    }
-
-    setBlocks(newBlocks);
-  }
-
-  
-
-
+  const [blocks, setBlocks] = useState(getFixedBlocksWithPins(item.blocks, item.pins));
+  console.log(blocks);
 
 
   const handleZoomChange = (value) => {
@@ -79,47 +35,34 @@ export default function Schedule({ navigation }) {
     <View style={styles_common.container}>
 
       <View style={{margin: 15, justifyContent: "center", alignItems: "center"}}>
-        <Text style={styles_text.title}>Title</Text>
+        <Text style={styles_text.title}>{item.title}</Text>
       </View>
     
       <View style={{flex:1, flexDirection: "row"}}>
-        <View style={{flex:1}}>
-          <FlatList
-            data={test.blocks}
-            renderItem={({item}) => {
-              const size = item.size * zoom;
-              return(
-                <View style={{
-                  height: size < minSize ? minSize : size,
-                  backgroundColor: item.color + alpha,
-                  borderColor: item.color + borderAlpha,
-                  borderWidth: 1,
-                  borderRadius: 10,
-                  margin: marginBetweenBlocks,
-                  paddingHorizontal: 5,
-                  paddingVertical: 3
-                }}>
-                  
-                  <View style={{flexDirection: "row", flex: 1}}>
-                    <View style={{flex: 1}}>
-                      <Text style={styles_text.common}>{getTimeFromMinutes(item.start)} - {item.label}</Text>
-                      <Text style={styles_text.common}>{getDurationFromMinuts(item.size)}</Text>
-                      <View style={{flex: 1, justifyContent: "flex-end"}}>
-                        <Text style={styles_text.common}>{getTimeFromMinutes(item.start + item.size)}</Text>
-                      </View>
-                    </View>
-                    <View>
-                      <Button_Icon icon="pencil"/>
-                    </View>
-                  </View>
-                  
-              </View>
-              );
-            }}
-          />
-        </View>
 
         <View style={{flex:1}}>
+             
+                <FlatList
+                  data={blocks}
+                  renderItem={({item}) => 
+                    <Block
+                      start = {item.start}
+                      size = {item.size}
+                      label = {item.label}
+                      color = {item.color}
+                      minSize = {block_minSize}
+                      alpha = {block_alpha}
+                      borderAlpha = {block_borderAlpha}
+                      marginBetweenBlocks = {block_marginBetween}
+                      zoom = {zoom}
+                      pins = {item.pins}
+                      pin_height = {pin_height}
+                    />
+                  }
+                />
+        </View>
+
+        <View style={{flex:0}}>
           
         </View>
       </View>
@@ -137,27 +80,92 @@ export default function Schedule({ navigation }) {
 
 
 
-function getHoursNMinutsFromMinutes(minutes) {
-  return {
-    h: parseInt(minutes/60),
-    m: parseInt(minutes%60),
+const getFixedBlocksWithPins = (currentBlocks, pins) => {
+  let newBlocks = [];
+  let lastPinIndex = {i: 0};
+
+  for (let i = 0; i < currentBlocks.length; i++) {
+    const block = currentBlocks[i];
+    const block_start = block.start;
+    const block_size = block.size;
+    const nextStart = block_start + block_size;
+
+    pushNewBlock(newBlocks, block, pins, lastPinIndex);
+
+    if(i + 1 === currentBlocks.length) {
+      if(nextStart < 1440) {
+        const newBlock = {label: " ", start: nextStart, size: 1440 - nextStart, color: "#fff"};
+        pushNewBlock(newBlocks, newBlock, pins, lastPinIndex);
+      }
+    }
+    else {
+      const nextBlock = currentBlocks[i + 1];
+      if(nextStart < nextBlock.start) {
+        const newBlock = {label: " ", start: nextStart, size: nextBlock.start - nextStart, color: "#fff"};
+        pushNewBlock(newBlocks, newBlock, pins, lastPinIndex);
+      }
+    }
   }
-}
-function getTimeFromMinutes(minutes) {
-  const hm = getHoursNMinutsFromMinutes(minutes);
-  const h = hm.h.toString().padStart(2, '0');
-  const m = hm.m.toString().padStart(2, '0');
-  return `${h}:${m}`;
-}
-function getDurationFromMinuts(minutes) {
-  const hm = getHoursNMinutsFromMinutes(minutes);
 
-  let h = hm.h === 0 ? "" : hm.h.toString() + "h";
-  let m = hm.m === 0 ? "" : hm.m.toString() + "min";
+  return newBlocks;
+}
+const pushNewBlock = (newBlocks, block, pins, lastPinIndex) =>  {
+  const start = block.start;
+  const size = block.size;
+  const correspondingPins = getCorrespondingPinsWithFixedMargin(pins, start, size, lastPinIndex);
 
-  return `${h}${m}`;
+  if(correspondingPins.length == 0) newBlocks.push(block);
+  else newBlocks.push({...block, pins: correspondingPins});
+}
+const getCorrespondingPinsWithFixedMargin = (pins, start, size, lastPinIndex) => {
+  const corresponding = getCorrespondingPins(pins, start, size, lastPinIndex);
+  const totalPinHeight = corresponding.length * 5;
+
+  let fixedCorresponding = [];
+
+  if(totalPinHeight > size) {
+    corresponding.forEach(pin => {
+      fixedCorresponding.push({...pin, margin: 0});
+    });
+  }
+  else {
+    corresponding.forEach(pin => {
+      const totalHeight = totalPinHeight + size;
+      const heightFactor = size / totalHeight;
+      const absoluteMargin = pin.pos - start;
+
+      let margin = heightFactor * absoluteMargin;
+      if(margin + pin_height > size ) margin = size - pin_height;
+
+      fixedCorresponding.push({...pin, margin: margin});
+    });
+  }
+
+  return fixedCorresponding;
 }
 
+const getCorrespondingPins = (pins, start, size, lastPinIndex) => {
+  const end = start + size;
+
+  let correspondingPins = [];
+
+  for (let i = lastPinIndex.i; i < pins.length; i++) {
+    const pin = pins[i];
+    const pin_pos = pin.pos;
+
+    if(pin_pos >= start) {
+      if(pin_pos > end) {
+        lastPinIndex.i = i;
+        return correspondingPins;
+      }
+      else {
+        correspondingPins.push(pin);
+      }
+    }
+  }
+
+  return correspondingPins;
+}
 
 
 const styles = StyleSheet.create({
