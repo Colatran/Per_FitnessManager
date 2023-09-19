@@ -50,13 +50,13 @@ export default function Schedule({ navigation, route }) {
                       size = {item.size}
                       label = {item.label}
                       color = {item.color}
+                      pins = {item.pins}
+                      pin_height = {pin_height}
                       minSize = {block_minSize}
                       alpha = {block_alpha}
                       borderAlpha = {block_borderAlpha}
                       marginBetweenBlocks = {block_marginBetween}
                       zoom = {zoom}
-                      pins = {item.pins}
-                      pin_height = {pin_height}
                     />
                   }
                 />
@@ -112,38 +112,11 @@ const getFixedBlocksWithPins = (currentBlocks, pins) => {
 const pushNewBlock = (newBlocks, block, pins, lastPinIndex) =>  {
   const start = block.start;
   const size = block.size;
-  const correspondingPins = getCorrespondingPinsWithFixedMargin(pins, start, size, lastPinIndex);
+  const correspondingPins = getCorrespondingPins(pins, start, size, lastPinIndex);
 
   if(correspondingPins.length == 0) newBlocks.push(block);
   else newBlocks.push({...block, pins: correspondingPins});
 }
-const getCorrespondingPinsWithFixedMargin = (pins, start, size, lastPinIndex) => {
-  const corresponding = getCorrespondingPins(pins, start, size, lastPinIndex);
-  const totalPinHeight = corresponding.length * 5;
-
-  let fixedCorresponding = [];
-
-  if(totalPinHeight > size) {
-    corresponding.forEach(pin => {
-      fixedCorresponding.push({...pin, margin: 0});
-    });
-  }
-  else {
-    corresponding.forEach(pin => {
-      const totalHeight = totalPinHeight + size;
-      const heightFactor = size / totalHeight;
-      const absoluteMargin = pin.pos - start;
-
-      let margin = heightFactor * absoluteMargin;
-      if(margin + pin_height > size ) margin = size - pin_height;
-
-      fixedCorresponding.push({...pin, margin: margin});
-    });
-  }
-
-  return fixedCorresponding;
-}
-
 const getCorrespondingPins = (pins, start, size, lastPinIndex) => {
   const end = start + size;
 
@@ -159,7 +132,8 @@ const getCorrespondingPins = (pins, start, size, lastPinIndex) => {
         return correspondingPins;
       }
       else {
-        correspondingPins.push(pin);
+        const marginFactor = (pin_pos - start) / size;
+        correspondingPins.push({...pin, marginFactor: marginFactor});
       }
     }
   }
