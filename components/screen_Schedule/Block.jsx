@@ -3,6 +3,7 @@ import Button_Icon from "../Button_Icon";
 
 import { getDurationText_FromMinuts, getTimeText_FromMinutes } from "../../utils/Funtions";
 import { styles_text } from "../../styles/styles";
+import Pin from "./Pin";
 
 
 
@@ -33,7 +34,6 @@ export default function Block(props) {
       margin: marginBetweenBlocks,
       flexDirection: "row",
     }}>
- <View style= {{flex: 1}}></View>
       <View style={{
         flex: 1,
         backgroundColor: color + alpha,
@@ -57,31 +57,20 @@ export default function Block(props) {
         </View>
       </View>
 
-      <View style= {{flex: 1}}>
+      <View style= {{flex: 1, paddingTop: pin_height/2, paddingBottom: 100}}>
         <FlatList
           data={pins}
           renderItem={({item}) => {
             return (
-              <View style={{
-                position: "relative",
-                top:  item.marginFactor * height,
-                height: pin_height,
-                alignItems: "center",
-                flexDirection: "row",
-              }}>
-                <View style={{
-                  backgroundColor: "#fff",
-                  width: 10,
-                  height: 1}}/>
-                <View style={{
-                  backgroundColor: item.color,
-                  width: pin_height, height: pin_height,
-                  borderRadius: pin_height}}/>
-                <Text style={styles_text.common}> {getTimeText_FromMinutes(item.pos)}  </Text>
-                <Text style={styles_text.common}>{item.pos}</Text>
-                <Text style={styles_text.common}> {item.marginFactor} </Text>
-                <Text style={styles_text.common}> {getTimeText_FromMinutes(item.pos)} - {item.label} </Text>
-            </View>
+              <Pin
+                pos={item.pos}
+                label={item.label}
+                color={item.color}
+                marginFactor={item.marginFactor}
+                index={item.index}
+                height={pin_height}
+                blockHeight={height}
+              />
             );
           }}
         />

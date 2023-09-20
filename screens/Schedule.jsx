@@ -22,7 +22,7 @@ export default function Schedule({ navigation, route }) {
 
   const [zoom, setZoom] = useState(1.0);
   const [blocks, setBlocks] = useState(getFixedBlocksWithPins(item.blocks, item.pins));
-  console.log(blocks);
+
 
 
   const handleZoomChange = (value) => {
@@ -41,25 +41,24 @@ export default function Schedule({ navigation, route }) {
       <View style={{flex:1, flexDirection: "row"}}>
 
         <View style={{flex:1}}>
-             
-                <FlatList
-                  data={blocks}
-                  renderItem={({item}) => 
-                    <Block
-                      start = {item.start}
-                      size = {item.size}
-                      label = {item.label}
-                      color = {item.color}
-                      pins = {item.pins}
-                      pin_height = {pin_height}
-                      minSize = {block_minSize}
-                      alpha = {block_alpha}
-                      borderAlpha = {block_borderAlpha}
-                      marginBetweenBlocks = {block_marginBetween}
-                      zoom = {zoom}
-                    />
-                  }
-                />
+          <FlatList
+            data={blocks}
+            renderItem={({item, index}) => 
+              <Block
+                start = {item.start}
+                size = {item.size}
+                label = {item.label}
+                color = {item.color}
+                pins = {item.pins}
+                pin_height = {pin_height}
+                minSize = {block_minSize}
+                alpha = {block_alpha}
+                borderAlpha = {block_borderAlpha}
+                marginBetweenBlocks = {block_marginBetween}
+                zoom = {zoom}
+              />
+            }
+          />
         </View>
 
         <View style={{flex:0}}>
@@ -121,6 +120,7 @@ const getCorrespondingPins = (pins, start, size, lastPinIndex) => {
   const end = start + size;
 
   let correspondingPins = [];
+  let currIndex = 0;
 
   for (let i = lastPinIndex.i; i < pins.length; i++) {
     const pin = pins[i];
@@ -133,7 +133,8 @@ const getCorrespondingPins = (pins, start, size, lastPinIndex) => {
       }
       else {
         const marginFactor = (pin_pos - start) / size;
-        correspondingPins.push({...pin, marginFactor: marginFactor});
+        correspondingPins.push({...pin, marginFactor: marginFactor, index: currIndex});
+        currIndex++;
       }
     }
   }
