@@ -26,7 +26,8 @@ export default function Block(props) {
   const minHeight = minSize < totalPinHeight ? totalPinHeight : minSize;
 
   const height = sizeWithZoom < minHeight ? minHeight : sizeWithZoom;
-  
+
+
 
   return (
     <View style={{
@@ -57,7 +58,7 @@ export default function Block(props) {
         </View>
       </View>
 
-      <View style= {{flex: 1, paddingTop: pin_height/2, paddingBottom: 100}}>
+      <View style= {{flex: 1, paddingTop: pin_height/2, backgroundColor: "#f004"}}>
         <FlatList
           data={pins}
           renderItem={({item}) => {

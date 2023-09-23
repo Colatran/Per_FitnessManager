@@ -1,13 +1,9 @@
 import { StyleSheet, View, Text, FlatList, ScrollView} from "react-native";
 import { useContext, useEffect, useState } from "react";
-import { addDoc, collection, deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { db, exercises, schedules } from '../firebase.config';
 
-import { color_background_light, styles_common, styles_text } from "../styles/styles";
-import Button_Icon from "../components/Button_Icon";
-import Slider from "../components/Slider";
-import Block from "../components/screen_Schedule/Block";
-import Pin from "../components/screen_Schedule/Pin";
+import { color_background_light, styles_common, styles_text } from "../../styles/styles";
+import Slider from "../../components/Slider";
+import Block from "../../components/screen_Schedule/Block";
 
 
 
@@ -79,28 +75,39 @@ export default function Schedule({ navigation, route }) {
 
 
 
+
 const getFixedBlocksWithPins = (currentBlocks, pins) => {
   let newBlocks = [];
   let lastPinIndex = {i: 0};
 
+  if(currentBlocks.length == 0) { //isEmpty
+    const block = {label: "", start: 0, size: 1440, color: "#fff"};;
+    pushNewBlock(newBlocks, block, pins, lastPinIndex);
+  }
+  else if(currentBlocks[0].start > 0) { //itDosentStartInTheBeginning
+    const size = currentBlocks[0].start;
+    const block = {label: "", start: 0, size: size, color: "#fff"};;
+    pushNewBlock(newBlocks, block, pins, lastPinIndex);
+  }
+
   for (let i = 0; i < currentBlocks.length; i++) {
     const block = currentBlocks[i];
+    pushNewBlock(newBlocks, block, pins, lastPinIndex);
+
     const block_start = block.start;
     const block_size = block.size;
     const nextStart = block_start + block_size;
 
-    pushNewBlock(newBlocks, block, pins, lastPinIndex);
-
-    if(i + 1 === currentBlocks.length) {
-      if(nextStart < 1440) {
-        const newBlock = {label: " ", start: nextStart, size: 1440 - nextStart, color: "#fff"};
+    if(i === currentBlocks.length - 1) {  //isTheLast  
+      if(nextStart < 1440) {  //itDosentFinishInTheEnd
+        const newBlock = {label: "", start: nextStart, size: 1440 - nextStart, color: "#fff"};
         pushNewBlock(newBlocks, newBlock, pins, lastPinIndex);
       }
     }
-    else {
+    else {  // isNotTheLast
       const nextBlock = currentBlocks[i + 1];
-      if(nextStart < nextBlock.start) {
-        const newBlock = {label: " ", start: nextStart, size: nextBlock.start - nextStart, color: "#fff"};
+      if(nextStart < nextBlock.start) { //isNotConnectedToTheNext
+        const newBlock = {label: "", start: nextStart, size: nextBlock.start - nextStart, color: "#fff"};
         pushNewBlock(newBlocks, newBlock, pins, lastPinIndex);
       }
     }
@@ -141,6 +148,7 @@ const getCorrespondingPins = (pins, start, size, lastPinIndex) => {
 
   return correspondingPins;
 }
+
 
 
 const styles = StyleSheet.create({

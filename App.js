@@ -12,9 +12,11 @@ import WorkoutList_Manage from './screens/WorkoutList_Manage';
 import WorkoutEdit from './screens/WorkoutEdit';
 import WorkoutEdit_Exercise from './screens/WorkoutEdit_Exercise';
 import WorkoutPractice from './screens/WorkoutPractice';*/
-import Schedule from './screens/Schedule';
-import ScheduleList from './screens/ScheduleList';
+import Schedule from './screens/Schedule/Schedule';
+import ScheduleList from './screens/Schedule/ScheduleList';
 import { color_background_light } from './styles/styles';
+import IngredientList from './screens/Food/IngredientList';
+import IngredientEdit from './screens/Food/IngredientEdit';
 
 
 const Stack = createStackNavigator();
@@ -25,8 +27,9 @@ export default function App() {
     <UserProvider>
       <View style={{flex: 1}}>
         <NavigationContainer>
+          
           <Tab.Navigator
-            initialRouteName='Tab_Schedule'
+            initialRouteName='Tab_Food'
             screenOptions={{
               headerShown: false,
               tabBarActiveTintColor: '#fff',              
@@ -65,6 +68,11 @@ export default function App() {
               options={TabOptions("History", "history")}
               component={Stack_Exercises}
             />*/}
+            <Tab.Screen 
+              name="Tab_Food"
+              options={TabOptions("Food", "food-drumstick")}
+              component={Stack_Food}
+            />
             <Tab.Screen 
               name="Tab_Schedule"
               options={TabOptions("Schedule", "calendar-month")}
@@ -158,6 +166,20 @@ function Stack_Schedule() {
         name='Schedule'
         component={Schedule}
         options={StackOptions("Schedule")}/>
+    </Stack.Navigator>
+  );
+}
+function Stack_Food() {
+  return (
+    <Stack.Navigator initialRouteName='Ingredient'>
+      <Stack.Screen 
+        name='IngredientEdit'
+        component={IngredientEdit}
+        options={StackOptions("Ingredient")}/>
+      <Stack.Screen 
+        name='IngredientList'
+        component={IngredientList}
+        options={StackOptions("IngredientList")}/>
     </Stack.Navigator>
   );
 }

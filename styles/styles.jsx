@@ -1,18 +1,19 @@
 import { StyleSheet } from 'react-native';
-import { background_dark, background_light } from './colors';
+import { background_dark, background_input, background_light } from './colors';
 
 
 
 
 export const color_background_dark = background_dark;
 export const color_background_light = background_light;
+export const color_background_input = background_input;
 
 
 
 export const styles_common = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 5,
+    paddingHorizontal: 10,
     backgroundColor: background_dark,
   },
 

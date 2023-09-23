@@ -1,17 +1,17 @@
 import { StyleSheet, View, FlatList, Text } from "react-native";
 import { useEffect, useState } from "react";
 import { addDoc, collection, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
-import { db, schedules } from '../firebase.config';
 
-import { color_background_dark, styles_common, styles_text } from "../styles/styles";
-import Button_Icon from "../components/Button_Icon";
+
+import { color_background_dark, styles_common, styles_text } from "../../styles/styles";
+import Button_Icon from "../../components/Button_Icon";
+import { db, schedules } from "../../firebase.config";
 
 
 const ref_schedules = collection(db, schedules);
 
 export default function ScheduleList({ navigation }) {
   const [docs, setDocs] = useState([]);
-  const [files, setFiles] = useState([])
 
 
   useEffect(() => {

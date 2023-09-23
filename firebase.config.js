@@ -22,3 +22,4 @@ export const exercises = "exercises";
 export const workouts = "workouts";
 export const workout_exercises = "workout_exercises";
 export const schedules = "schedules";
+export const food_ingredients = "food_ingredients";

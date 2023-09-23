@@ -1,5 +1,5 @@
 import { Pressable, View } from "react-native";
-import { android_ripple_style, color_background_light, styles_common } from "../styles/styles";
+import { android_ripple_style, styles_common } from "../styles/styles";
 
 
 

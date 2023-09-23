@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import { SelectList } from "react-native-dropdown-select-list";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { addDoc, collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
-import { db, exercises, workout_exercises } from "../firebase.config";
+import { db, exercises, workout_exercises } from "../../firebase.config";
 
 import Button from "../components/Ritch_Button";
 import TextInput from "../components/Ritch_TextInput";
 import Field_Boolean from "../components/Field_Boolean";
 import Display_Set from "../components/Display_Set";
-import { styles_text } from "../styles/styles";
+import { styles_text } from "../../styles/styles";
 
 
 

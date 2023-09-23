@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import Button_Icon from "../Button_Icon";
 
-import { getDurationText_FromMinuts, getTimeText_FromMinutes } from "../../utils/Funtions";
+import { getTimeText_FromMinutes } from "../../utils/Funtions";
 import { styles_text } from "../../styles/styles";
 
 
@@ -32,7 +32,8 @@ export default function Pin(props) {
         backgroundColor: color,
         height: height,
         borderRadius: height}}>
-        <Text style={[styles_text.common, {zIndex:10}]}>  {getTimeText_FromMinutes(pos)} - {label}  </Text>
+        {/*<Text style={[styles_text.common, {zIndex:10}]}>  {getTimeText_FromMinutes(pos)} - {label} - {marginFactor} </Text>*/}
+        <Text style={[styles_text.common, {zIndex:10}]}> {getTimeText_FromMinutes(pos)} - {marginFactor} - {marginFactor * blockHeight - index * height*2}</Text>
       </View>
   </View>
   );
