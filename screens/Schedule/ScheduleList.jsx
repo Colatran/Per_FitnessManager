@@ -47,12 +47,12 @@ export default function ScheduleList({ navigation }) {
   return (
     <View style={styles_common.container}>
       
-      <View style={{flex: 1}}>
+      <View style={styles_common.container_list}>
         <FlatList
           data={docs}
           renderItem={({item}) => { 
             return(
-              <View style={[styles_common.container_front, {paddingHorizontal: 8, paddingVertical: 4, marginVertical: 10, flexDirection: "row", alignItems: "center"}]}>
+              <View style={[styles_common.container_front, styles_common.container_list_item]}>
                 <Button_Icon style={[styles.button, {marginRight: 8}]} icon="eye" onPress={() => handleOnPressView(item)}/>
                 <Text style={styles_text.common}>{item.title}</Text>
                 <View style={{flex: 1, justifyContent: "flex-end", flexDirection: "row"}}>

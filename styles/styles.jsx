@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
-import { background_dark, background_input, background_light, button_confirmation } from './colors';
+import { background_dark, background_input, background_light, button_green, button_red } from './colors';
 
 
 
 export const color_background_dark = background_dark;
 export const color_background_light = background_light;
 export const color_background_input = background_input;
-export const color_button_confirmation = button_confirmation;
+export const color_button_green = button_green;
+export const color_button_red = button_red ;
 
 
 
@@ -20,7 +21,19 @@ export const styles_common = StyleSheet.create({
   container_front: {
     borderRadius: 10,
     backgroundColor: color_background_light,
-    elevation: 4
+    elevation: 4,
+  },
+
+  container_list: {
+    flex: 1,
+    marginVertical: 10
+  },
+  container_list_item: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    marginVertical: 5,
+    flexDirection: "row",
+    alignItems: "center"
   }
 });
 

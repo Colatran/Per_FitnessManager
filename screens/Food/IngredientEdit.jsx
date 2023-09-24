@@ -1,11 +1,10 @@
-import { StyleSheet, View, Text } from "react-native";
+import { View, Text } from "react-native";
 import { useState } from "react";
-
-import { color_button_confirmation, styles_common, styles_text } from "../../styles/styles";
+import { ref_food_ingredients } from "../../firebase.config";
+import { addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { color_button_green, color_button_red, styles_common, styles_text } from "../../styles/styles";
 import Input_TextLabel from "../../components/Input_TextLabel";
 import Button_Icon from "../../components/Button_Icon";
-import { addDoc, doc, updateDoc } from "firebase/firestore";
-import { ref_food_ingredients } from "../../firebase.config";
 
 
 
@@ -13,16 +12,18 @@ const margin = 5;
 export default function IngredientEdit({ navigation, route }) {
   const { ingredient } = route.params;
 
-  const [label, setLabel]         = useState(ingredient ? ingredient.label : "");
-  const [unit, setUnit]           = useState(ingredient ? ingredient.unit : 0);
-  const [energy, setEnergy]       = useState(ingredient ? ingredient.energy : 0);
-  const [fats, setFats]           = useState(ingredient ? ingredient.fats : 0);
-  const [saturates, setSaturates] = useState(ingredient ? ingredient.saturates : 0);
-  const [carbs, setCarbs]         = useState(ingredient ? ingredient.carbs : 0);
-  const [sugars, setSugar]        = useState(ingredient ? ingredient.sugars : 0);
-  const [protein, setProtein]     = useState(ingredient ? ingredient.protein : 0);
-  const [salt, setSalt]           = useState(ingredient ? ingredient.salt : 0);
-  const [fiber, setFiber]         = useState(ingredient ? ingredient.fiber : 0);
+  const [saveLock, setSaveLock] = useState(false);
+
+  const [label, setLabel]         = useState(ingredient ? ingredient.label      : "");
+  const [unit, setUnit]           = useState(ingredient ? ingredient.unit       : 0);
+  const [energy, setEnergy]       = useState(ingredient ? ingredient.energy     : 0);
+  const [fats, setFats]           = useState(ingredient ? ingredient.fats       : 0);
+  const [saturates, setSaturates] = useState(ingredient ? ingredient.saturates  : 0);
+  const [carbs, setCarbs]         = useState(ingredient ? ingredient.carbs      : 0);
+  const [sugars, setSugar]        = useState(ingredient ? ingredient.sugars     : 0);
+  const [protein, setProtein]     = useState(ingredient ? ingredient.protein    : 0);
+  const [salt, setSalt]           = useState(ingredient ? ingredient.salt       : 0);
+  const [fiber, setFiber]         = useState(ingredient ? ingredient.fiber      : 0);
 
 
 
@@ -41,20 +42,40 @@ export default function IngredientEdit({ navigation, route }) {
     }
 
     if(ingredient) {
-      await addDoc(ref_food_ingredients, data);
+      const docRef = doc(ref_food_ingredients, ingredient.id);
+      return await updateDoc(docRef, data);
     } 
     else {
-      const docRef = doc(ref_food_ingredients, ingredient.id);
-      await updateDoc(docRef, data);
+      return await addDoc(ref_food_ingredients, data);
     }
+  }
+  const deleteIngredient = async () => {
+    const docRef = doc(ref_food_ingredients, ingredient.id);
+    return deleteDoc(docRef);
   }
 
 
 
-  const handleSaveOnPress = () => { 
+  const handleSaveOnPress = () => {
+    if(saveLock) return;
+    setSaveLock(true);
     saveIngredient()
-    .then(() => {navigation.goBack()})
-    .catch(() => {setSaveLock(false)});
+    .then(() => {
+      setSaveLock(false);
+      navigation.goBack();
+    })
+    .catch((e) => {
+      console.log(e);
+      setSaveLock(false)});
+  }
+  const handleDeleteOnPress = () => {
+    deleteIngredient()
+    .then(() => {
+      navigation.goBack();
+    })
+    .catch((e) => {
+      console.log(e);
+    });
   }
 
 
@@ -98,20 +119,27 @@ export default function IngredientEdit({ navigation, route }) {
       </View>
 
       <View style={{flex:1, flexDirection: "row", alignItems: "flex-end", marginVertical: 20}}>
-        {
-          ingredient ?
+      {
+        ingredient ?
+          <View style={{flex:1, flexDirection: "row"}}>
             <Button_Icon 
-              style={{flex: 1, backgroundColor: color_button_confirmation}}
-              icon="plus"
-              onPress={handleSaveOnPress}
-            />
-          :
-            <Button_Icon 
-              style={{flex: 1, backgroundColor: color_button_confirmation}}
+              style={{flex: 1, backgroundColor: color_button_green, marginRight: 5}}
               icon="content-save"
               onPress={handleSaveOnPress}
-            />
-        }
+            /> 
+            <Button_Icon 
+              style={{flex: 1, backgroundColor: color_button_red, marginLeft: 5}}
+              icon="delete-forever"
+              onPress={handleDeleteOnPress}
+            /> 
+          </View>
+        :
+        <Button_Icon 
+          style={{flex: 1, backgroundColor: color_button_green}}
+          icon="plus"
+          onPress={handleSaveOnPress}
+        />
+      }
       </View>
     </View>
   );
@@ -119,12 +147,3 @@ export default function IngredientEdit({ navigation, route }) {
 
 function Paragraph(props) { return (<View style={{marginLeft: 30}}>{props.children}</View>);}
 function Margin(props) { return (<View style={{margin: props.margin}}/>); }
-
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#000',
-  },
-});
