@@ -1,10 +1,10 @@
-import { StyleSheet, View, Text, FlatList, ScrollView} from "react-native";
+import { StyleSheet, View, Text, FlatList} from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { onSnapshot } from 'firebase/firestore';
-import { db, exercises, schedules } from '../../firebase.config';
+import { db, exercises, ref_food_ingredients } from '../../firebase.config';
 
-import { styles_common, styles_text } from "../../styles/styles";
-import { ref_food_ingredients } from "./Food_Crud";
+import { color_button_confirmation, styles_common, styles_text } from "../../styles/styles";
+import Button_Icon from "../../components/Button_Icon";
 
 
 
@@ -23,6 +23,10 @@ export default function IngredientList({ navigation }) {
   }, []);
 
 
+
+  const handleAddOnPress = () => {
+    navigation.navigate("IngredientEdit", {});
+  }
 
 
 
@@ -45,6 +49,14 @@ export default function IngredientList({ navigation }) {
               </View>
             )
           }}
+        />
+      </View>
+
+      <View style={{flex:1, flexDirection: "row", alignItems: "flex-end", marginVertical: 20}}>
+        <Button_Icon 
+          style={{flex: 1, backgroundColor: color_button_confirmation}}
+          icon="plus"
+          onPress={handleAddOnPress}
         />
       </View>
     </View>

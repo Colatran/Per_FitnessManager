@@ -9,13 +9,16 @@ export default function Button(props) {
 
   return (
     <View style={[styles_common.container_front, style]}>
-      <Pressable
-        style={{alignItems: "center", justifyContent: "center",}}
-        android_ripple={android_ripple_style}
-        onPress={onPress}
-      >
-        {props.children}
-      </Pressable>
+      <View style={{flex: 1, flexDirection: "row"}}>
+        <Pressable
+          style={{flex: 1, justifyContent: "center", alignItems: "center"}}
+          android_ripple={android_ripple_style}
+          onPress={onPress}
+        >
+          {props.children}
+        </Pressable>
+      </View>
+      
     </View>
   );
 }

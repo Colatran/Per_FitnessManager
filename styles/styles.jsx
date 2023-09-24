@@ -1,12 +1,12 @@
 import { StyleSheet } from 'react-native';
-import { background_dark, background_input, background_light } from './colors';
-
+import { background_dark, background_input, background_light, button_confirmation } from './colors';
 
 
 
 export const color_background_dark = background_dark;
 export const color_background_light = background_light;
 export const color_background_input = background_input;
+export const color_button_confirmation = button_confirmation;
 
 
 

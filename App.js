@@ -5,6 +5,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { UserProvider } from './utils/UserContext';
 
+
+import { color_background_light } from './styles/styles';
 /*
 import ExercisesList from './screens/ExercisesList';
 import WorkoutList_Practice from './screens/WorkoutList_Practice';
@@ -14,9 +16,11 @@ import WorkoutEdit_Exercise from './screens/WorkoutEdit_Exercise';
 import WorkoutPractice from './screens/WorkoutPractice';*/
 import Schedule from './screens/Schedule/Schedule';
 import ScheduleList from './screens/Schedule/ScheduleList';
-import { color_background_light } from './styles/styles';
+
 import IngredientList from './screens/Food/IngredientList';
 import IngredientEdit from './screens/Food/IngredientEdit';
+
+
 
 
 const Stack = createStackNavigator();
@@ -171,15 +175,15 @@ function Stack_Schedule() {
 }
 function Stack_Food() {
   return (
-    <Stack.Navigator initialRouteName='Ingredient'>
+    <Stack.Navigator initialRouteName='IngredientList'>
+      <Stack.Screen 
+        name='IngredientList'
+        component={IngredientList}
+        options={StackOptions("Ingredients")}/>
       <Stack.Screen 
         name='IngredientEdit'
         component={IngredientEdit}
         options={StackOptions("Ingredient")}/>
-      <Stack.Screen 
-        name='IngredientList'
-        component={IngredientList}
-        options={StackOptions("IngredientList")}/>
     </Stack.Navigator>
   );
 }

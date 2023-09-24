@@ -32,14 +32,10 @@ export const UserProvider = ({ children }) => {
     });
   }, []);
 
-
-
   const getExerciseName = (key) => {
     const foundObject = exerciseDocs.find(obj => obj.id === key);
     return foundObject.name;
   }
-
-
 
   return (
     <UserContext.Provider

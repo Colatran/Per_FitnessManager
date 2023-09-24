@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { addDoc, deleteDoc, doc, getFirestore } from "firebase/firestore";
+import { collection, getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -23,3 +23,5 @@ export const workouts = "workouts";
 export const workout_exercises = "workout_exercises";
 export const schedules = "schedules";
 export const food_ingredients = "food_ingredients";
+
+export const ref_food_ingredients = collection(db, food_ingredients);
