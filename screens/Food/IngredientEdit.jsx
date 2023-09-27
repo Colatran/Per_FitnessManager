@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { useState } from "react";
 import { ref_food_ingredients } from "../../firebase.config";
 import { addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
@@ -82,7 +82,7 @@ export default function IngredientEdit({ navigation, route }) {
 
   return (
     <View style={styles_common.container}>
-      <View>
+      <ScrollView>
         <Margin margin={margin}/>
         <Input_TextLabel label="Label" value={label} setValue={setLabel} placeholder={"Label"}/>
         <Margin margin={margin}/>
@@ -116,7 +116,7 @@ export default function IngredientEdit({ navigation, route }) {
           <Input_TextLabel label="Fiber (g)" value={fiber} setValue={setFiber} placeholder={""} keyboardType={"numeric"}/>
           <Margin margin={margin}/>
         </View>
-      </View>
+      </ScrollView>
 
       <View style={{flex:1, flexDirection: "row", alignItems: "flex-end", marginVertical: 20}}>
       {

@@ -19,6 +19,7 @@ import ScheduleList from './screens/Schedule/ScheduleList';
 
 import IngredientList from './screens/Food/IngredientList';
 import IngredientEdit from './screens/Food/IngredientEdit';
+import Food from './screens/Food/Food';
 
 
 
@@ -175,7 +176,11 @@ function Stack_Schedule() {
 }
 function Stack_Food() {
   return (
-    <Stack.Navigator initialRouteName='IngredientList'>
+    <Stack.Navigator initialRouteName='FoodScreen'>
+      <Stack.Screen 
+        name='FoodScreen'
+        component={Food}
+        options={StackOptions("Food")}/>
       <Stack.Screen 
         name='IngredientList'
         component={IngredientList}
