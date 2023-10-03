@@ -17,9 +17,10 @@ import WorkoutPractice from './screens/WorkoutPractice';*/
 import Schedule from './screens/Schedule/Schedule';
 import ScheduleList from './screens/Schedule/ScheduleList';
 
+import Food from './screens/Food/Food';
 import IngredientList from './screens/Food/IngredientList';
 import IngredientEdit from './screens/Food/IngredientEdit';
-import Food from './screens/Food/Food';
+import RecipeEdit from './screens/Food/RecipeEdit';
 
 
 
@@ -181,6 +182,7 @@ function Stack_Food() {
         name='FoodScreen'
         component={Food}
         options={StackOptions("Food")}/>
+
       <Stack.Screen 
         name='IngredientList'
         component={IngredientList}
@@ -189,6 +191,11 @@ function Stack_Food() {
         name='IngredientEdit'
         component={IngredientEdit}
         options={StackOptions("Ingredient")}/>
+
+      <Stack.Screen 
+        name='RecipeEdit'
+        component={RecipeEdit}
+        options={StackOptions("Recipe")}/>
     </Stack.Navigator>
   );
 }

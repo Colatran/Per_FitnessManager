@@ -9,14 +9,24 @@ import Button_Icon from "../../components/Button_Icon";
 
 
 export default function IngredientList({ navigation }) {
-  const [docs, setDocs] = useState([]);
+  const [ingredientDocs, setIngredientDocs] = useState([]);
 
-
-  
   useEffect(() => {
     return onSnapshot(ref_food_ingredients, (snapshot) => {
       const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setDocs(data);
+      data.sort((a, b) => {
+        const nameA = a.label.toUpperCase();
+        const nameB = b.label.toUpperCase();
+      
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      });
+      setIngredientDocs(data);
     });
   }, []);
 
@@ -39,15 +49,20 @@ export default function IngredientList({ navigation }) {
       
       <View style={styles_common.container_list}>
         <FlatList
-          data={docs}
+          data={ingredientDocs}
           renderItem={({item}) => { 
             return(
               <View style={[styles_common.container_front, styles_common.container_list_item]}>
                 <Button_Icon style={[styles.button, {marginRight: 8}]} icon="eye" onPress={() => handleViewOnPress(item)}/>
                 <Text style={styles_text.common}>{item.label}</Text>
-                <View style={{flex: 1, justifyContent: "flex-end", flexDirection: "row"}}>
-                  <Button_Icon style={styles.button} icon="pencil" onPress={() => handleEditOnPress(item)}/>
-                </View>
+                {
+                  item.recipeId === "" ?
+                  <View style={{flex: 1, justifyContent: "flex-end", flexDirection: "row"}}>
+                    <Button_Icon style={styles.button} icon="pencil" onPress={() => handleEditOnPress(item)}/>
+                  </View>
+                  :
+                  <></>
+                }
               </View>
             )
           }}

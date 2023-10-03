@@ -16,6 +16,7 @@ export const styles_common = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 10,
     backgroundColor: background_dark,
+    paddingTop: 10,
   },
 
   container_front: {
