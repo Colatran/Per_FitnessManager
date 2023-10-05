@@ -17,40 +17,44 @@ export default function RedipeEdit({ navigation, route }) {
 
   const [saveLock, setSaveLock] = useState(false);
 
-  const [label, setLabel]             = useState(recipe ? recipe.label            : "");
-  const [servings, setServings]       = useState(servings ? recipe.servings       : 1);
-  const [isIngredient, setIsIngredient] = useState(servings ? recipe.isIngredient : false);
-  const [ingredients, setIngredients] = useState(recipe.ingredients ? recipe.ingredients : []);
-  const [docs, setDocs] = useState([]);
-  const [removedDocs, setRemovedDocs] = useState([]);
+  const [label, setLabel]                     = useState(recipe ? recipe.label            : "");
+  const [servings, setServings]               = useState(servings ? recipe.servings       : "1");
+  const [ingredients, setIngredients]         = useState(recipe.ingredients ? recipe.ingredients : []);
+  const [ingredientsDocs, setIngredientsDocs] = useState([]);
+
+  const [lockSwitch, setLockSwitch]           = useState(false);
 
 
   
   useEffect(() => {
     return onSnapshot(ref_food_ingredients, (snapshot) => {
       const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setDocs(data);
+      setIngredientsDocs(data);
     });
   }, []);
 
 
 
-  const addIngredient = (ingredient) => {
-    const newIngredients = [...ingredients];
-    newIngredients.push({label: ingredient.label, data:{ingredientId: ingredient.id, amount: ingredient.unit}});
-    setIngredients(newIngredients);
+  const addIngredient = async (ingredient) => {
+    const newIngredient = {amount: ingredient.unit, ingredient: ingredient};
+    setIngredients([...ingredients, newIngredient]);
 
-    docs.pop(ingredient);
-    setDocs(docs);
-    removedDocs.push(ingredient);
-    setRemovedDocs(removedDocs);
+    const newDocs = ingredientsDocs.filter(item => item !== ingredient);
+    setIngredientsDocs(newDocs);
+  }
+  const removeIngredient = async (ingredient) => {
+    const newIngredients = ingredients.filter(item => item !== ingredient);
+    setIngredients(newIngredients);
+    
+    const newDocs = [...ingredientsDocs, ingredient.ingredient];
+    setIngredientsDocs(newDocs);
   }
   const saveRecipe = async () => {
     const data = {
       label: label,
       ingredients: ingredients,
       isIngredient: isIngredient,
-      ingredients: ingredients,
+      ingredients: [],
     }
 
     if(recipe) {
@@ -69,7 +73,18 @@ export default function RedipeEdit({ navigation, route }) {
 
 
   const handleAddIngredientOnPress = (item) => {
-    addIngredient(item);
+    if(lockSwitch) return;
+    setLockSwitch(true);
+
+    addIngredient(item)
+    .then(() => setLockSwitch(false));
+  }
+  const handleRemoveIngredientOnPress = (item) => {
+    if(lockSwitch) return;
+    setLockSwitch(true);
+
+    removeIngredient(item)
+    .then(() => setLockSwitch(false));
   }
   const handleSaveOnPress = () => {
     if(saveLock) return;
@@ -99,21 +114,19 @@ export default function RedipeEdit({ navigation, route }) {
     <View style={styles_common.container}>
 
       <View>
-        <ScrollView>
-          <Label label="Label">
-            <Input_Text value={label} setValue={setLabel} placeholder={"Label"}/>
-          </Label>
-          
-          <Label label="Servings">
-            <Input_Text value={servings} setValue={setServings} placeholder={""} keyboardType={"numeric"}/>
-          </Label>
-        </ScrollView>
+        <Label label="Label">
+          <Input_Text value={label} setValue={setLabel} placeholder={"Label"}/>
+        </Label>
+        
+        <Label label="Servings">
+          <Input_Text value={servings} setValue={setServings} placeholder={""} keyboardType={"numeric"}/>
+        </Label>
       </View>
 
       <View style={{flex: 1}}>
         <View style={styles.container_list}>
           <FlatList
-            data={docs}
+            data={ingredientsDocs}
             renderItem={({item}) => { 
               return(
                 <View style={styles.container_item}>
@@ -136,16 +149,7 @@ export default function RedipeEdit({ navigation, route }) {
         <View style={styles.container_list}>
           <FlatList
             data={ingredients}
-            renderItem={({item}) => { 
-              return(
-                <View style={styles.container_item}>
-                  <Text style={styles_text.common}>{item.label}</Text>
-                  <View style={{flex: 1, justifyContent: "flex-end", flexDirection: "row"}}>
-                    <Button_Icon style={styles.button} icon="delete" onPress={() => {}}/>
-                  </View>
-                </View>
-              )
-            }}
+            renderItem={({item}) => <Ingredient item={item} onRemove={() => handleRemoveIngredientOnPress(item)}/>}
           />
         </View>
       </View>
@@ -177,6 +181,40 @@ export default function RedipeEdit({ navigation, route }) {
     </View>
   );
 }
+
+
+
+const Ingredient = (props) => {
+  const item = props.item;
+  const removeOnPress = props.removeOnPress;
+
+
+
+  const handleOnPress = () => {removeOnPress}
+
+
+
+  const handleRemoveIngredientOnPress = (item) => {}
+
+
+
+  return (
+    <View style={styles.container_item}>
+      <View style={{flex: 1}}>
+        <Text style={styles_text.common}>{item.ingredient.label}</Text>
+      </View>
+
+      <View style={{flex: 1, paddingHorizontal: 5}}>
+        <Input_Text/>
+      </View>
+
+      <View style={{justifyContent: "flex-end", flexDirection: "row"}}>
+        <Button_Icon style={styles.button} icon="close" onPress={() => handleOnPress()}/>
+      </View>
+    </View>
+  );
+}
+
 
 
 const styles = StyleSheet.create({

@@ -15,16 +15,16 @@ export default function IngredientEdit({ navigation, route }) {
   const [saveLock, setSaveLock] = useState(false);
 
   const [label, setLabel]           = useState(ingredient ? ingredient.label      : "");
-  const [unitPrice, setUnitPrice]   = useState(ingredient ? ingredient.unitPrice  : 0);
-  const [unitWeight, setUnitWeight] = useState(ingredient ? ingredient.unitWeight : 0);
-  const [energy, setEnergy]         = useState(ingredient ? ingredient.energy     : 0);
-  const [fats, setFats]             = useState(ingredient ? ingredient.fats       : 0);
-  const [saturates, setSaturates]   = useState(ingredient ? ingredient.saturates  : 0);
-  const [carbs, setCarbs]           = useState(ingredient ? ingredient.carbs      : 0);
-  const [sugars, setSugar]          = useState(ingredient ? ingredient.sugars     : 0);
-  const [protein, setProtein]       = useState(ingredient ? ingredient.protein    : 0);
-  const [salt, setSalt]             = useState(ingredient ? ingredient.salt       : 0);
-  const [fiber, setFiber]           = useState(ingredient ? ingredient.fiber      : 0);
+  const [unitPrice, setUnitPrice]   = useState(ingredient ? ingredient.unitPrice  : "0");
+  const [unitWeight, setUnitWeight] = useState(ingredient ? ingredient.unitWeight : "0");
+  const [energy, setEnergy]         = useState(ingredient ? ingredient.energy     : "0");
+  const [fats, setFats]             = useState(ingredient ? ingredient.fats       : "0");
+  const [saturates, setSaturates]   = useState(ingredient ? ingredient.saturates  : "0");
+  const [carbs, setCarbs]           = useState(ingredient ? ingredient.carbs      : "0");
+  const [sugars, setSugar]          = useState(ingredient ? ingredient.sugars     : "0");
+  const [protein, setProtein]       = useState(ingredient ? ingredient.protein    : "0");
+  const [salt, setSalt]             = useState(ingredient ? ingredient.salt       : "0");
+  const [fiber, setFiber]           = useState(ingredient ? ingredient.fiber      : "0");
   const [recipeId, setRecipeId]     = useState(ingredient ? ingredient.recipeId   : "");
 
   const isRecipe = recipeId !== "";
