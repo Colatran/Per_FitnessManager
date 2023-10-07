@@ -16,13 +16,12 @@ export default function RedipeEdit({ navigation, route }) {
   const { recipe } = route.params;
 
   const [saveLock, setSaveLock] = useState(false);
+  const [lockSwitch, setLockSwitch]           = useState(false);
 
   const [label, setLabel]                     = useState(recipe ? recipe.label            : "");
   const [servings, setServings]               = useState(servings ? recipe.servings       : "1");
   const [ingredients, setIngredients]         = useState(recipe.ingredients ? recipe.ingredients : []);
   const [ingredientsDocs, setIngredientsDocs] = useState([]);
-
-  const [lockSwitch, setLockSwitch]           = useState(false);
 
 
   
@@ -35,19 +34,20 @@ export default function RedipeEdit({ navigation, route }) {
 
 
 
-  const addIngredient = async (ingredient) => {
-    const newIngredient = {amount: ingredient.unit, ingredient: ingredient};
-    setIngredients([...ingredients, newIngredient]);
+  const addIngredient = async (index) => {
+    const ingDoc = ingredientsDocs[index];
+    const newIng = {amount: ingDoc.unit, ingredient: ingDoc};
+    setIngredients([...ingredients, newIng]);
 
-    const newDocs = ingredientsDocs.filter(item => item !== ingredient);
-    setIngredientsDocs(newDocs);
+    ingredientsDocs.splice(index, 1);
+    setIngredientsDocs(ingredientsDocs);
   }
-  const removeIngredient = async (ingredient) => {
-    const newIngredients = ingredients.filter(item => item !== ingredient);
-    setIngredients(newIngredients);
-    
-    const newDocs = [...ingredientsDocs, ingredient.ingredient];
-    setIngredientsDocs(newDocs);
+  const removeIngredient = async (index) => {
+    const ing = ingredients[index].ingredient;
+    setIngredientsDocs([...ingredientsDocs, ing]);
+
+    ingredients.splice(index, 1);
+    setIngredients(ingredients);
   }
   const saveRecipe = async () => {
     const data = {
@@ -69,21 +69,26 @@ export default function RedipeEdit({ navigation, route }) {
     const docRef = doc(ref_food_ingredients, recipe.id);
     return deleteDoc(docRef);
   }
+  const changeIngredientAmount = async (index, value) => {
+    const newIngredients = [...ingredients];
+    newIngredients[index].amount = value;
+    setIngredients(newIngredients);
+  }
 
 
 
-  const handleAddIngredientOnPress = (item) => {
+  const handleAddIngredientOnPress = (index) => {
     if(lockSwitch) return;
     setLockSwitch(true);
 
-    addIngredient(item)
+    addIngredient(index)
     .then(() => setLockSwitch(false));
   }
-  const handleRemoveIngredientOnPress = (item) => {
+  const handleRemoveIngredientOnPress = (index) => {
     if(lockSwitch) return;
     setLockSwitch(true);
 
-    removeIngredient(item)
+    removeIngredient(index)
     .then(() => setLockSwitch(false));
   }
   const handleSaveOnPress = () => {
@@ -107,6 +112,9 @@ export default function RedipeEdit({ navigation, route }) {
       console.log(e);
     });
   }
+  const handleIngredientSetValue = (index, value) => {
+    changeIngredientAmount(index, value).then(()=> {console.log(ingredients)});
+  }
 
 
 
@@ -127,12 +135,12 @@ export default function RedipeEdit({ navigation, route }) {
         <View style={styles.container_list}>
           <FlatList
             data={ingredientsDocs}
-            renderItem={({item}) => { 
+            renderItem={({item, index}) => { 
               return(
                 <View style={styles.container_item}>
                   <Text style={styles_text.common}>{item.label}</Text>
                   <View style={{flex: 1, justifyContent: "flex-end", flexDirection: "row"}}>
-                    <Button_Icon style={styles.button} icon="plus" onPress={() => handleAddIngredientOnPress(item)}/>
+                    <Button_Icon style={styles.button} icon="plus" onPress={() => handleAddIngredientOnPress(index)}/>
                   </View>
                 </View>
               )
@@ -149,11 +157,24 @@ export default function RedipeEdit({ navigation, route }) {
         <View style={styles.container_list}>
           <FlatList
             data={ingredients}
-            renderItem={({item}) => <Ingredient item={item} onRemove={() => handleRemoveIngredientOnPress(item)}/>}
+            renderItem={({item, index}) => 
+              <View style={styles.container_item}>
+                <View style={{flex: 1}}>
+                  <Text style={styles_text.common}>{item.ingredient.label}</Text>
+                </View>
+
+                <View style={{flex: 1, paddingHorizontal: 5}}>
+                  <Input_Text value={item.amount} setValue={(text) => handleIngredientSetValue(index, text)} keyboardType={"numeric"}/>
+                </View>
+
+                <View style={{justifyContent: "flex-end", flexDirection: "row"}}>
+                  <Button_Icon style={styles.button} icon="close" onPress={() => handleRemoveIngredientOnPress(index)}/>
+                </View>
+              </View>
+            }
           />
         </View>
       </View>
-
 
       <View style={{flexDirection: "row", alignItems: "flex-end", marginVertical: 20}}>
       {
@@ -177,39 +198,6 @@ export default function RedipeEdit({ navigation, route }) {
           onPress={handleSaveOnPress}
         />
       }
-      </View>
-    </View>
-  );
-}
-
-
-
-const Ingredient = (props) => {
-  const item = props.item;
-  const removeOnPress = props.removeOnPress;
-
-
-
-  const handleOnPress = () => {removeOnPress}
-
-
-
-  const handleRemoveIngredientOnPress = (item) => {}
-
-
-
-  return (
-    <View style={styles.container_item}>
-      <View style={{flex: 1}}>
-        <Text style={styles_text.common}>{item.ingredient.label}</Text>
-      </View>
-
-      <View style={{flex: 1, paddingHorizontal: 5}}>
-        <Input_Text/>
-      </View>
-
-      <View style={{justifyContent: "flex-end", flexDirection: "row"}}>
-        <Button_Icon style={styles.button} icon="close" onPress={() => handleOnPress()}/>
       </View>
     </View>
   );
