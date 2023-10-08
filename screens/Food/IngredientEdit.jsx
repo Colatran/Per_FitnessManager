@@ -14,36 +14,35 @@ export default function IngredientEdit({ navigation, route }) {
 
   const [saveLock, setSaveLock] = useState(false);
 
-  const [label, setLabel]           = useState(ingredient ? ingredient.label      : "");
-  const [unitPrice, setUnitPrice]   = useState(ingredient ? ingredient.unitPrice  : "0");
-  const [unitWeight, setUnitWeight] = useState(ingredient ? ingredient.unitWeight : "0");
-  const [energy, setEnergy]         = useState(ingredient ? ingredient.energy     : "0");
-  const [fats, setFats]             = useState(ingredient ? ingredient.fats       : "0");
-  const [saturates, setSaturates]   = useState(ingredient ? ingredient.saturates  : "0");
-  const [carbs, setCarbs]           = useState(ingredient ? ingredient.carbs      : "0");
-  const [sugars, setSugar]          = useState(ingredient ? ingredient.sugars     : "0");
-  const [protein, setProtein]       = useState(ingredient ? ingredient.protein    : "0");
-  const [salt, setSalt]             = useState(ingredient ? ingredient.salt       : "0");
-  const [fiber, setFiber]           = useState(ingredient ? ingredient.fiber      : "0");
-  const [recipeId, setRecipeId]     = useState(ingredient ? ingredient.recipeId   : "");
-
-  const isRecipe = recipeId !== "";
+  const [label, setLabel]           = useState(ingredient ? ingredient.label            : "");
+  const [recipeId, setRecipeId]     = useState(ingredient ? ingredient.recipeId         : "");
+  const [unitPrice, setUnitPrice]   = useState(ingredient ? `${ingredient.unitPrice}`   : "0");
+  const [unitWeight, setUnitWeight] = useState(ingredient ? `${ingredient.unitWeight}`  : "0");
+  const [energy, setEnergy]         = useState(ingredient ? `${ingredient.energy}`      : "0");
+  const [fats, setFats]             = useState(ingredient ? `${ingredient.fats}`        : "0");
+  const [saturates, setSaturates]   = useState(ingredient ? `${ingredient.saturates}`   : "0");
+  const [carbs, setCarbs]           = useState(ingredient ? `${ingredient.carbs}`       : "0");
+  const [sugars, setSugar]          = useState(ingredient ? `${ingredient.sugars}`      : "0");
+  const [protein, setProtein]       = useState(ingredient ? `${ingredient.protein}`     : "0");
+  const [fiber, setFiber]           = useState(ingredient ? `${ingredient.fiber}`       : "0");
+  const [salt, setSalt]             = useState(ingredient ? `${ingredient.salt}`        : "0");
 
 
 
   const saveIngredient = async () => {
     const data = {
-      label: label,
-      unit: unit,
-      energy: energy,
-      fats: fats,
-      saturates: saturates,
-      carbs: carbs,
-      sugars: sugars,
-      protein: protein,
-      salt: salt,
-      fiber: fiber,
-      recipeId: recipeId,
+      label:      label,
+      recipeId:   recipeId,
+      unitPrice:  parseFloat(unitPrice),
+      unitWeight: parseFloat(unitWeight),
+      energy:     parseFloat(energy),
+      fats:       parseFloat(fats),
+      saturates:  parseFloat(saturates),
+      carbs:      parseFloat(carbs),
+      sugars:     parseFloat(sugars),
+      protein:    parseFloat(protein),
+      fiber:      parseFloat(fiber),
+      salt:       parseFloat(salt),
     }
 
     if(ingredient) {
@@ -99,11 +98,11 @@ export default function IngredientEdit({ navigation, route }) {
           <Input_Text value={unitPrice} setValue={setUnitPrice} placeholder={""} keyboardType={"numeric"} />
         </Label>
 
-        <Label label="Unit Weight (g)">
+        <Label label="Unit Weight (g/ml)">
           <Input_Text value={unitWeight} setValue={setUnitWeight} placeholder={""} keyboardType={"numeric"}/>
         </Label>
 
-        <Label label="Nutrition (Per 100g): ">
+        <Label label="Nutrition (Per 100g/ml): ">
           <View style={{marginLeft: 10}}>
             <Label label="Energy (kcal)">
               <Input_Text value={energy} setValue={setEnergy} placeholder={""} keyboardType={"numeric"}/>
@@ -131,12 +130,12 @@ export default function IngredientEdit({ navigation, route }) {
               <Input_Text value={protein} setValue={setProtein} placeholder={""} keyboardType={"numeric"}/>
             </Label>
 
-            <Label label="Salt (g)">
-              <Input_Text value={salt} setValue={setSalt} placeholder={""} keyboardType={"numeric"}/>
-            </Label>
-
             <Label label="Fiber (g)">
               <Input_Text value={fiber} setValue={setFiber} placeholder={""} keyboardType={"numeric"}/>
+            </Label>
+
+            <Label label="Salt (g)">
+              <Input_Text value={salt} setValue={setSalt} placeholder={""} keyboardType={"numeric"}/>
             </Label>
           </View>
         </Label>
@@ -144,7 +143,7 @@ export default function IngredientEdit({ navigation, route }) {
 
       <View style={{flex:1, flexDirection: "row", alignItems: "flex-end", marginVertical: 20}}>
       {
-        isRecipe ? 
+        recipeId != "" ? 
           <Button_Icon 
             style={{flex: 1, backgroundColor: color_button_green, marginRight: 5}}
             icon="check"

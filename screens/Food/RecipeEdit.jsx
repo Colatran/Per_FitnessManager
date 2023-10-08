@@ -2,8 +2,8 @@ import { View, Text, ScrollView, FlatList, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { ref_food_ingredients } from "../../firebase.config";
-import { addDoc, deleteDoc, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { ref_food_ingredients, ref_food_recipes } from "../../firebase.config";
+import { addDoc, deleteDoc, doc, onSnapshot, updateDoc, where } from "firebase/firestore";
 import { color_background_dark, color_button_green, color_button_red, styles_common, styles_text } from "../../styles/styles";
 
 import Input_Text from "../../components/Input_Text";
@@ -11,34 +11,95 @@ import Button_Icon from "../../components/Button_Icon";
 import Label from "../../components/Label";
 
 
+const FloorValue = (value) => {return  Math.floor(value * Math.pow(10, 2)) / Math.pow(10, 2);}
 
 export default function RedipeEdit({ navigation, route }) {
   const { recipe } = route.params;
 
-  const [saveLock, setSaveLock] = useState(false);
+  const [saveLock, setSaveLock]               = useState(false);
   const [lockSwitch, setLockSwitch]           = useState(false);
 
-  const [label, setLabel]                     = useState(recipe ? recipe.label            : "");
-  const [servings, setServings]               = useState(servings ? recipe.servings       : "1");
-  const [ingredients, setIngredients]         = useState(recipe.ingredients ? recipe.ingredients : []);
+  const [label, setLabel]                     = useState(recipe.id ? recipe.label          : "");
+  const [servings, setServings]               = useState(recipe.id ? `${recipe.servings}`  : "1");
+  const [ingredients, setIngredients]         = useState(recipe.id ? recipe.ingredients    : []);
+
   const [ingredientsDocs, setIngredientsDocs] = useState([]);
 
 
   
   useEffect(() => {
     return onSnapshot(ref_food_ingredients, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data()}));
+      data.sort((a, b) => {
+        const nameA = a.label.toUpperCase();
+        const nameB = b.label.toUpperCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+      });
       setIngredientsDocs(data);
     });
   }, []);
 
 
 
+  const getIngredientFromRecipe = (ingredients, recipeId) => {
+    let unitPrice = 0;
+    let unitWeight = 0;
+    let energy = 0;
+    let fats = 0;
+    let saturates = 0;
+    let carbs = 0;
+    let sugars = 0;
+    let protein = 0;
+    let fiber = 0;
+    let salt = 0;
+
+    ingredients.forEach(element => {
+      console.log(element);
+
+      const amount = element.amount;
+      const ingredient = element.ingredient;
+      const ingUnitWeight = ingredient.unitWeight;
+      const ingUnitPrice = ingredient.unitPrice;
+
+      unitWeight += parseFloat(amount);
+      unitPrice += parseFloat(amount * ingUnitPrice / ingUnitWeight);
+      energy += parseFloat(amount * ingredient.energy / 100);
+      console.log(amount);console.log(ingredient.energy);
+
+      fats += parseFloat(amount * ingredient.fats / 100);
+      saturates += parseFloat(amount * ingredient.saturates / 100);
+      carbs += parseFloat(amount * ingredient.carbs / 100);
+      sugars += parseFloat(amount * ingredient.sugars / 100);
+      protein += parseFloat(amount * ingredient.protein / 100);
+      fiber += parseFloat(amount * ingredient.fiber / 100);
+      salt += parseFloat(amount * ingredient.salt / 100);
+    });
+
+    const _servings = parseFloat(servings);
+
+    return ({
+      label:      label,
+      recipeId:   recipeId,
+      unitPrice:  FloorValue(unitPrice  / _servings),
+      unitWeight: FloorValue(unitWeight / _servings),
+      energy:     FloorValue(energy     / _servings),
+      fats:       FloorValue(fats       / _servings),
+      saturates:  FloorValue(saturates  / _servings),
+      carbs:      FloorValue(carbs      / _servings),
+      sugars:     FloorValue(sugars     / _servings),
+      protein:    FloorValue(protein    / _servings),
+      fiber:      FloorValue(fiber      / _servings),
+      salt:       FloorValue(salt       / _servings),
+    })
+  }
+
   const addIngredient = async (index) => {
     const ingDoc = ingredientsDocs[index];
-    const newIng = {amount: ingDoc.unit, ingredient: ingDoc};
+    const newIng = {amount: `${ingDoc.unitWeight}`, ingredient: ingDoc};
     setIngredients([...ingredients, newIng]);
-
+ 
     ingredientsDocs.splice(index, 1);
     setIngredientsDocs(ingredientsDocs);
   }
@@ -49,30 +110,38 @@ export default function RedipeEdit({ navigation, route }) {
     ingredients.splice(index, 1);
     setIngredients(ingredients);
   }
-  const saveRecipe = async () => {
-    const data = {
-      label: label,
-      ingredients: ingredients,
-      isIngredient: isIngredient,
-      ingredients: [],
-    }
-
-    if(recipe) {
-      const docRef = doc(ref_food_ingredients, recipe.id);
-      return await updateDoc(docRef, data);
-    } 
-    else {
-      return await addDoc(ref_food_ingredients, data);
-    }
-  }
-  const deleteRecipe = async () => {
-    const docRef = doc(ref_food_ingredients, recipe.id);
-    return deleteDoc(docRef);
-  }
   const changeIngredientAmount = async (index, value) => {
     const newIngredients = [...ingredients];
     newIngredients[index].amount = value;
     setIngredients(newIngredients);
+  }
+  const saveRecipe = async () => {
+    const ingredietData = ingredients.map((item) => ({ingredientId: item.ingredient.id, amount: item.amount}));
+
+    const recipeData = {
+      label: label,
+      ingredients: ingredietData,
+    }
+
+    if(recipe.id) {
+      const recipeDocRef = doc(ref_food_recipes, recipe.id);
+      const ingredientDocRef = doc(ref_food_ingredients, where((x) => x.recipeId === recipe.id));
+      const recipeIngredientData = getIngredientFromRecipe(ingredients, recipe.id);
+      
+      await updateDoc(recipeDocRef, recipeData).then(() => {
+        updateDoc(ingredientDocRef, recipeIngredientData);
+      });
+    } 
+    else {
+      const recipeId = (await addDoc(ref_food_recipes, recipeData)).id;
+      const recipeIngredientData = getIngredientFromRecipe(ingredients, recipeId);
+      console.log(recipeIngredientData);
+      return await addDoc(ref_food_ingredients, recipeIngredientData);
+    }
+  }
+  const deleteRecipe = async () => {
+    const docRef = doc(ref_food_recipes, recipe.id);
+    return deleteDoc(docRef);
   }
 
 
@@ -90,6 +159,9 @@ export default function RedipeEdit({ navigation, route }) {
 
     removeIngredient(index)
     .then(() => setLockSwitch(false));
+  }
+  const handleIngredientSetValue = (index, value) => {
+    changeIngredientAmount(index, value);
   }
   const handleSaveOnPress = () => {
     if(saveLock) return;
@@ -111,9 +183,6 @@ export default function RedipeEdit({ navigation, route }) {
     .catch((e) => {
       console.log(e);
     });
-  }
-  const handleIngredientSetValue = (index, value) => {
-    changeIngredientAmount(index, value).then(()=> {console.log(ingredients)});
   }
 
 

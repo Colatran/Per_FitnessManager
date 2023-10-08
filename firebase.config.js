@@ -23,5 +23,7 @@ export const workouts = "workouts";
 export const workout_exercises = "workout_exercises";
 export const schedules = "schedules";
 export const food_ingredients = "food_ingredients";
+export const food_recipes = "food_recipes";
 
 export const ref_food_ingredients = collection(db, food_ingredients);
+export const ref_food_recipes = collection(db, food_recipes);

@@ -1,5 +1,5 @@
 import { StyleSheet, View, Text, FlatList} from "react-native";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { onSnapshot } from 'firebase/firestore';
 import { ref_food_ingredients } from '../../firebase.config';
 
@@ -17,13 +17,8 @@ export default function IngredientList({ navigation }) {
       data.sort((a, b) => {
         const nameA = a.label.toUpperCase();
         const nameB = b.label.toUpperCase();
-      
-        if (nameA < nameB) {
-          return -1;
-        }
-        if (nameA > nameB) {
-          return 1;
-        }
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
         return 0;
       });
       setIngredientDocs(data);
@@ -36,7 +31,7 @@ export default function IngredientList({ navigation }) {
     navigation.navigate("IngredientEdit", {});
   }
   const handleViewOnPress = (item) => {
-    
+    navigation.navigate("IngredientEdit", {ingredient: item});
   }
   const handleEditOnPress = (item) => {
     navigation.navigate("IngredientEdit", {ingredient: item});
@@ -56,7 +51,7 @@ export default function IngredientList({ navigation }) {
                 <Button_Icon style={[styles.button, {marginRight: 8}]} icon="eye" onPress={() => handleViewOnPress(item)}/>
                 <Text style={styles_text.common}>{item.label}</Text>
                 {
-                  item.recipeId === "" ?
+                  item.recipeId == "" ?
                   <View style={{flex: 1, justifyContent: "flex-end", flexDirection: "row"}}>
                     <Button_Icon style={styles.button} icon="pencil" onPress={() => handleEditOnPress(item)}/>
                   </View>
@@ -69,7 +64,7 @@ export default function IngredientList({ navigation }) {
         />
       </View>
 
-      <View style={{flex:1, flexDirection: "row", alignItems: "flex-end", marginVertical: 20}}>
+      <View style={{flexDirection: "row", alignItems: "flex-end", marginVertical: 20}}>
         <Button_Icon 
           style={{flex: 1, backgroundColor: color_button_green}}
           icon="plus"
