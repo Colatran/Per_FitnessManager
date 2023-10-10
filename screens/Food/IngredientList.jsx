@@ -31,7 +31,7 @@ export default function IngredientList({ navigation }) {
     navigation.navigate("IngredientEdit", {});
   }
   const handleViewOnPress = (item) => {
-    navigation.navigate("IngredientEdit", {ingredient: item});
+    navigation.navigate("IngredientCheck", {ingredient: item});
   }
   const handleEditOnPress = (item) => {
     navigation.navigate("IngredientEdit", {ingredient: item});

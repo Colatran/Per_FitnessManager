@@ -21,6 +21,7 @@ import Food from './screens/Food/Food';
 import IngredientList from './screens/Food/IngredientList';
 import IngredientEdit from './screens/Food/IngredientEdit';
 import RecipeEdit from './screens/Food/RecipeEdit';
+import IngredientCheck from './screens/Food/IngredientCheck';
 
 
 
@@ -191,7 +192,11 @@ function Stack_Food() {
         name='IngredientEdit'
         component={IngredientEdit}
         options={StackOptions("Ingredient")}/>
-
+      <Stack.Screen 
+        name='IngredientCheck'
+        component={IngredientCheck}
+        options={StackOptions("Ingredient")}/>
+        
       <Stack.Screen 
         name='RecipeEdit'
         component={RecipeEdit}

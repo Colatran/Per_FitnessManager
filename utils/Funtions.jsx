@@ -20,4 +20,6 @@ export function getDurationText_FromMinuts(minutes) {
   
   return `${h}${m}`;
 }
-  
+
+
+export const FloorValue = (value) => {return  Math.floor(value * Math.pow(10, 2)) / Math.pow(10, 2);}

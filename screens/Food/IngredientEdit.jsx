@@ -6,7 +6,7 @@ import { color_button_green, color_button_red, styles_common, styles_text } from
 import Label from "../../components/Label";
 import Input_Text from "../../components/Input_Text";
 import Button_Icon from "../../components/Button_Icon";
-
+import Button_FormFooter from "../../components/Button_FormFooter";
 
 
 export default function IngredientEdit({ navigation, route }) {
@@ -140,6 +140,14 @@ export default function IngredientEdit({ navigation, route }) {
           </View>
         </Label>
       </ScrollView>
+
+
+      <Button_FormFooter
+        isNew={recipeId != "" || ingredient}
+        onPressSaveNew={handleSaveOnPress}
+        onPressSave={handleSaveOnPress}
+        onPressDelete={handleDeleteOnPress}
+      />
 
       <View style={{flex:1, flexDirection: "row", alignItems: "flex-end", marginVertical: 20}}>
       {
