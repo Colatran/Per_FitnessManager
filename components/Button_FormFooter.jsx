@@ -14,12 +14,6 @@ export default function Button_FormFooter(props) {
     <View style={{flexDirection: "row", alignItems: "flex-end", marginVertical: 20}}>
       {
         isNew ?
-        <Button_Icon 
-          style={{flex: 1, backgroundColor: color_button_green}}
-          icon="plus"
-          onPress={onPressSaveNew}
-        />
-        :
         <View style={{flex:1, flexDirection: "row"}}>
           <Button_Icon 
             style={{flex: 1, backgroundColor: color_button_green, marginRight: 5}}
@@ -32,7 +26,12 @@ export default function Button_FormFooter(props) {
             onPress={onPressDelete}
           /> 
         </View>
-        
+        :
+        <Button_Icon 
+          style={{flex: 1, backgroundColor: color_button_green}}
+          icon="plus"
+          onPress={onPressSaveNew}
+        />
       }
       </View>
   );

@@ -1,12 +1,15 @@
-import { View, Text, ScrollView } from "react-native";
+import { StyleSheet, View, Text, ScrollView } from "react-native";
 import { useState } from "react";
 import { ref_food_ingredients } from "../../firebase.config";
 import { addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { color_button_green, color_button_red, styles_common, styles_text } from "../../styles/styles";
+
+import { color_background_dark, color_background_light, styles_common, styles_text } from "../../styles/styles";
+import { getPhysicalState } from "../../utils/Funtions";
 import Label from "../../components/Label";
 import Input_Text from "../../components/Input_Text";
 import Button_Icon from "../../components/Button_Icon";
 import Button_FormFooter from "../../components/Button_FormFooter";
+
 
 
 export default function IngredientEdit({ navigation, route }) {
@@ -14,35 +17,39 @@ export default function IngredientEdit({ navigation, route }) {
 
   const [saveLock, setSaveLock] = useState(false);
 
-  const [label, setLabel]           = useState(ingredient ? ingredient.label            : "");
-  const [recipeId, setRecipeId]     = useState(ingredient ? ingredient.recipeId         : "");
-  const [unitPrice, setUnitPrice]   = useState(ingredient ? `${ingredient.unitPrice}`   : "0");
-  const [unitWeight, setUnitWeight] = useState(ingredient ? `${ingredient.unitWeight}`  : "0");
-  const [energy, setEnergy]         = useState(ingredient ? `${ingredient.energy}`      : "0");
-  const [fats, setFats]             = useState(ingredient ? `${ingredient.fats}`        : "0");
-  const [saturates, setSaturates]   = useState(ingredient ? `${ingredient.saturates}`   : "0");
-  const [carbs, setCarbs]           = useState(ingredient ? `${ingredient.carbs}`       : "0");
-  const [sugars, setSugar]          = useState(ingredient ? `${ingredient.sugars}`      : "0");
-  const [protein, setProtein]       = useState(ingredient ? `${ingredient.protein}`     : "0");
-  const [fiber, setFiber]           = useState(ingredient ? `${ingredient.fiber}`       : "0");
-  const [salt, setSalt]             = useState(ingredient ? `${ingredient.salt}`        : "0");
+  const [label,         setLabel]         = useState(ingredient ? ingredient.label              : "");
+  const [recipeId,      setRecipeId]      = useState(ingredient ? ingredient.recipeId           : "");
+  const [isSolid,       setIsSolid]       = useState(ingredient ? ingredient.isSolid            : true);
+  const [unit_price,    setUnit_price]    = useState(ingredient ? `${ingredient.unit_price}`    : "0");
+  const [unit_weight,   setUnit_weight]   = useState(ingredient ? `${ingredient.unit_weight}`   : "0");
+  const [unit_servings, setUnit_servings] = useState(ingredient ? `${ingredient.unit_servings}` : "0");
+  const [nut_energy,    setNut_energy]    = useState(ingredient ? `${ingredient.nut_energy}`    : "0");
+  const [nut_fats,      setNut_fats]      = useState(ingredient ? `${ingredient.nut_fats}`      : "0");
+  const [nut_saturates, setNut_saturates] = useState(ingredient ? `${ingredient.nut_saturates}` : "0");
+  const [nut_carbs,     setNut_carbs]     = useState(ingredient ? `${ingredient.nut_carbs}`     : "0");
+  const [nut_sugars,    setNut_sugar]     = useState(ingredient ? `${ingredient.nut_sugars}`    : "0");
+  const [nut_protein,   setNut_protein]   = useState(ingredient ? `${ingredient.nut_protein}`   : "0");
+  const [nut_fiber,     setNut_fiber]     = useState(ingredient ? `${ingredient.nut_fiber}`     : "0");
+  const [nut_salt,      setNut_salt]      = useState(ingredient ? `${ingredient.nut_salt}`      : "0");
 
 
 
   const saveIngredient = async () => {
     const data = {
-      label:      label,
-      recipeId:   recipeId,
-      unitPrice:  parseFloat(unitPrice),
-      unitWeight: parseFloat(unitWeight),
-      energy:     parseFloat(energy),
-      fats:       parseFloat(fats),
-      saturates:  parseFloat(saturates),
-      carbs:      parseFloat(carbs),
-      sugars:     parseFloat(sugars),
-      protein:    parseFloat(protein),
-      fiber:      parseFloat(fiber),
-      salt:       parseFloat(salt),
+      label:          label,
+      recipeId:       recipeId,
+      isSolid:        isSolid,
+      unit_price:     parseFloat(unit_price),
+      unit_weight:    parseFloat(unit_weight),
+      unit_servings:  parseInt(unit_servings),
+      nut_energy:     parseFloat(nut_energy),
+      nut_fats:       parseFloat(nut_fats),
+      nut_saturates:  parseFloat(nut_saturates),
+      nut_carbs:      parseFloat(nut_carbs),
+      nut_sugars:     parseFloat(nut_sugars),
+      nut_protein:    parseFloat(nut_protein),
+      nut_fiber:      parseFloat(nut_fiber),
+      nut_salt:       parseFloat(nut_salt),
     }
 
     if(ingredient) {
@@ -58,7 +65,9 @@ export default function IngredientEdit({ navigation, route }) {
     return deleteDoc(docRef);
   }
 
+  
 
+  const gps = () => {return getPhysicalState(isSolid);}
 
   const handleSaveOnPress = () => {
     if(saveLock) return;
@@ -81,8 +90,8 @@ export default function IngredientEdit({ navigation, route }) {
       console.log(e);
     });
   }
-  const handleCheckOnPress = () => {
-    navigation.goBack();
+  const handleIsSolidOnPress = () => {
+    setIsSolid(!isSolid);
   }
 
 
@@ -90,97 +99,73 @@ export default function IngredientEdit({ navigation, route }) {
   return (
     <View style={styles_common.container}>
       <ScrollView>
+
         <Label label="Label">
           <Input_Text value={label} setValue={setLabel} placeholder={"Label"}/>
         </Label>
-      
+        <Label label="Is Solid">
+          <Button_Icon icon={isSolid ? "check" : ""} onPress={handleIsSolidOnPress}/>
+        </Label>
         <Label label="Unit Price (eur)">
-          <Input_Text value={unitPrice} setValue={setUnitPrice} placeholder={""} keyboardType={"numeric"} />
+          <Input_Text value={unit_price} setValue={setUnit_price} placeholder={""} keyboardType={"numeric"} />
+        </Label>
+        <Label label={`Unit Amount (${gps()})`}>
+          <Input_Text value={unit_weight} setValue={setUnit_weight} placeholder={""} keyboardType={"numeric"}/>
+        </Label>
+        <Label label={`Unit Servings (${gps()})`}>
+          <Input_Text value={unit_servings} setValue={setUnit_servings} placeholder={""} keyboardType={"numeric"}/>
         </Label>
 
-        <Label label="Unit Weight (g/ml)">
-          <Input_Text value={unitWeight} setValue={setUnitWeight} placeholder={""} keyboardType={"numeric"}/>
-        </Label>
-
-        <Label label="Nutrition (Per 100g/ml): ">
-          <View style={{marginLeft: 10}}>
-            <Label label="Energy (kcal)">
-              <Input_Text value={energy} setValue={setEnergy} placeholder={""} keyboardType={"numeric"}/>
-            </Label>
-
-            <Label label="Fat (g)">
-              <Input_Text value={fats} setValue={setFats} placeholder={""} keyboardType={"numeric"}/>
-              <Paragraph>
-                <Label label="Saturates (g)" noMargin={true}>
-                  <Input_Text value={saturates} setValue={setSaturates} placeholder={""} keyboardType={"numeric"}/>
-                </Label>
-              </Paragraph>
-            </Label>
-
-            <Label label="Carbohydrate (g)">
-              <Input_Text value={carbs} setValue={setCarbs} placeholder={""} keyboardType={"numeric"}/>
-              <Paragraph>
-                <Label label="Sugars (g)" noMargin={true}>
-                  <Input_Text value={sugars} setValue={setSugar} placeholder={""} keyboardType={"numeric"}/>
-                </Label>
-              </Paragraph>
-            </Label>
-
-            <Label label="Protein (g)">
-              <Input_Text value={protein} setValue={setProtein} placeholder={""} keyboardType={"numeric"}/>
-            </Label>
-
-            <Label label="Fiber (g)">
-              <Input_Text value={fiber} setValue={setFiber} placeholder={""} keyboardType={"numeric"}/>
-            </Label>
-
-            <Label label="Salt (g)">
-              <Input_Text value={salt} setValue={setSalt} placeholder={""} keyboardType={"numeric"}/>
-            </Label>
+        <Label label={`Nutrition (Per 100${gps()}): `}>
+          <View style={{marginLeft: 10, borderColor: "#fff", borderTopWidth: 1,}}>
+            <Parameter label="Energy (kcal)"      value={nut_energy}    setValue={setNut_energy}/>
+            <Parameter label="Fat (g)"            value={nut_fats}      setValue={setNut_fats}/>
+            <Parameter label="     Saturates (g)" value={nut_saturates} setValue={setNut_saturates}/>
+            <Parameter label="Carbohydrate (g)"   value={nut_carbs}     setValue={setNut_carbs}/>
+            <Parameter label="     Sugars (g)"    value={nut_sugars}    setValue={setNut_sugar}/>
+            <Parameter label="Protein (g)"        value={nut_protein}   setValue={setNut_protein}/>
+            <Parameter label="Fiber (g)"          value={nut_fiber}     setValue={setNut_fiber}/>
+            <Parameter label="Salt (g)"           value={nut_salt}      setValue={setNut_salt}/>
           </View>
         </Label>
+
       </ScrollView>
 
-
       <Button_FormFooter
-        isNew={recipeId != "" || ingredient}
+        isNew={ingredient}
         onPressSaveNew={handleSaveOnPress}
         onPressSave={handleSaveOnPress}
         onPressDelete={handleDeleteOnPress}
       />
+    </View>
+  );
+}
 
-      <View style={{flex:1, flexDirection: "row", alignItems: "flex-end", marginVertical: 20}}>
-      {
-        recipeId != "" ? 
-          <Button_Icon 
-            style={{flex: 1, backgroundColor: color_button_green, marginRight: 5}}
-            icon="check"
-            onPress={handleCheckOnPress}
-          /> 
-        :
-        ingredient ?
-          <View style={{flex:1, flexDirection: "row"}}>
-            <Button_Icon 
-              style={{flex: 1, backgroundColor: color_button_green, marginRight: 5}}
-              icon="content-save"
-              onPress={handleSaveOnPress}
-            /> 
-            <Button_Icon 
-              style={{flex: 1, backgroundColor: color_button_red, marginLeft: 5}}
-              icon="delete-forever"
-              onPress={handleDeleteOnPress}
-            /> 
-          </View>
-        :
-        <Button_Icon 
-          style={{flex: 1, backgroundColor: color_button_green}}
-          icon="plus"
-          onPress={handleSaveOnPress}
-        />
-      }
+
+
+function Parameter(props) {
+  const label = props.label;
+  const value = props.value;
+  const setValue = props.setValue;
+
+  return (
+    <View style={{flexDirection: "row", borderColor: "#fff", borderBottomWidth: 1}}>
+      <View style={[styles.container, {backgroundColor: color_background_light}]}>
+        <Text style={styles_text.bold}>{label}</Text>
+      </View>
+      <View style={[styles.container, {backgroundColor: color_background_dark}]}>
+        <Input_Text value={value} setValue={setValue} placeholder={""} keyboardType={"numeric"}/>
       </View>
     </View>
   );
 }
 
-function Paragraph(props) { return (<View style={{marginLeft: 30}}>{props.children}</View>);}
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingVertical: 3,
+    paddingLeft: 10,
+  }
+});

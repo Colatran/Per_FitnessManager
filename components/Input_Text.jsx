@@ -24,6 +24,7 @@ export default function Input_Text(props) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: color_background_input,
     flexDirection: 'row',
   },

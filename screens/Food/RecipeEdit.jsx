@@ -82,6 +82,7 @@ export default function RedipeEdit({ navigation, route }) {
     return ({
       label:      label,
       recipeId:   recipeId,
+      isSolid:    true,
       unitPrice:  FloorValue(unitPrice  / _servings),
       unitWeight: FloorValue(unitWeight / _servings),
       energy:     FloorValue(energy     / _servings),

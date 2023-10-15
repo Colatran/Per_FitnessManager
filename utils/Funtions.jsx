@@ -23,3 +23,5 @@ export function getDurationText_FromMinuts(minutes) {
 
 
 export const FloorValue = (value) => {return  Math.floor(value * Math.pow(10, 2)) / Math.pow(10, 2);}
+
+export const getPhysicalState = (isSolid) => {return isSolid ? "g" : "ml"}
