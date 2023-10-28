@@ -4,11 +4,14 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { ref_food_ingredients, ref_food_recipes } from "../../firebase.config";
 import { addDoc, deleteDoc, doc, onSnapshot, updateDoc, where } from "firebase/firestore";
-import { color_background_dark, color_button_green, color_button_red, styles_common, styles_text } from "../../styles/styles";
+import { color_background_dark, color_background_input, color_button_green, color_button_red, styles_common, styles_text } from "../../styles/styles";
 
 import Input_Text from "../../components/Input_Text";
+import Button_FormFooter from "../../components/Button_FormFooter";
 import Button_Icon from "../../components/Button_Icon";
 import Label from "../../components/Label";
+import Button from "../../components/Button";
+import Popup from "../../components/Popup";
 
 
 const FloorValue = (value) => {return  Math.floor(value * Math.pow(10, 2)) / Math.pow(10, 2);}
@@ -16,16 +19,21 @@ const FloorValue = (value) => {return  Math.floor(value * Math.pow(10, 2)) / Mat
 export default function RedipeEdit({ navigation, route }) {
   const { recipe } = route.params;
 
-  const [saveLock, setSaveLock]               = useState(false);
-  const [lockSwitch, setLockSwitch]           = useState(false);
-
-  const [label, setLabel]                     = useState(recipe.id ? recipe.label          : "");
-  const [servings, setServings]               = useState(recipe.id ? `${recipe.servings}`  : "1");
-  const [ingredients, setIngredients]         = useState(recipe.id ? recipe.ingredients    : []);
+  const [label, setLabel]                     = useState(false ? recipe.label          : "");
+  const [servings, setServings]               = useState(false ? `${recipe.servings}`  : "1");
+  const [isSolid, setIsSolid]                 = useState(false ? recipe.isSolid        : true);
+  const [ingredients, setIngredients]         = useState(false ? recipe.ingredients    : []);
 
   const [ingredientsDocs, setIngredientsDocs] = useState([]);
 
+  const [saveLock, setSaveLock]               = useState(false);
+  const [lockSwitch, setLockSwitch]           = useState(false);
 
+  const [amountEdit_visible, setAmountEdit_visible] = useState(false);
+  const [amountEdit_index, setAmountEdit_index] = useState(0);
+  const [amountEdit_value, setAmountEdit_value] = useState(0);
+
+  
   
   useEffect(() => {
     return onSnapshot(ref_food_ingredients, (snapshot) => {
@@ -44,61 +52,57 @@ export default function RedipeEdit({ navigation, route }) {
 
 
   const getIngredientFromRecipe = (ingredients, recipeId) => {
-    let unitPrice = 0;
-    let unitWeight = 0;
-    let energy = 0;
-    let fats = 0;
-    let saturates = 0;
-    let carbs = 0;
-    let sugars = 0;
-    let protein = 0;
-    let fiber = 0;
-    let salt = 0;
+    let unit_price = 0;
+    let unit_weight = 0;
+    let nut_energy = 0;
+    let nut_fats = 0;
+    let nut_saturates = 0;
+    let nut_carbs = 0;
+    let nut_sugars = 0;
+    let nut_protein = 0;
+    let nut_fiber = 0;
+    let nut_salt = 0;
 
     ingredients.forEach(element => {
-      console.log(element);
-
-      const amount = element.amount;
+      const amount = parseFloat(element.amount);
       const ingredient = element.ingredient;
-      const ingUnitWeight = ingredient.unitWeight;
-      const ingUnitPrice = ingredient.unitPrice;
+      const ingUnitWeight = ingredient.unit_weight;
+      const ingUnitPrice = ingredient.unit_price;
 
-      unitWeight += parseFloat(amount);
-      unitPrice += parseFloat(amount * ingUnitPrice / ingUnitWeight);
-      energy += parseFloat(amount * ingredient.energy / 100);
-      console.log(amount);console.log(ingredient.energy);
+      unit_price    += parseFloat(amount * ingUnitPrice / ingUnitWeight);
+      unit_weight   += parseFloat(amount);
 
-      fats += parseFloat(amount * ingredient.fats / 100);
-      saturates += parseFloat(amount * ingredient.saturates / 100);
-      carbs += parseFloat(amount * ingredient.carbs / 100);
-      sugars += parseFloat(amount * ingredient.sugars / 100);
-      protein += parseFloat(amount * ingredient.protein / 100);
-      fiber += parseFloat(amount * ingredient.fiber / 100);
-      salt += parseFloat(amount * ingredient.salt / 100);
+      nut_energy    += parseFloat(amount * ingredient.nut_energy);
+      nut_fats      += parseFloat(amount * ingredient.nut_fats);
+      nut_saturates += parseFloat(amount * ingredient.nut_saturates);
+      nut_carbs     += parseFloat(amount * ingredient.nut_carbs);
+      nut_sugars    += parseFloat(amount * ingredient.nut_sugars);
+      nut_protein   += parseFloat(amount * ingredient.nut_protein);
+      nut_fiber     += parseFloat(amount * ingredient.nut_fiber);
+      nut_salt      += parseFloat(amount * ingredient.nut_salt);
     });
-
-    const _servings = parseFloat(servings);
 
     return ({
       label:      label,
       recipeId:   recipeId,
-      isSolid:    true,
-      unitPrice:  FloorValue(unitPrice  / _servings),
-      unitWeight: FloorValue(unitWeight / _servings),
-      energy:     FloorValue(energy     / _servings),
-      fats:       FloorValue(fats       / _servings),
-      saturates:  FloorValue(saturates  / _servings),
-      carbs:      FloorValue(carbs      / _servings),
-      sugars:     FloorValue(sugars     / _servings),
-      protein:    FloorValue(protein    / _servings),
-      fiber:      FloorValue(fiber      / _servings),
-      salt:       FloorValue(salt       / _servings),
+      isSolid:    isSolid,
+      unit_price:     FloorValue(unit_price),
+      unit_weight:    FloorValue(unit_weight),
+      unit_servings:  parseInt(servings),
+      nut_energy:     FloorValue(nut_energy) / unit_weight,
+      nut_fats:       FloorValue(nut_fats) / unit_weight,
+      nut_saturates:  FloorValue(nut_saturates) / unit_weight,
+      nut_carbs:      FloorValue(nut_carbs) / unit_weight,
+      nut_sugars:     FloorValue(nut_sugars) / unit_weight,
+      nut_protein:    FloorValue(nut_protein) / unit_weight,
+      nut_fiber:      FloorValue(nut_fiber) / unit_weight,
+      nut_salt:       FloorValue(nut_salt) / unit_weight,
     })
   }
 
   const addIngredient = async (index) => {
     const ingDoc = ingredientsDocs[index];
-    const newIng = {amount: `${ingDoc.unitWeight}`, ingredient: ingDoc};
+    const newIng = {amount: `${FloorValue(ingDoc.unit_weight / ingDoc.unit_servings)}`, ingredient: ingDoc};
     setIngredients([...ingredients, newIng]);
  
     ingredientsDocs.splice(index, 1);
@@ -147,6 +151,9 @@ export default function RedipeEdit({ navigation, route }) {
 
 
 
+  const handleIsSolidOnPress = () => {
+    setIsSolid(!isSolid);
+  }
   const handleAddIngredientOnPress = (index) => {
     if(lockSwitch) return;
     setLockSwitch(true);
@@ -161,8 +168,14 @@ export default function RedipeEdit({ navigation, route }) {
     removeIngredient(index)
     .then(() => setLockSwitch(false));
   }
-  const handleIngredientSetValue = (index, value) => {
-    changeIngredientAmount(index, value);
+  const handleIngredientSetValue = (index) => {
+    setAmountEdit_index(index);
+    setAmountEdit_value(ingredients[index].amount);
+    setAmountEdit_visible(true);
+  }
+  const handleAmountSave = () => {
+    changeIngredientAmount(amountEdit_index, amountEdit_value);
+    setAmountEdit_visible(false);
   }
   const handleSaveOnPress = () => {
     if(saveLock) return;
@@ -191,14 +204,36 @@ export default function RedipeEdit({ navigation, route }) {
   return (
     <View style={styles_common.container}>
 
-      <View>
-        <Label label="Label">
-          <Input_Text value={label} setValue={setLabel} placeholder={"Label"}/>
-        </Label>
-        
-        <Label label="Servings">
-          <Input_Text value={servings} setValue={setServings} placeholder={""} keyboardType={"numeric"}/>
-        </Label>
+      <Popup isVisible={amountEdit_visible} setInvisible={() => setAmountEdit_visible(false)}>
+        <View style={{flex:1}}>
+          <View style={{margin: 20 }}>
+            <ScrollView>
+              <Label label="Amount">
+                <Input_Text value={amountEdit_value} setValue={setAmountEdit_value} placeholder={""} keyboardType={"numeric"}/>
+              </Label>
+            </ScrollView>
+          </View>
+          <View style={{ flexDirection: "row", justifyContent: "center"}}>
+            <Button_Icon style={{margin: 10, backgroundColor: color_button_green}} icon="check" onPress={() => handleAmountSave()}/>
+            <Button_Icon style={{margin: 10, backgroundColor: color_button_red}} icon="close" onPress={() => setAmountEdit_visible(false)}/>
+          </View>
+        </View>
+      </Popup>
+
+      <View style={{marginBottom: 10}}>
+        <ScrollView>
+          <Label label="Label">
+            <Input_Text value={label} setValue={setLabel} placeholder={"Label"}/>
+          </Label>
+
+          <Label label="Is Solid">
+            <Button_Icon icon={isSolid ? "check" : ""} onPress={handleIsSolidOnPress}/>
+          </Label>
+          
+          <Label label="Servings">
+            <Input_Text value={servings} setValue={setServings} placeholder={""} keyboardType={"numeric"}/>
+          </Label>
+        </ScrollView>
       </View>
 
       <View style={{flex: 1}}>
@@ -234,7 +269,9 @@ export default function RedipeEdit({ navigation, route }) {
                 </View>
 
                 <View style={{flex: 1, paddingHorizontal: 5}}>
-                  <Input_Text value={item.amount} setValue={(text) => handleIngredientSetValue(index, text)} keyboardType={"numeric"}/>
+                  <Button style={styles.button_input} onPress={() => handleIngredientSetValue(index)}>
+                    <Text style={styles_text.common}>{item.amount}</Text>
+                  </Button>
                 </View>
 
                 <View style={{justifyContent: "flex-end", flexDirection: "row"}}>
@@ -246,29 +283,12 @@ export default function RedipeEdit({ navigation, route }) {
         </View>
       </View>
 
-      <View style={{flexDirection: "row", alignItems: "flex-end", marginVertical: 20}}>
-      {
-        recipe ?
-        <View style={{flex:1, flexDirection: "row"}}>
-          <Button_Icon 
-            style={{flex: 1, backgroundColor: color_button_green, marginRight: 5}}
-            icon="content-save"
-            onPress={handleSaveOnPress}
-          /> 
-          <Button_Icon 
-            style={{flex: 1, backgroundColor: color_button_red, marginLeft: 5}}
-            icon="delete-forever"
-            onPress={handleDeleteOnPress}
-          /> 
-        </View>
-        :
-        <Button_Icon 
-          style={{flex: 1, backgroundColor: color_button_green}}
-          icon="plus"
-          onPress={handleSaveOnPress}
-        />
-      }
-      </View>
+      <Button_FormFooter
+        isNew={false}
+        onPressSaveNew={handleSaveOnPress}
+        onPressSave={handleSaveOnPress}
+        onPressDelete={handleDeleteOnPress}
+      />
     </View>
   );
 }
@@ -279,6 +299,11 @@ const styles = StyleSheet.create({
   button: {
     marginHorizontal: 2,
     backgroundColor: color_background_dark,
+  },
+
+  button_input: {
+    flex: 1,
+    backgroundColor: color_background_input,
   },
 
   container_item: [

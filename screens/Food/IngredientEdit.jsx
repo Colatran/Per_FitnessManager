@@ -112,7 +112,7 @@ export default function IngredientEdit({ navigation, route }) {
         <Label label={`Unit Amount (${gps()})`}>
           <Input_Text value={unit_weight} setValue={setUnit_weight} placeholder={""} keyboardType={"numeric"}/>
         </Label>
-        <Label label={`Unit Servings (${gps()})`}>
+        <Label label={`Unit Servings`}>
           <Input_Text value={unit_servings} setValue={setUnit_servings} placeholder={""} keyboardType={"numeric"}/>
         </Label>
 
