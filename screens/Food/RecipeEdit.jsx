@@ -3,41 +3,50 @@ import { useEffect, useState } from "react";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { ref_food_ingredients, ref_food_recipes } from "../../firebase.config";
-import { addDoc, deleteDoc, doc, onSnapshot, updateDoc, where } from "firebase/firestore";
+import { addDoc, deleteDoc, doc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { color_background_dark, color_background_input, color_button_green, color_button_red, styles_common, styles_text } from "../../styles/styles";
 
 import Input_Text from "../../components/Input_Text";
-import Button_FormFooter from "../../components/Button_FormFooter";
+import Button_Footer_Form from "../../components/Button_Footer_Form";
 import Button_Icon from "../../components/Button_Icon";
 import Label from "../../components/Label";
 import Button from "../../components/Button";
 import Popup from "../../components/Popup";
 
 
+
 const FloorValue = (value) => {return  Math.floor(value * Math.pow(10, 2)) / Math.pow(10, 2);}
 
 export default function RedipeEdit({ navigation, route }) {
   const { recipe } = route.params;
+  const isEdit = recipe ? true : false;
 
-  const [label, setLabel]                     = useState(false ? recipe.label          : "");
-  const [servings, setServings]               = useState(false ? `${recipe.servings}`  : "1");
-  const [isSolid, setIsSolid]                 = useState(false ? recipe.isSolid        : true);
-  const [ingredients, setIngredients]         = useState(false ? recipe.ingredients    : []);
 
-  const [ingredientsDocs, setIngredientsDocs] = useState([]);
 
-  const [saveLock, setSaveLock]               = useState(false);
-  const [lockSwitch, setLockSwitch]           = useState(false);
+  const [label, setLabel]                   = useState(isEdit ? recipe.label          : "");
+  const [servings, setServings]             = useState(isEdit ? `${recipe.servings}`  : "1");
+  const [isSolid, setIsSolid]               = useState(isEdit ? recipe.isSolid        : true);
+  const [ingredients, setIngredients]       = useState([]);
+
+  const [ingredientDocs, setIngredientDocs] = useState([]);
+
+  const [saveLock, setSaveLock]             = useState(false);
+  const [lockSwitch, setLockSwitch]         = useState(false);
 
   const [amountEdit_visible, setAmountEdit_visible] = useState(false);
-  const [amountEdit_index, setAmountEdit_index] = useState(0);
-  const [amountEdit_value, setAmountEdit_value] = useState(0);
+  const [amountEdit_index, setAmountEdit_index]     = useState(0);
+  const [amountEdit_value, setAmountEdit_value]     = useState(0);
 
-  
+
   
   useEffect(() => {
     return onSnapshot(ref_food_ingredients, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data()}));
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        include: true
+      }));
+
       data.sort((a, b) => {
         const nameA = a.label.toUpperCase();
         const nameB = b.label.toUpperCase();
@@ -45,7 +54,27 @@ export default function RedipeEdit({ navigation, route }) {
         if (nameA > nameB) return 1;
         return 0;
       });
-      setIngredientsDocs(data);
+
+      if(isEdit) {
+        const ingData = recipe.ingredients;
+  
+        ingData.forEach(element => {
+          const index = data.findIndex(item => item.id === element.ingredientId);
+          const item = data[index];
+          item.include = false;
+          data[index] = item;
+        });
+        setIngredientDocs(data);
+  
+        setIngredients(ingData.map((doc) => ({
+          ingredientId: doc.ingredientId,
+          amount: doc.amount,
+          ingredient: data[data.findIndex(item => item.id === doc.ingredientId)]
+        })));
+      }
+      else {
+        setIngredientDocs(data);
+      }
     });
   }, []);
 
@@ -101,16 +130,18 @@ export default function RedipeEdit({ navigation, route }) {
   }
 
   const addIngredient = async (index) => {
-    const ingDoc = ingredientsDocs[index];
-    const newIng = {amount: `${FloorValue(ingDoc.unit_weight / ingDoc.unit_servings)}`, ingredient: ingDoc};
+    const ingDoc = ingredientDocs[index];
+    const newIng = { ingredientId: ingDoc.id, amount: `${FloorValue(ingDoc.unit_weight / ingDoc.unit_servings)}`, ingredient: ingDoc};
     setIngredients([...ingredients, newIng]);
  
-    ingredientsDocs.splice(index, 1);
-    setIngredientsDocs(ingredientsDocs);
+    ingredientDocs[index].include = false;
+    setIngredientDocs(ingredientDocs);
   }
   const removeIngredient = async (index) => {
-    const ing = ingredients[index].ingredient;
-    setIngredientsDocs([...ingredientsDocs, ing]);
+    const ingId = ingredients[index].ingredientId;
+    const indexDoc = ingredientDocs.findIndex(item => item.id === ingId);
+    ingredientDocs[indexDoc].include = true;
+    setIngredientDocs(ingredientDocs);
 
     ingredients.splice(index, 1);
     setIngredients(ingredients);
@@ -121,30 +152,44 @@ export default function RedipeEdit({ navigation, route }) {
     setIngredients(newIngredients);
   }
   const saveRecipe = async () => {
-    const ingredietData = ingredients.map((item) => ({ingredientId: item.ingredient.id, amount: item.amount}));
+    const ingredietData = ingredients.map((item) => ({ingredientId: item.ingredientId, amount: item.amount}));
 
     const recipeData = {
       label: label,
+      isSolid: isSolid,
+      servings: servings,
       ingredients: ingredietData,
     }
 
-    if(recipe.id) {
+
+    if(isEdit) {
       const recipeDocRef = doc(ref_food_recipes, recipe.id);
-      const ingredientDocRef = doc(ref_food_ingredients, where((x) => x.recipeId === recipe.id));
+      let ingDocRef;
+
+      const q = query(ref_food_ingredients, where('recipeId', '==', recipe.id));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((item) => {ingDocRef = doc(ref_food_ingredients, item.id)});
+
       const recipeIngredientData = getIngredientFromRecipe(ingredients, recipe.id);
       
       await updateDoc(recipeDocRef, recipeData).then(() => {
-        updateDoc(ingredientDocRef, recipeIngredientData);
+        updateDoc(ingDocRef, recipeIngredientData);
       });
     } 
     else {
       const recipeId = (await addDoc(ref_food_recipes, recipeData)).id;
       const recipeIngredientData = getIngredientFromRecipe(ingredients, recipeId);
-      console.log(recipeIngredientData);
       return await addDoc(ref_food_ingredients, recipeIngredientData);
     }
   }
   const deleteRecipe = async () => {
+    const q = query(ref_food_ingredients, where('recipeId', '==', recipe.id));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((item) => {
+      const docRef = doc(ref_food_ingredients, item.id)
+      deleteDoc(docRef);
+    });
+
     const docRef = doc(ref_food_recipes, recipe.id);
     return deleteDoc(docRef);
   }
@@ -180,6 +225,7 @@ export default function RedipeEdit({ navigation, route }) {
   const handleSaveOnPress = () => {
     if(saveLock) return;
     setSaveLock(true);
+
     saveRecipe()
     .then(() => {
       setSaveLock(false);
@@ -239,16 +285,18 @@ export default function RedipeEdit({ navigation, route }) {
       <View style={{flex: 1}}>
         <View style={styles.container_list}>
           <FlatList
-            data={ingredientsDocs}
+            data={ingredientDocs}
             renderItem={({item, index}) => { 
-              return(
-                <View style={styles.container_item}>
-                  <Text style={styles_text.common}>{item.label}</Text>
-                  <View style={{flex: 1, justifyContent: "flex-end", flexDirection: "row"}}>
-                    <Button_Icon style={styles.button} icon="plus" onPress={() => handleAddIngredientOnPress(index)}/>
+              if(item.include)
+                return(
+                  <View style={styles.container_item}>
+                    <Text style={styles_text.common}>{item.label}</Text>
+                    <View style={{flex: 1, justifyContent: "flex-end", flexDirection: "row"}}>
+                      <Button_Icon style={styles.button} icon="plus" onPress={() => handleAddIngredientOnPress(index)}/>
+                    </View>
                   </View>
-                </View>
-              )
+                );
+              else return (<></>);
             }}
           />
         </View>
@@ -262,7 +310,7 @@ export default function RedipeEdit({ navigation, route }) {
         <View style={styles.container_list}>
           <FlatList
             data={ingredients}
-            renderItem={({item, index}) => 
+            renderItem={({item, index}) =>
               <View style={styles.container_item}>
                 <View style={{flex: 1}}>
                   <Text style={styles_text.common}>{item.ingredient.label}</Text>
@@ -283,11 +331,11 @@ export default function RedipeEdit({ navigation, route }) {
         </View>
       </View>
 
-      <Button_FormFooter
-        isNew={false}
-        onPressSaveNew={handleSaveOnPress}
-        onPressSave={handleSaveOnPress}
-        onPressDelete={handleDeleteOnPress}
+      <Button_Footer_Form
+        isEdit={isEdit}
+        onPressSaveNew={() => handleSaveOnPress()}
+        onPressSave={() => handleSaveOnPress()}
+        onPressDelete={() => handleDeleteOnPress()}
       />
     </View>
   );

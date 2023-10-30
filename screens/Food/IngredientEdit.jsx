@@ -8,29 +8,30 @@ import { getPhysicalState } from "../../utils/Funtions";
 import Label from "../../components/Label";
 import Input_Text from "../../components/Input_Text";
 import Button_Icon from "../../components/Button_Icon";
-import Button_FormFooter from "../../components/Button_FormFooter";
+import Button_Footer_Form from "../../components/Button_Footer_Form";
 
 
 
 export default function IngredientEdit({ navigation, route }) {
   const { ingredient } = route.params;
+  const isEdit = ingredient ? true : false;
 
   const [saveLock, setSaveLock] = useState(false);
 
-  const [label,         setLabel]         = useState(ingredient ? ingredient.label              : "");
-  const [recipeId,      setRecipeId]      = useState(ingredient ? ingredient.recipeId           : "");
-  const [isSolid,       setIsSolid]       = useState(ingredient ? ingredient.isSolid            : true);
-  const [unit_price,    setUnit_price]    = useState(ingredient ? `${ingredient.unit_price}`    : "0");
-  const [unit_weight,   setUnit_weight]   = useState(ingredient ? `${ingredient.unit_weight}`   : "0");
-  const [unit_servings, setUnit_servings] = useState(ingredient ? `${ingredient.unit_servings}` : "0");
-  const [nut_energy,    setNut_energy]    = useState(ingredient ? `${ingredient.nut_energy}`    : "0");
-  const [nut_fats,      setNut_fats]      = useState(ingredient ? `${ingredient.nut_fats}`      : "0");
-  const [nut_saturates, setNut_saturates] = useState(ingredient ? `${ingredient.nut_saturates}` : "0");
-  const [nut_carbs,     setNut_carbs]     = useState(ingredient ? `${ingredient.nut_carbs}`     : "0");
-  const [nut_sugars,    setNut_sugar]     = useState(ingredient ? `${ingredient.nut_sugars}`    : "0");
-  const [nut_protein,   setNut_protein]   = useState(ingredient ? `${ingredient.nut_protein}`   : "0");
-  const [nut_fiber,     setNut_fiber]     = useState(ingredient ? `${ingredient.nut_fiber}`     : "0");
-  const [nut_salt,      setNut_salt]      = useState(ingredient ? `${ingredient.nut_salt}`      : "0");
+  const [label,         setLabel]         = useState(isEdit ? ingredient.label              : "");
+  const [recipeId,      setRecipeId]      = useState(isEdit ? ingredient.recipeId           : "");
+  const [isSolid,       setIsSolid]       = useState(isEdit ? ingredient.isSolid            : true);
+  const [unit_price,    setUnit_price]    = useState(isEdit ? `${ingredient.unit_price}`    : "0");
+  const [unit_weight,   setUnit_weight]   = useState(isEdit ? `${ingredient.unit_weight}`   : "0");
+  const [unit_servings, setUnit_servings] = useState(isEdit ? `${ingredient.unit_servings}` : "0");
+  const [nut_energy,    setNut_energy]    = useState(isEdit ? `${ingredient.nut_energy}`    : "0");
+  const [nut_fats,      setNut_fats]      = useState(isEdit ? `${ingredient.nut_fats}`      : "0");
+  const [nut_saturates, setNut_saturates] = useState(isEdit ? `${ingredient.nut_saturates}` : "0");
+  const [nut_carbs,     setNut_carbs]     = useState(isEdit ? `${ingredient.nut_carbs}`     : "0");
+  const [nut_sugars,    setNut_sugar]     = useState(isEdit ? `${ingredient.nut_sugars}`    : "0");
+  const [nut_protein,   setNut_protein]   = useState(isEdit ? `${ingredient.nut_protein}`   : "0");
+  const [nut_fiber,     setNut_fiber]     = useState(isEdit ? `${ingredient.nut_fiber}`     : "0");
+  const [nut_salt,      setNut_salt]      = useState(isEdit ? `${ingredient.nut_salt}`      : "0");
 
 
 
@@ -131,11 +132,11 @@ export default function IngredientEdit({ navigation, route }) {
 
       </ScrollView>
 
-      <Button_FormFooter
-        isNew={ingredient}
-        onPressSaveNew={handleSaveOnPress}
-        onPressSave={handleSaveOnPress}
-        onPressDelete={handleDeleteOnPress}
+      <Button_Footer_Form
+        isEdit={isEdit}
+        onPressSaveNew={() => handleSaveOnPress()}
+        onPressSave={() => handleSaveOnPress()}
+        onPressDelete={() => handleDeleteOnPress()}
       />
     </View>
   );

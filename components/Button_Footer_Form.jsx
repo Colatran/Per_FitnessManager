@@ -4,8 +4,8 @@ import Button_Icon from "./Button_Icon";
 
 
 
-export default function Button_FormFooter(props) {
-  const isNew = props.isNew;
+export default function Button_Footer_Form(props) {
+  const isEdit = props.isEdit;
   const onPressSaveNew = props.onPressSaveNew;
   const onPressSave = props.onPressSave;
   const onPressDelete = props.onPressDelete;
@@ -13,7 +13,7 @@ export default function Button_FormFooter(props) {
   return (
     <View style={{flexDirection: "row", alignItems: "flex-end", marginVertical: 20}}>
       {
-        isNew ?
+        isEdit ?
         <View style={{flex:1, flexDirection: "row"}}>
           <Button_Icon 
             style={{flex: 1, backgroundColor: color_button_green, marginRight: 5}}
@@ -33,6 +33,6 @@ export default function Button_FormFooter(props) {
           onPress={onPressSaveNew}
         />
       }
-      </View>
+    </View>
   );
 }

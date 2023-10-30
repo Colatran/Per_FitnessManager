@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { onSnapshot } from 'firebase/firestore';
 import { ref_food_ingredients } from '../../firebase.config';
 
-import { color_background_dark, color_button_green, styles_common, styles_text } from "../../styles/styles";
+import { color_background_dark, styles_common, styles_text } from "../../styles/styles";
 import Button_Icon from "../../components/Button_Icon";
+import Button_Footer_List from "../../components/Button_Footer_List";
 
 
 
@@ -64,13 +65,7 @@ export default function IngredientList({ navigation }) {
         />
       </View>
 
-      <View style={{flexDirection: "row", alignItems: "flex-end", marginVertical: 20}}>
-        <Button_Icon 
-          style={{flex: 1, backgroundColor: color_button_green}}
-          icon="plus"
-          onPress={handleAddOnPress}
-        />
-      </View>
+      <Button_Footer_List onPressAdd={handleAddOnPress}/>
     </View>
   );
 }

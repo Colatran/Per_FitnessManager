@@ -1,6 +1,6 @@
-import { StyleSheet, View, Text } from "react-native";
+import { View, Text } from "react-native";
 
-import { color_background_dark, styles_common, styles_text } from "../../styles/styles";
+import { styles_common, styles_text } from "../../styles/styles";
 import Button from "../../components/Button";
 
 
@@ -11,7 +11,7 @@ export default function Food({ navigation }) {
       <View style={{marginTop: 10, flexDirection: "row", height: 100}}>
         <Button_Option label="Ingredients" onPress={() => navigation.navigate("IngredientList")}/>
         <View style={{marginHorizontal: 5}}/>
-        <Button_Option label="Recipes" onPress={() => navigation.navigate("RecipeEdit", {recipe: {}})}/>
+        <Button_Option label="Recipes" onPress={() => navigation.navigate("RecipeList")}/>
       </View>
     </View>
   );
