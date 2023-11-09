@@ -17,7 +17,7 @@ export default function Food({ navigation }) {
       </View>
 
       <View style={{marginTop: 10, flexDirection: "row", height: 100}}>
-        <Button_Option label="Meals" onPress={() => navigation.navigate("MealList")}/>
+        <Button_Option label="Days Meals" onPress={() => navigation.navigate("MealList")}/>
       </View>
     </View>
   );
