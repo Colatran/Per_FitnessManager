@@ -18,12 +18,19 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const db  = getFirestore(app);
 
+export const info_status = "info_status";
+export const food_ingredients = "food_ingredients";
+export const food_recipes = "food_recipes";
+export const food_meals = "food_meals";
+
 export const exercises = "exercises";
 export const workouts = "workouts";
 export const workout_exercises = "workout_exercises";
 export const schedules = "schedules";
-export const food_ingredients = "food_ingredients";
-export const food_recipes = "food_recipes";
 
+
+
+export const ref_info_status = collection(db, info_status);
 export const ref_food_ingredients = collection(db, food_ingredients);
 export const ref_food_recipes = collection(db, food_recipes);
+export const ref_food_meals = collection(db, food_meals);

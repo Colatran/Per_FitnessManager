@@ -5,17 +5,16 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { UserProvider } from './utils/UserContext';
 
-
 import { color_background_light } from './styles/styles';
-/*
-import ExercisesList from './screens/ExercisesList';
+
+
+
+/*import ExercisesList from './screens/ExercisesList';
 import WorkoutList_Practice from './screens/WorkoutList_Practice';
 import WorkoutList_Manage from './screens/WorkoutList_Manage';
 import WorkoutEdit from './screens/WorkoutEdit';
 import WorkoutEdit_Exercise from './screens/WorkoutEdit_Exercise';
 import WorkoutPractice from './screens/WorkoutPractice';*/
-import Schedule from './screens/Schedule/Schedule';
-import ScheduleList from './screens/Schedule/ScheduleList';
 
 import Food from './screens/Food/Food';
 import IngredientList from './screens/Food/IngredientList';
@@ -23,7 +22,11 @@ import IngredientEdit from './screens/Food/IngredientEdit';
 import IngredientCheck from './screens/Food/IngredientCheck';
 import RecipeList from './screens/Food/RecipeList';
 import RecipeEdit from './screens/Food/RecipeEdit';
+import MealList from './screens/Food/MealList';
+import MealEdit from './screens/Food/MealEdit';
 
+import Schedule from './screens/Schedule/Schedule';
+import ScheduleList from './screens/Schedule/ScheduleList';
 
 
 
@@ -33,7 +36,7 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   return (
     <UserProvider>
-      <View style={{flex: 1}}>
+      <View style={{flex: 1, backgroundColor: "#000"}}>
         <NavigationContainer>
           
           <Tab.Navigator
@@ -206,6 +209,15 @@ function Stack_Food() {
         name='RecipeEdit'
         component={RecipeEdit}
         options={StackOptions("Recipe")}/>
+
+      <Stack.Screen 
+        name='MealList'
+        component={MealList}
+        options={StackOptions("Meals")}/>
+      <Stack.Screen 
+        name='MealEdit'
+        component={MealEdit}
+        options={StackOptions("Meal")}/>
     </Stack.Navigator>
   );
 }

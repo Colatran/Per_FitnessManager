@@ -73,6 +73,7 @@ export default function IngredientEdit({ navigation, route }) {
   const handleSaveOnPress = () => {
     if(saveLock) return;
     setSaveLock(true);
+    
     saveIngredient()
     .then(() => {
       setSaveLock(false);

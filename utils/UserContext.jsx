@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { db, exercises } from '../firebase.config';
+import { db, exercises, ref_status } from '../firebase.config';
 import { collection, onSnapshot } from 'firebase/firestore';
 
 
@@ -11,10 +11,18 @@ const ref_exercises = collection(db, exercises);
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
+  const [status, setStatus] = useState(70.0);
   const [exerciseDocs, setExerciseDocs] = useState([]);
 
 
-
+/*
+  useEffect(() => {
+    return onSnapshot(ref_status, (snapshot) => {
+      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...data.data() }));
+      setStatus(data[0]);
+    });
+  }, []);
+*/
   useEffect(() => {
     return onSnapshot(ref_exercises, (snapshot) => {
       const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -33,6 +41,7 @@ export const UserProvider = ({ children }) => {
       setExerciseDocs(data);
     });
   }, []);
+
 
 
 

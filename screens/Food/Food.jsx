@@ -9,9 +9,15 @@ export default function Food({ navigation }) {
   return (
     <View style={styles_common.container}>
       <View style={{marginTop: 10, flexDirection: "row", height: 100}}>
-        <Button_Option label="Ingredients" onPress={() => navigation.navigate("IngredientList")}/>
-        <View style={{marginHorizontal: 5}}/>
+        <Button_Option label="Ingredients" onPress={() => navigation.navigate("IngredientList")}/>  
+      </View>
+
+      <View style={{marginTop: 10, flexDirection: "row", height: 100}}>
         <Button_Option label="Recipes" onPress={() => navigation.navigate("RecipeList")}/>
+      </View>
+
+      <View style={{marginTop: 10, flexDirection: "row", height: 100}}>
+        <Button_Option label="Meals" onPress={() => navigation.navigate("MealList")}/>
       </View>
     </View>
   );
