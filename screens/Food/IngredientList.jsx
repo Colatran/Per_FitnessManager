@@ -1,30 +1,15 @@
-import { StyleSheet, View, Text, FlatList} from "react-native";
-import { useEffect, useState } from "react";
-import { onSnapshot } from 'firebase/firestore';
-import { ref_food_ingredients } from '../../firebase.config';
+import { StyleSheet, View, Text, FlatList } from "react-native";
+import { useContext } from "react";
 
 import { color_background_dark, styles_common, styles_text } from "../../styles/styles";
 import Button_Icon from "../../components/Button_Icon";
 import Button_Footer_List from "../../components/Button_Footer_List";
+import { UserContext } from "../../utils/UserContext";
 
 
 
 export default function IngredientList({ navigation }) {
-  const [ingredientDocs, setIngredientDocs] = useState([]);
-
-  useEffect(() => {
-    return onSnapshot(ref_food_ingredients, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      data.sort((a, b) => {
-        const nameA = a.label.toUpperCase();
-        const nameB = b.label.toUpperCase();
-        if (nameA < nameB) return -1;
-        if (nameA > nameB) return 1;
-        return 0;
-      });
-      setIngredientDocs(data);
-    });
-  }, []);
+  const { ingredientDocs } = useContext(UserContext);
 
 
 

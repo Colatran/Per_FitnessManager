@@ -1,9 +1,9 @@
 import { View, Text, ScrollView, FlatList, StyleSheet } from "react-native";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { ref_food_ingredients, ref_food_meals } from "../../firebase.config";
-import { addDoc, deleteDoc, doc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, deleteDoc, doc, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { color_background_dark, color_background_input, color_button_green, color_button_red, styles_common, styles_text } from "../../styles/styles";
 
 import Input_Text from "../../components/Input_Text";
@@ -12,6 +12,7 @@ import Button_Icon from "../../components/Button_Icon";
 import Label from "../../components/Label";
 import Button from "../../components/Button";
 import Popup from "../../components/Popup";
+import { UserContext } from "../../utils/UserContext";
 
 
 
@@ -19,126 +20,75 @@ const FloorValue = (value) => {return  Math.floor(value * Math.pow(10, 2)) / Mat
 
 export default function MealEdit({ navigation, route }) {
   const { meal } = route.params;
+  const { ingredientDocs } = useContext(UserContext);
+
+
   const isEdit = meal ? true : false;
 
 
-
-  const [label, setLabel]                   = useState(isEdit ? meal.label          : "");
-  const [isSolid, setIsSolid]               = useState(isEdit ? meal.isSolid        : true);
-  const [ingredients, setIngredients]       = useState([]);
-
-  const [ingredientDocs, setIngredientDocs] = useState([]);
-
-  const [saveLock, setSaveLock]             = useState(false);
-  const [lockSwitch, setLockSwitch]         = useState(false);
 
   const [amountEdit_visible, setAmountEdit_visible] = useState(false);
   const [amountEdit_index, setAmountEdit_index]     = useState(0);
   const [amountEdit_value, setAmountEdit_value]     = useState(0);
 
+  const [saveLock, setSaveLock]             = useState(false);
+  const [lockSwitch, setLockSwitch]         = useState(false);
+
+  const [incIngredientDocs, setIngredientDocs] = useState([]);
+
+  const [label, setLabel]                   = useState(isEdit ? meal.label          : "");
+  const [isSolid, setIsSolid]               = useState(isEdit ? meal.isSolid        : true);
+  const [ingredients, setIngredients]       = useState([]);
+
 
   
-  useEffect(() => {
-    return onSnapshot(ref_food_ingredients, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-        include: true
-      }));
+  const Start = () => {
+    const data = ingredientDocs.map((doc) => ({
+      ...doc,
+      include: true
+    }));
 
-      data.sort((a, b) => {
-        const nameA = a.label.toUpperCase();
-        const nameB = b.label.toUpperCase();
-        if (nameA < nameB) return -1;
-        if (nameA > nameB) return 1;
-        return 0;
+    if(isEdit) {
+      const ingData = meal.ingredients;
+  
+      ingData.forEach(element => {
+        const index = data.findIndex(item => item.id === element.ingredientId);
+        const item = data[index];
+        item.include = false;
+        data[index] = item;
       });
-
-      if(isEdit) {
-        const ingData = meal.ingredients;
+      setIngredientDocs(data);
   
-        ingData.forEach(element => {
-          const index = data.findIndex(item => item.id === element.ingredientId);
-          const item = data[index];
-          item.include = false;
-          data[index] = item;
-        });
-        setIngredientDocs(data);
-  
-        setIngredients(ingData.map((doc) => ({
-          ingredientId: doc.ingredientId,
-          amount: doc.amount,
-          ingredient: data[data.findIndex(item => item.id === doc.ingredientId)]
-        })));
-      }
-      else {
-        setIngredientDocs(data);
-      }
-    });
+      setIngredients(ingData.map((doc) => ({
+        ingredientId: doc.ingredientId,
+        amount: doc.amount,
+        ingredient: data[data.findIndex(item => item.id === doc.ingredientId)]
+      })));
+    }
+    else {
+      setIngredientDocs(data);
+    }
+  }
+  useEffect(() => {
+    Start();
+    return;
   }, []);
 
 
 
-  const getIngredientFromMeal = (ingredients, mealId) => {
-    let unit_price = 0;
-    let unit_weight = 0;
-    let nut_energy = 0;
-    let nut_fats = 0;
-    let nut_saturates = 0;
-    let nut_carbs = 0;
-    let nut_sugars = 0;
-    let nut_protein = 0;
-    let nut_fiber = 0;
-    let nut_salt = 0;
-
-    ingredients.forEach(element => {
-      const amount = parseFloat(element.amount);
-      const ingredient = element.ingredient;
-      const ingUnitWeight = ingredient.unit_weight;
-      const ingUnitPrice = ingredient.unit_price;
-
-      unit_price    += parseFloat(amount * ingUnitPrice / ingUnitWeight);
-      unit_weight   += parseFloat(amount);
-
-      nut_energy    += parseFloat(amount * ingredient.nut_energy);
-      nut_fats      += parseFloat(amount * ingredient.nut_fats);
-      nut_saturates += parseFloat(amount * ingredient.nut_saturates);
-      nut_carbs     += parseFloat(amount * ingredient.nut_carbs);
-      nut_sugars    += parseFloat(amount * ingredient.nut_sugars);
-      nut_protein   += parseFloat(amount * ingredient.nut_protein);
-      nut_fiber     += parseFloat(amount * ingredient.nut_fiber);
-      nut_salt      += parseFloat(amount * ingredient.nut_salt);
-    });
-
-    return ({
-      label:      label,
-      isSolid:    isSolid,
-      unit_price:     FloorValue(unit_price),
-      unit_weight:    FloorValue(unit_weight),
-      nut_energy:     FloorValue(nut_energy) / unit_weight,
-      nut_fats:       FloorValue(nut_fats) / unit_weight,
-      nut_saturates:  FloorValue(nut_saturates) / unit_weight,
-      nut_carbs:      FloorValue(nut_carbs) / unit_weight,
-      nut_sugars:     FloorValue(nut_sugars) / unit_weight,
-      nut_protein:    FloorValue(nut_protein) / unit_weight,
-      nut_fiber:      FloorValue(nut_fiber) / unit_weight,
-      nut_salt:       FloorValue(nut_salt) / unit_weight,
-    })
-  }
-
   const addIngredient = async (index) => {
-    const ingDoc = ingredientDocs[index];
+    const ingDoc = incIngredientDocs[index];
     const newIng = { ingredientId: ingDoc.id, amount: `${FloorValue(ingDoc.unit_weight / ingDoc.unit_servings)}`, ingredient: ingDoc};
     setIngredients([...ingredients, newIng]);
  
-    ingredientDocs[index].include = false;
-    setIngredientDocs(ingredientDocs);
+    incIngredientDocs[index].include = false;
+    setIngredientDocs(incIngredientDocs);
   }
   const removeIngredient = async (index) => {
     const ingId = ingredients[index].ingredientId;
-    const indexDoc = ingredientDocs.findIndex(item => item.id === ingId);
-    ingredientDocs[indexDoc].include = true;
-    setIngredientDocs(ingredientDocs);
+    const indexDoc = incIngredientDocs.findIndex(item => item.id === ingId);
+    incIngredientDocs[indexDoc].include = true;
+    setIngredientDocs(incIngredientDocs);
 
     ingredients.splice(index, 1);
     setIngredients(ingredients);
@@ -150,42 +100,21 @@ export default function MealEdit({ navigation, route }) {
   }
   const saveMeal = async () => {
     const ingredietData = ingredients.map((item) => ({ingredientId: item.ingredientId, amount: item.amount}));
-
     const mealData = {
       label: label,
       isSolid: isSolid,
       ingredients: ingredietData,
     }
 
-
     if(isEdit) {
       const mealDocRef = doc(ref_food_meals, meal.id);
-      let ingDocRef;
-
-      const q = query(ref_food_ingredients, where('mealId', '==', meal.id));
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((item) => {ingDocRef = doc(ref_food_ingredients, item.id)});
-
-      const mealIngredientData = getIngredientFromMeal(ingredients, meal.id);
-      
-      await updateDoc(mealDocRef, mealData).then(() => {
-        updateDoc(ingDocRef, mealIngredientData);
-      });
+      await updateDoc(mealDocRef, mealData);
     } 
     else {
-      const mealId = (await addDoc(ref_food_meals, mealData)).id;
-      const mealIngredientData = getIngredientFromMeal(ingredients, mealId);
-      return await addDoc(ref_food_ingredients, mealIngredientData);
+      return await addDoc(ref_food_meals, mealData);
     }
   }
   const deleteMeal = async () => {
-    const q = query(ref_food_ingredients, where('mealId', '==', meal.id));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((item) => {
-      const docRef = doc(ref_food_ingredients, item.id)
-      deleteDoc(docRef);
-    });
-
     const docRef = doc(ref_food_meals, meal.id);
     return deleteDoc(docRef);
   }
@@ -277,7 +206,7 @@ export default function MealEdit({ navigation, route }) {
       <View style={{flex: 1}}>
         <View style={styles.container_list}>
           <FlatList
-            data={ingredientDocs}
+            data={incIngredientDocs}
             renderItem={({item, index}) => { 
               if(item.include)
                 return(

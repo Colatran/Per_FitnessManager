@@ -1,47 +1,43 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { db, exercises, ref_status } from '../firebase.config';
-import { collection, onSnapshot } from 'firebase/firestore';
-
-
-
-const ref_exercises = collection(db, exercises);
+import { ref_food_ingredients, ref_food_meals, ref_food_recipes } from '../firebase.config';
+import { onSnapshot } from 'firebase/firestore';
 
 
 
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [status, setStatus] = useState(70.0);
-  const [exerciseDocs, setExerciseDocs] = useState([]);
+  const [ingredientDocs, setIngredientDocs] = useState([]);
+  const [recipeDocs, setRecipeDocs] = useState([]);
+  const [mealDocs, setMealDocs] = useState([]);
 
 
-/*
-  useEffect(() => {
-    return onSnapshot(ref_status, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...data.data() }));
-      setStatus(data[0]);
-    });
-  }, []);
-*/
-  useEffect(() => {
-    return onSnapshot(ref_exercises, (snapshot) => {
+
+  const SortedListSnapshot = (ref, setData) => {
+    return onSnapshot(ref, (snapshot) => {
       const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       data.sort((a, b) => {
-        const nameA = a.name.toUpperCase();
-        const nameB = b.name.toUpperCase();
-      
-        if (nameA < nameB) {
-          return -1;
-        }
-        if (nameA > nameB) {
-          return 1;
-        }
+        const nameA = a.label.toUpperCase();
+        const nameB = b.label.toUpperCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
         return 0;
       });
-      setExerciseDocs(data);
+      setData(data);
     });
-  }, []);
+  }
 
+  useEffect(() => {
+    const ingredientSnap =  SortedListSnapshot(ref_food_ingredients, setIngredientDocs);
+    const recipeSnap =      SortedListSnapshot(ref_food_recipes, setRecipeDocs);
+    const mealSnap =        SortedListSnapshot(ref_food_meals, setMealDocs);
+
+    return () => {
+      ingredientSnap();
+      recipeSnap();
+      mealSnap();
+    }
+  }, []);
 
 
 
@@ -55,7 +51,9 @@ export const UserProvider = ({ children }) => {
   return (
     <UserContext.Provider
       value={{
-        exerciseDocs,   setExerciseDocs,
+        ingredientDocs, setIngredientDocs,
+        recipeDocs,     setRecipeDocs,
+        mealDocs,       setMealDocs,
 
         getExerciseName,
       }}

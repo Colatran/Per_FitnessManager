@@ -166,20 +166,6 @@ function Stack_Workouts() {
     </Stack.Navigator>
   );
 }*/
-function Stack_Schedule() {
-  return (
-    <Stack.Navigator initialRouteName='ScheduleList'>
-      <Stack.Screen 
-        name='ScheduleList'
-        component={ScheduleList}
-        options={StackOptions("Schedules")}/>
-      <Stack.Screen 
-        name='Schedule'
-        component={Schedule}
-        options={StackOptions("Schedule")}/>
-    </Stack.Navigator>
-  );
-}
 function Stack_Food() {
   return (
     <Stack.Navigator initialRouteName='FoodScreen'>
@@ -218,6 +204,21 @@ function Stack_Food() {
         name='MealEdit'
         component={MealEdit}
         options={StackOptions("Meal")}/>
+    </Stack.Navigator>
+  );
+}
+
+function Stack_Schedule() {
+  return (
+    <Stack.Navigator initialRouteName='ScheduleList'>
+      <Stack.Screen 
+        name='ScheduleList'
+        component={ScheduleList}
+        options={StackOptions("Schedules")}/>
+      <Stack.Screen 
+        name='Schedule'
+        component={Schedule}
+        options={StackOptions("Schedule")}/>
     </Stack.Navigator>
   );
 }

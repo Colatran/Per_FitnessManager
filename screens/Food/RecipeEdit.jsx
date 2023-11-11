@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, FlatList, StyleSheet } from "react-native";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { ref_food_ingredients, ref_food_recipes } from "../../firebase.config";
@@ -12,6 +12,7 @@ import Button_Icon from "../../components/Button_Icon";
 import Label from "../../components/Label";
 import Button from "../../components/Button";
 import Popup from "../../components/Popup";
+import { UserContext } from "../../utils/UserContext";
 
 
 
@@ -19,6 +20,8 @@ const FloorValue = (value) => {return  Math.floor(value * Math.pow(10, 2)) / Mat
 
 export default function RedipeEdit({ navigation, route }) {
   const { recipe } = route.params;
+  const { ingredientDocs } = useContext(UserContext);
+
   const isEdit = recipe ? true : false;
 
 
@@ -28,7 +31,7 @@ export default function RedipeEdit({ navigation, route }) {
   const [isSolid, setIsSolid]               = useState(isEdit ? recipe.isSolid        : true);
   const [ingredients, setIngredients]       = useState([]);
 
-  const [ingredientDocs, setIngredientDocs] = useState([]);
+  const [ incIngredientDocs, setIngredientDocs] = useState([]);
 
   const [saveLock, setSaveLock]             = useState(false);
   const [lockSwitch, setLockSwitch]         = useState(false);
@@ -39,45 +42,37 @@ export default function RedipeEdit({ navigation, route }) {
 
 
   
-  useEffect(() => {
-    return onSnapshot(ref_food_ingredients, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-        include: true
-      }));
+  const Start = () => {
+    const data = ingredientDocs.map((doc) => ({
+      ...doc,
+      include: true
+    }));
 
-      data.sort((a, b) => {
-        const nameA = a.label.toUpperCase();
-        const nameB = b.label.toUpperCase();
-        if (nameA < nameB) return -1;
-        if (nameA > nameB) return 1;
-        return 0;
+    if(isEdit) {
+      const ingData = recipe.ingredients;
+  
+      ingData.forEach(element => {
+        const index = data.findIndex(item => item.id === element.ingredientId);
+        const item = data[index];
+        item.include = false;
+        data[index] = item;
       });
-
-      if(isEdit) {
-        const ingData = recipe.ingredients;
+      setIngredientDocs(data);
   
-        ingData.forEach(element => {
-          const index = data.findIndex(item => item.id === element.ingredientId);
-          const item = data[index];
-          item.include = false;
-          data[index] = item;
-        });
-        setIngredientDocs(data);
-  
-        setIngredients(ingData.map((doc) => ({
-          ingredientId: doc.ingredientId,
-          amount: doc.amount,
-          ingredient: data[data.findIndex(item => item.id === doc.ingredientId)]
-        })));
-      }
-      else {
-        setIngredientDocs(data);
-      }
-    });
+      setIngredients(ingData.map((doc) => ({
+        ingredientId: doc.ingredientId,
+        amount: doc.amount,
+        ingredient: data[data.findIndex(item => item.id === doc.ingredientId)]
+      })));
+    }
+    else {
+      setIngredientDocs(data);
+    }
+  }
+  useEffect(() => {
+    Start();
+    return;
   }, []);
-
 
 
   const getIngredientFromRecipe = (ingredients, recipeId) => {
@@ -130,18 +125,18 @@ export default function RedipeEdit({ navigation, route }) {
   }
 
   const addIngredient = async (index) => {
-    const ingDoc = ingredientDocs[index];
+    const ingDoc = incIngredientDocs[index];
     const newIng = { ingredientId: ingDoc.id, amount: `${FloorValue(ingDoc.unit_weight / ingDoc.unit_servings)}`, ingredient: ingDoc};
     setIngredients([...ingredients, newIng]);
  
-    ingredientDocs[index].include = false;
-    setIngredientDocs(ingredientDocs);
+    incIngredientDocs[index].include = false;
+    setIngredientDocs(incIngredientDocs);
   }
   const removeIngredient = async (index) => {
     const ingId = ingredients[index].ingredientId;
-    const indexDoc = ingredientDocs.findIndex(item => item.id === ingId);
-    ingredientDocs[indexDoc].include = true;
-    setIngredientDocs(ingredientDocs);
+    const indexDoc = incIngredientDocs.findIndex(item => item.id === ingId);
+    incIngredientDocs[indexDoc].include = true;
+    setIngredientDocs(incIngredientDocs);
 
     ingredients.splice(index, 1);
     setIngredients(ingredients);
@@ -285,7 +280,7 @@ export default function RedipeEdit({ navigation, route }) {
       <View style={{flex: 1}}>
         <View style={styles.container_list}>
           <FlatList
-            data={ingredientDocs}
+            data={incIngredientDocs}
             renderItem={({item, index}) => { 
               if(item.include)
                 return(

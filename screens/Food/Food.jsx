@@ -2,12 +2,16 @@ import { View, Text } from "react-native";
 
 import { styles_common, styles_text } from "../../styles/styles";
 import Button from "../../components/Button";
+import Display_DailyAverage from "../../components/screen_Food/Display_DailyAverage";
 
 
 
 export default function Food({ navigation }) {
   return (
     <View style={styles_common.container}>
+
+      <Display_DailyAverage/>
+
       <View style={{marginTop: 10, flexDirection: "row", height: 100}}>
         <Button_Option label="Ingredients" onPress={() => navigation.navigate("IngredientList")}/>  
       </View>
@@ -17,7 +21,7 @@ export default function Food({ navigation }) {
       </View>
 
       <View style={{marginTop: 10, flexDirection: "row", height: 100}}>
-        <Button_Option label="Days Meals" onPress={() => navigation.navigate("MealList")}/>
+        <Button_Option label="Day's Meals" onPress={() => navigation.navigate("MealList")}/>
       </View>
     </View>
   );
@@ -35,6 +39,3 @@ function Button_Option(props) {
     </Button>
   );
 }
-
-
-

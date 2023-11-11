@@ -69,7 +69,7 @@ export default function IngredientCheck({ navigation, route }) {
       </View>
 
       <Parameter label={"Price Serving"}        value={`${FloorValue(unit_price / unit_servings)}€`}/>
-      <Parameter label={"Price Protein(100g)"}  value={`${FloorValue(price_100 / nut_protein * 100)}€`}/>
+      <Parameter label={"Price Protein(100g)"}  value={nut_protein > 0 ? `${FloorValue(price_100 / nut_protein * 100)}€` : '--'}/>
       <Parameter label={"Price 100cal"}         value={`${FloorValue(price_100 / nut_energy * 100)}€`}/>
     </View>
   );
