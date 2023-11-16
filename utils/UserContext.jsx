@@ -1,3 +1,4 @@
+import { View } from 'react-native';
 import React, { createContext, useEffect, useState } from 'react';
 import { ref_food_ingredients, ref_food_meals, ref_food_recipes } from '../firebase.config';
 import { onSnapshot } from 'firebase/firestore';
@@ -49,16 +50,18 @@ export const UserProvider = ({ children }) => {
 
 
   return (
-    <UserContext.Provider
-      value={{
-        ingredientDocs, setIngredientDocs,
-        recipeDocs,     setRecipeDocs,
-        mealDocs,       setMealDocs,
+    <View style={{flex: 1, backgroundColor: "#000"}}>
+      <UserContext.Provider
+        value={{
+          ingredientDocs, setIngredientDocs,
+          recipeDocs,     setRecipeDocs,
+          mealDocs,       setMealDocs,
 
-        getExerciseName,
-      }}
-    >
-      {children}
-    </UserContext.Provider>
+          getExerciseName,
+        }}
+      >
+        {children}
+      </UserContext.Provider>
+    </View>
   );
 };

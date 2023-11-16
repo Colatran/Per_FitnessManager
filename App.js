@@ -5,7 +5,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { UserProvider } from './utils/UserContext';
 
-import { color_background_light } from './styles/styles';
+import {
+  _color_background_front, _color_border_background_front,
+  _iconSize_m,
+  _space_l, _space_m, _space_s,
+  _textColor, _textShadowColor, _textShadowRadius, styles_text
+} from './styles/styles';
 
 
 
@@ -36,30 +41,37 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   return (
     <UserProvider>
-      <View style={{flex: 1, backgroundColor: "#000"}}>
-        <NavigationContainer>
-          
-          <Tab.Navigator
-            initialRouteName='Tab_Food'
-            screenOptions={{
-              headerShown: false,
-              tabBarActiveTintColor: '#fff',              
-              tabBarStyle: {
-                height: 60,
-                justifyContent: "flex-end",
-                alignItems: "flex-end",
-                paddingTop: 5,
-                paddingBottom: 5,
-                backgroundColor: color_background_light,
-                borderTopColor: "#000",
-              },
-              tabBarLabelStyle: {
-                textShadowColor: '#101010',
-                textShadowRadius: 10,
-              }
-            }}
-          >
-            {/*<Tab.Screen 
+      <NavigationContainer>
+        <Tab.Navigator
+          initialRouteName='Tab_Food'
+          screenOptions={{
+            headerShown: false,
+            tabBarActiveTintColor: _textColor,
+            tabBarStyle: {
+              height: 64,
+              paddingTop: _space_s,
+              paddingBottom: _space_m,
+              backgroundColor: _color_background_front,
+              borderTopColor: _color_border_background_front,
+            },
+            tabBarLabelStyle: {
+              textShadowColor: _textShadowColor,
+              textShadowRadius: _textShadowRadius,
+            }
+          }}
+        >
+          <Tab.Screen
+            name="Tab_Food"
+            options={TabOptions("Food", "food-drumstick")}
+            component={Stack_Food}
+          />
+          <Tab.Screen
+            name="Tab_Schedule"
+            options={TabOptions("Schedule", "calendar-month")}
+            component={Stack_Schedule}
+          />
+
+          {/*<Tab.Screen 
               name="Tab_Practice"
               options={TabOptions("Practice", "play")}
               component={Stack_Practice}
@@ -79,19 +91,8 @@ export default function App() {
               options={TabOptions("History", "history")}
               component={Stack_Exercises}
             />*/}
-            <Tab.Screen 
-              name="Tab_Food"
-              options={TabOptions("Food", "food-drumstick")}
-              component={Stack_Food}
-            />
-            <Tab.Screen 
-              name="Tab_Schedule"
-              options={TabOptions("Schedule", "calendar-month")}
-              component={Stack_Schedule}
-            />
-          </Tab.Navigator>
-        </NavigationContainer>
-      </View>
+        </Tab.Navigator>
+      </NavigationContainer>
     </UserProvider>
   );
 }
@@ -102,25 +103,82 @@ const StackOptions = (title) => {
   return {
     title: `  ${title}  `,
     headerStyle: {
-      backgroundColor: color_background_light,
+      backgroundColor: _color_background_front,
+      borderBottomColor: _color_border_background_front
     },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-      textShadowColor: '#000',
-      textShadowOffset: {width: 1, height: 1},
-      textShadowRadius: 10,
-    },
+    headerTitleStyle: styles_text.title,
   }
 }
 const TabOptions = (title, icon) => {
   return {
-    title: title,
+    title: `${title}`,
     tabBarIcon: () => (
-      <Icon name={icon} size={30} color='white' />
+      <Icon name={icon} size={_iconSize_m} color={_textColor}/>
     ),
   }
 }
+
+
+
+function Stack_Food() {
+  return (
+    <Stack.Navigator initialRouteName='FoodScreen'>
+      <Stack.Screen
+        name='FoodScreen'
+        component={Food}
+        options={StackOptions("Food")} />
+
+      <Stack.Screen
+        name='IngredientList'
+        component={IngredientList}
+        options={StackOptions("Ingredients")} />
+      <Stack.Screen
+        name='IngredientEdit'
+        component={IngredientEdit}
+        options={StackOptions("Ingredient")} />
+      <Stack.Screen
+        name='IngredientCheck'
+        component={IngredientCheck}
+        options={StackOptions("Ingredient")} />
+
+      <Stack.Screen
+        name='RecipeList'
+        component={RecipeList}
+        options={StackOptions("Recipes")} />
+      <Stack.Screen
+        name='RecipeEdit'
+        component={RecipeEdit}
+        options={StackOptions("Recipe")} />
+
+      <Stack.Screen
+        name='MealList'
+        component={MealList}
+        options={StackOptions("Meals")} />
+      <Stack.Screen
+        name='MealEdit'
+        component={MealEdit}
+        options={StackOptions("Meal")} />
+    </Stack.Navigator>
+  );
+}
+
+function Stack_Schedule() {
+  return (
+    <Stack.Navigator initialRouteName='ScheduleList'>
+      <Stack.Screen
+        name='ScheduleList'
+        component={ScheduleList}
+        options={StackOptions("Schedules")} />
+      <Stack.Screen
+        name='Schedule'
+        component={Schedule}
+        options={StackOptions("Schedule")} />
+    </Stack.Navigator>
+  );
+}
+
+
+
 
 
 /*
@@ -166,59 +224,3 @@ function Stack_Workouts() {
     </Stack.Navigator>
   );
 }*/
-function Stack_Food() {
-  return (
-    <Stack.Navigator initialRouteName='FoodScreen'>
-      <Stack.Screen 
-        name='FoodScreen'
-        component={Food}
-        options={StackOptions("Food")}/>
-
-      <Stack.Screen 
-        name='IngredientList'
-        component={IngredientList}
-        options={StackOptions("Ingredients")}/>
-      <Stack.Screen 
-        name='IngredientEdit'
-        component={IngredientEdit}
-        options={StackOptions("Ingredient")}/>
-      <Stack.Screen 
-        name='IngredientCheck'
-        component={IngredientCheck}
-        options={StackOptions("Ingredient")}/>
-        
-      <Stack.Screen 
-        name='RecipeList'
-        component={RecipeList}
-        options={StackOptions("Recipes")}/>
-      <Stack.Screen 
-        name='RecipeEdit'
-        component={RecipeEdit}
-        options={StackOptions("Recipe")}/>
-
-      <Stack.Screen 
-        name='MealList'
-        component={MealList}
-        options={StackOptions("Meals")}/>
-      <Stack.Screen 
-        name='MealEdit'
-        component={MealEdit}
-        options={StackOptions("Meal")}/>
-    </Stack.Navigator>
-  );
-}
-
-function Stack_Schedule() {
-  return (
-    <Stack.Navigator initialRouteName='ScheduleList'>
-      <Stack.Screen 
-        name='ScheduleList'
-        component={ScheduleList}
-        options={StackOptions("Schedules")}/>
-      <Stack.Screen 
-        name='Schedule'
-        component={Schedule}
-        options={StackOptions("Schedule")}/>
-    </Stack.Navigator>
-  );
-}

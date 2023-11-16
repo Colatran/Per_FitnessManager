@@ -9,9 +9,6 @@ import Display_DailyAverage from "../../components/screen_Food/Display_DailyAver
 export default function Food({ navigation }) {
   return (
     <View style={styles_common.container}>
-
-      <Display_DailyAverage/>
-
       <View style={{marginTop: 10, flexDirection: "row", height: 100}}>
         <Button_Option label="Ingredients" onPress={() => navigation.navigate("IngredientList")}/>  
       </View>
@@ -34,7 +31,7 @@ function Button_Option(props) {
   const onPress = props.onPress;
   
   return (
-    <Button style={[{flex: 1}]} onPress={onPress}>
+    <Button style={{flex: 1}} onPress={onPress}>
       <Text style={styles_text.bold}>{label}</Text>
     </Button>
   );

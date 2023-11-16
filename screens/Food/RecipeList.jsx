@@ -3,7 +3,7 @@ import { useContext } from "react";
 
 import { color_background_dark, styles_common, styles_text } from "../../styles/styles";
 import Button_Icon from "../../components/Button_Icon";
-import Button_Footer_List from "../../components/Button_Footer_List";
+import Button_Footer_Add from "../../components/Button_Footer_Add";
 import { UserContext } from "../../utils/UserContext";
 
 
@@ -41,7 +41,7 @@ export default function RecipeList({ navigation }) {
         />
       </View>
 
-      <Button_Footer_List onPressAdd={handleAddOnPress}/>
+      <Button_Footer_Add onPressAdd={handleAddOnPress}/>
     </View>
   );
 }

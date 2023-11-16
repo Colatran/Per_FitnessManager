@@ -4,7 +4,7 @@ import Button_Icon from "./Button_Icon";
 
 
 
-export default function Button_Footer_List(props) {
+export default function Button_Footer_Add(props) {
   const onPressAdd = props.onPressAdd
 
   return (
