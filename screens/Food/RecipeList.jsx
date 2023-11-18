@@ -1,56 +1,61 @@
-import { StyleSheet, View, Text, FlatList} from "react-native";
+import { View, Text } from "react-native";
 import { useContext } from "react";
 
-import { color_background_dark, styles_common, styles_text } from "../../styles/styles";
+import { _icon_check, _icon_edit, styles_common, styles_text, styles_lists } from "../../styles/styles";
+
 import Button_Icon from "../../components/Button_Icon";
-import Button_Footer_Add from "../../components/Button_Footer_Add";
 import { UserContext } from "../../utils/UserContext";
+import ScreenList from "../../components/screen/ScreenList";
+import Button_Footer_Add from "../../components/Button_Footer_Add";
 
 
 
 export default function RecipeList({ navigation }) {
   const { recipeDocs } = useContext(UserContext);
 
-
-
-  const handleAddOnPress = () => {
+  const handleOnPressAdd = () => {
     navigation.navigate("RecipeEdit", {});
   }
-  const handleEditOnPress = (item) => {
-    navigation.navigate("RecipeEdit", {recipe: item});
-  }
-
-
 
   return (
     <View style={styles_common.container}>
-      
-      <View style={styles_common.container_list}>
-        <FlatList
-          data={recipeDocs}
-          renderItem={({item}) => { 
-            return(
-              <View style={[styles_common.container_front, styles_common.container_list_item]}>
-                <Text style={styles_text.common}>{item.label}</Text>
-                <View style={{flex: 1, justifyContent: "flex-end", flexDirection: "row"}}>
-                  <Button_Icon style={styles.button} icon="pencil" onPress={() => handleEditOnPress(item)}/>
-                </View>
-              </View>
-            )
-          }}
-        />
-      </View>
-
-      <Button_Footer_Add onPressAdd={handleAddOnPress}/>
+      <ScreenList data={recipeDocs}>
+        <ListItem navigation={navigation} />
+      </ScreenList>
+      <Button_Footer_Add onPressAdd={handleOnPressAdd} />
     </View>
   );
 }
 
 
 
-const styles = StyleSheet.create({
-  button: {
-    marginHorizontal: 2,
-    backgroundColor: color_background_dark,
+function ListItem(props) {
+  const { item } = props;
+  const navigation = props.navigation;
+
+  const handleOnPressCheck = (item) => {
   }
-});
+  const handleEditOnPress = (item) => {
+    navigation.navigate("RecipeEdit", { recipe: item });
+  }
+
+  return (
+    <View style={styles_lists.container}>
+      <Button_Icon
+        style={styles_lists.button}
+        icon={_icon_edit}
+        onPress={() => handleOnPressCheck(item)}
+      />
+
+      <View style={styles_lists.container_label}>
+        <Text style={styles_text.common}>{item.label}</Text>
+      </View>
+
+      <Button_Icon
+        style={styles_lists.button}
+        icon={_icon_edit}
+        onPress={() => handleEditOnPress(item)}
+      />
+    </View>
+  );
+}

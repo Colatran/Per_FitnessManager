@@ -1,24 +1,23 @@
-import { View, Text } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 
-import { styles_common, styles_text } from "../../styles/styles";
+import { _color_button, _size_m, _space_m, styles_common, styles_text } from "../../styles/styles";
 import Button from "../../components/Button";
-import Display_DailyAverage from "../../components/screen_Food/Display_DailyAverage";
 
 
 
 export default function Food({ navigation }) {
   return (
     <View style={styles_common.container}>
-      <View style={{marginTop: 10, flexDirection: "row", height: 100}}>
+      <View style={styles.container}>
         <Button_Option label="Ingredients" onPress={() => navigation.navigate("IngredientList")}/>  
       </View>
 
-      <View style={{marginTop: 10, flexDirection: "row", height: 100}}>
+      <View style={styles.container}>
         <Button_Option label="Recipes" onPress={() => navigation.navigate("RecipeList")}/>
       </View>
 
-      <View style={{marginTop: 10, flexDirection: "row", height: 100}}>
-        <Button_Option label="Day's Meals" onPress={() => navigation.navigate("MealList")}/>
+      <View style={styles.container}>
+        <Button_Option label="Meals" onPress={() => navigation.navigate("MealList")}/>
       </View>
     </View>
   );
@@ -36,3 +35,13 @@ function Button_Option(props) {
     </Button>
   );
 }
+
+
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: _space_m,
+    height: _size_m,
+    flexDirection: "row",
+  },
+});

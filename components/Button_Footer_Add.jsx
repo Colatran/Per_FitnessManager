@@ -1,5 +1,5 @@
-import { View } from "react-native";
-import { color_button_green } from "../styles/styles";
+import { StyleSheet, View } from "react-native";
+import { _color_button_green, _space_l } from "../styles/styles";
 import Button_Icon from "./Button_Icon";
 
 
@@ -8,12 +8,27 @@ export default function Button_Footer_Add(props) {
   const onPressAdd = props.onPressAdd
 
   return (
-    <View style={{flexDirection: "row", alignItems: "flex-end", marginVertical: 20}}>
+    <View style={styles.container}>
       <Button_Icon 
-        style={{flex: 1, backgroundColor: color_button_green}}
+        style={styles.button}
         icon="plus"
         onPress={onPressAdd}
       />
     </View>
   );
 }
+
+
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    marginVertical: _space_l
+  },
+
+  button: {
+    flex: 1, 
+    backgroundColor: _color_button_green
+  },
+});

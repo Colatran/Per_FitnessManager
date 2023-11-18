@@ -1,7 +1,7 @@
 import { StyleSheet, View, FlatList } from "react-native";
 import React from "react";
 
-import { styles_common } from "../../styles/styles";
+import { _space_m, _space_s, styles_common } from "../../styles/styles";
 
 
 
@@ -15,9 +15,11 @@ export default function ScreenList(props) {
         renderItem={({ item }) => {
           return (
             <View style={[styles_common.container_front, styles.container_list_item]}>
-              {React.Children.map(props.children, child =>
-                React.cloneElement(child, { item: item })
-              )}
+              {
+                React.Children.map(props.children, child =>
+                  React.cloneElement(child, { item: item })
+                )
+              }
             </View>
           )
         }}
@@ -31,12 +33,11 @@ export default function ScreenList(props) {
 const styles = StyleSheet.create({
   container_list: {
     flex: 1,
-    marginVertical: 10
   },
   container_list_item: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    marginVertical: 5,
+    paddingHorizontal: _space_m,
+    paddingVertical: _space_s,
+    marginVertical: _space_s,
     flexDirection: "row",
     alignItems: "center"
   }
