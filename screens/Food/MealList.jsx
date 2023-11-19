@@ -3,7 +3,7 @@ import { useContext } from "react";
 
 import { UserContext } from "../../utils/UserContext";
 import { _icon_checkout, _icon_edit, styles_common, styles_text, styles_lists } from "../../styles/styles";
-import ScreenList from "../../components/screen/ScreenList";
+import List from "../../components/List";
 import Button_Icon from "../../components/input/Button_Icon";
 import Button_Footer_Add from "../../components/input/Button_Footer_Add";
 
@@ -18,9 +18,9 @@ export default function MealList({ navigation }) {
 
   return (
     <View style={styles_common.container}>
-      <ScreenList data={mealDocs}>
+      <List data={mealDocs}>
         <ListItem navigation={navigation}/>
-      </ScreenList>
+      </List>
       <Button_Footer_Add onPressAdd={handleOnPressAdd}/>
     </View>
   );

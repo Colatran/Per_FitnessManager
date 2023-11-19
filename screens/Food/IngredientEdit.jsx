@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, ScrollView } from "react-native";
+import { StyleSheet, View, Text, ScrollView, TextInput } from "react-native";
 import { useState } from "react";
 import { ref_food_ingredients } from "../../firebase.config";
 import { addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
@@ -104,41 +104,39 @@ export default function IngredientEdit({ navigation, route }) {
 
   return (
     <View style={styles_common.container}>
-      <ScrollView>
-        <View style={[styles_common.container_front, styles.container]}>
+      <ScrollView style={styles_common.form}>
 
-          <View style={{marginBottom: _space_l}}>
-            <Label label="Label">
-              <Input_Text value={label} setValue={setLabel} placeholder={"Label"}/>
-            </Label>
-            <Label label="Is Solid">
-              <Input_Boolean isOn={isSolid} onPress={handleIsSolidOnPress}/>
-            </Label>
-            <Label label="Unit Price (eur)">
-              <Input_Text value={unit_price} setValue={setUnit_price} placeholder={""} keyboardType={"numeric"} />
-            </Label>
-            <Label label={`Unit Amount (${gps()})`}>
-              <Input_Text value={unit_weight} setValue={setUnit_weight} placeholder={""} keyboardType={"numeric"}/>
-            </Label>
-            <Label label={`Unit Servings`}>
-              <Input_Text value={unit_servings} setValue={setUnit_servings} placeholder={""} keyboardType={"numeric"}/>
-            </Label>
-          </View>
-
-          <Label label={`Nutrition (Per 100${gps()}): `}>
-            <View style={styles.container_table}>
-              <Parameter_Nut label="Calories (kcal)"    value={nut_energy}    setValue={setNut_energy}/>
-              <Parameter_Nut label="Fat (g)"            value={nut_fats}      setValue={setNut_fats}/>
-              <Parameter_Nut label="Saturates (g)"      value={nut_saturates} setValue={setNut_saturates} hasPadding={true}/>
-              <Parameter_Nut label="Carbohydrate (g)"   value={nut_carbs}     setValue={setNut_carbs}/>
-              <Parameter_Nut label="Sugars (g)"         value={nut_sugars}    setValue={setNut_sugar}     hasPadding={true}/>
-              <Parameter_Nut label="Fiber (g)"          value={nut_fiber}     setValue={setNut_fiber}     hasPadding={true}/>
-              <Parameter_Nut label="Protein (g)"        value={nut_protein}   setValue={setNut_protein}/>
-              <Parameter_Nut label="Salt (g)"           value={nut_salt}      setValue={setNut_salt}/>
-            </View>
+        <View style={{marginBottom: _space_l}}>
+          <Label label="Label">
+            <Input_Text value={label} setValue={setLabel} placeholder={"Label"}/>
           </Label>
-
+          <Label label="Is Solid">
+            <Input_Boolean isOn={isSolid} onPress={handleIsSolidOnPress}/>
+          </Label>
+          <Label label="Unit Price (eur)">
+            <Input_Text value={unit_price} setValue={setUnit_price} placeholder={""} keyboardType={"numeric"} />
+          </Label>
+          <Label label={`Unit Amount (${gps()})`}>
+            <Input_Text value={unit_weight} setValue={setUnit_weight} placeholder={""} keyboardType={"numeric"}/>
+          </Label>
+          <Label label={`Unit Servings`}>
+            <Input_Text value={unit_servings} setValue={setUnit_servings} placeholder={""} keyboardType={"numeric"}/>
+          </Label>
         </View>
+
+        <Label label={`Nutrition (Per 100${gps()}): `}>
+          <View style={styles.container_table}>
+            <Parameter_Nut label="Calories (kcal)"    value={nut_energy}    setValue={setNut_energy}/>
+            <Parameter_Nut label="Fat (g)"            value={nut_fats}      setValue={setNut_fats}/>
+            <Parameter_Nut label="Saturates (g)"      value={nut_saturates} setValue={setNut_saturates} hasPadding={true}/>
+            <Parameter_Nut label="Carbohydrate (g)"   value={nut_carbs}     setValue={setNut_carbs}/>
+            <Parameter_Nut label="Sugars (g)"         value={nut_sugars}    setValue={setNut_sugar}     hasPadding={true}/>
+            <Parameter_Nut label="Fiber (g)"          value={nut_fiber}     setValue={setNut_fiber}     hasPadding={true}/>
+            <Parameter_Nut label="Protein (g)"        value={nut_protein}   setValue={setNut_protein}/>
+            <Parameter_Nut label="Salt (g)"           value={nut_salt}      setValue={setNut_salt}/>
+          </View>
+        </Label>
+
       </ScrollView>
       <Button_Footer_Form
         isEdit={isEdit}
@@ -175,12 +173,6 @@ function Parameter_Nut(props) {
 
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: _space_m,
-    paddingVertical: _space_l,
-    backgroundColor: _color_back_2,
-  },
-
   container_table: {
     borderColor: _color_front_0,
     borderTopWidth: _borderWidth_xs

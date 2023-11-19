@@ -16,13 +16,14 @@ export const _borderRadius_m = 12;
 export const _borderWidth_xs = 1;
 export const _elevation_s = 4;
 
-export const _color_back_0         = '#1e1e1e';
-export const _color_back_1         = '#252526';
-export const _color_back_1_border  = '#2d2d30';
-export const _color_back_2         = '#3e3e42';
+export const _color_back_0        = '#1e1e1e';
+export const _color_back_1        = '#252526';
+export const _color_back_1_border = '#2d2d30';
+export const _color_back_2        = '#3e3e42';
+export const _color_transparent_0 = _color_back_0 + 'f0';
 
-export const _color_front_0        = '#d1d1d1';
-export const _color_front_1        = '#c0c0c0';
+export const _color_front_0       = '#d1d1d1';
+export const _color_front_1       = '#c0c0c0';
 
 export const _color_input             = _color_back_1;
 export const _color_button            = _color_back_2;
@@ -65,6 +66,14 @@ export const styles_common = StyleSheet.create({
   container_front: {
     borderRadius: _borderRadius_m,
     backgroundColor: _color_back_1,
+    elevation: _elevation_s,
+  },
+
+  form: {
+    borderRadius: _borderRadius_m,
+    paddingHorizontal: _space_m,
+    paddingVertical: _space_l,
+    backgroundColor: _color_back_2,
     elevation: _elevation_s,
   }
 });

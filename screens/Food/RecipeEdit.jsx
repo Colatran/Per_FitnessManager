@@ -5,13 +5,14 @@ import { ref_food_ingredients, ref_food_recipes } from "../../firebase.config";
 import { addDoc, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 
 import { UserContext } from "../../utils/UserContext";
-import { color_background_dark, color_background_input, color_button_green, color_button_red, styles_common, styles_text } from "../../styles/styles";
+import { _space_l, color_background_dark, color_background_input, color_button_green, color_button_red, styles_common, styles_text } from "../../styles/styles";
 import Label from "../../components/Label";
 import Popup from "../../components/Popup";
 import Input_Text from "../../components/input/Input_Text";
 import Button_Footer_Form from "../../components/input/Button_Footer_Form";
 import Button_Icon from "../../components/input/Button_Icon";
 import Button from "../../components/input/Button";
+import Input_Boolean from "../../components/input/Input_Boolean";
 
 
 
@@ -72,6 +73,7 @@ export default function RedipeEdit({ navigation, route }) {
     Start();
     return;
   }, []);
+
 
 
   const getIngredientFromRecipe = (ingredients, recipeId) => {
@@ -260,70 +262,72 @@ export default function RedipeEdit({ navigation, route }) {
         </View>
       </Popup>
 
-      <View style={{marginBottom: 10}}>
-        <ScrollView>
-          <Label label="Label">
-            <Input_Text value={label} setValue={setLabel} placeholder={"Label"}/>
-          </Label>
+        <View style={[styles_common.form, styles.form]}>
 
-          <Label label="Is Solid">
-            <Button_Icon icon={isSolid ? "check" : ""} onPress={handleIsSolidOnPress}/>
-          </Label>
-          
-          <Label label="Servings">
-            <Input_Text value={servings} setValue={setServings} placeholder={""} keyboardType={"numeric"}/>
-          </Label>
-        </ScrollView>
-      </View>
+          <View style={{marginBottom: _space_l}}>
+            <Label label="Label">
+              <Input_Text value={label} setValue={setLabel} placeholder={"Label"}/>
+            </Label>
+            <Label label="Is Solid">
+              <Input_Boolean isOn={isSolid} onPress={handleIsSolidOnPress}/>
+            </Label>
+            <Label label="Servings">
+              <Input_Text value={servings} setValue={setServings} placeholder={""} keyboardType={"numeric"}/>
+            </Label>
+          </View>
 
-      <View style={{flex: 1}}>
-        <View style={styles.container_list}>
-          <FlatList
-            data={incIngredientDocs}
-            renderItem={({item, index}) => { 
-              if(item.include)
-                return(
+
+          <View style={{flex: 1}}>
+            <View style={styles.container_list}>
+              <FlatList
+                data={incIngredientDocs}
+                renderItem={({item, index}) => { 
+                  if(item.include)
+                    return(
+                      <View style={styles.container_item}>
+                        <Text style={styles_text.common}>{item.label}</Text>
+                        <View style={{flex: 1, justifyContent: "flex-end", flexDirection: "row"}}>
+                          <Button_Icon style={styles.button} icon="plus" onPress={() => handleAddIngredientOnPress(index)}/>
+                        </View>
+                      </View>
+                    );
+                  else return (<></>);
+                }}
+              />
+            </View>
+
+            <View style={{flexDirection: "row", justifyContent: "space-around"}}>
+              <Icon name={"chevron-down"} size={15} color='white'/>
+              <Icon name={"chevron-down"} size={15} color='white'/>
+              <Icon name={"chevron-down"} size={15} color='white'/>
+            </View>
+
+            <View style={styles.container_list}>
+              <FlatList
+                data={ingredients}
+                renderItem={({item, index}) =>
                   <View style={styles.container_item}>
-                    <Text style={styles_text.common}>{item.label}</Text>
-                    <View style={{flex: 1, justifyContent: "flex-end", flexDirection: "row"}}>
-                      <Button_Icon style={styles.button} icon="plus" onPress={() => handleAddIngredientOnPress(index)}/>
+                    <View style={{flex: 1}}>
+                      <Text style={styles_text.common}>{item.ingredient.label}</Text>
+                    </View>
+
+                    <View style={{flex: 1, paddingHorizontal: 5}}>
+                      <Button style={styles.button_input} onPress={() => handleIngredientSetValue(index)}>
+                        <Text style={styles_text.common}>{item.amount}</Text>
+                      </Button>
+                    </View>
+
+                    <View style={{justifyContent: "flex-end", flexDirection: "row"}}>
+                      <Button_Icon style={styles.button} icon="close" onPress={() => handleRemoveIngredientOnPress(index)}/>
                     </View>
                   </View>
-                );
-              else return (<></>);
-            }}
-          />
+                }
+              />
+            </View>
+          </View>
+
+
         </View>
-
-        <View style={{flexDirection: "row", justifyContent: "space-around"}}>
-          <Icon name={"chevron-down"} size={15} color='white'/>
-          <Icon name={"chevron-down"} size={15} color='white'/>
-          <Icon name={"chevron-down"} size={15} color='white'/>
-        </View>
-
-        <View style={styles.container_list}>
-          <FlatList
-            data={ingredients}
-            renderItem={({item, index}) =>
-              <View style={styles.container_item}>
-                <View style={{flex: 1}}>
-                  <Text style={styles_text.common}>{item.ingredient.label}</Text>
-                </View>
-
-                <View style={{flex: 1, paddingHorizontal: 5}}>
-                  <Button style={styles.button_input} onPress={() => handleIngredientSetValue(index)}>
-                    <Text style={styles_text.common}>{item.amount}</Text>
-                  </Button>
-                </View>
-
-                <View style={{justifyContent: "flex-end", flexDirection: "row"}}>
-                  <Button_Icon style={styles.button} icon="close" onPress={() => handleRemoveIngredientOnPress(index)}/>
-                </View>
-              </View>
-            }
-          />
-        </View>
-      </View>
 
       <Button_Footer_Form
         isEdit={isEdit}
@@ -337,7 +341,16 @@ export default function RedipeEdit({ navigation, route }) {
 
 
 
+
+
+
 const styles = StyleSheet.create({
+  form: {
+    flex: 1,
+  },
+
+
+
   button: {
     marginHorizontal: 2,
     backgroundColor: color_background_dark,

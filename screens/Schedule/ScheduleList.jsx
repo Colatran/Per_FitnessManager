@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { addDoc, collection, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
 
 
-import { color_background_dark, styles_common, styles_text } from "../../styles/styles";
+import { _color_back_0, color_background_dark, styles_common, styles_text } from "../../styles/styles";
 import { db, schedules } from "../../firebase.config";
 import Button_Icon from "../../components/input/Button_Icon";
 
@@ -74,6 +74,6 @@ export default function ScheduleList({ navigation }) {
 const styles = StyleSheet.create({
   button: {
     marginHorizontal: 2,
-    backgroundColor: color_background_dark,
+    backgroundColor: _color_back_0,
   }
 });

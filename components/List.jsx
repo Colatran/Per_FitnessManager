@@ -1,11 +1,11 @@
 import { StyleSheet, View, FlatList } from "react-native";
 import React from "react";
 
-import { _space_m, _space_s, styles_common } from "../../styles/styles";
+import { _space_m, _space_s, styles_common } from "../styles/styles";
 
 
 
-export default function ScreenList(props) {
+export default function List(props) {
   const data = props.data;
 
   return (
