@@ -1,8 +1,8 @@
 import { View, Text } from "react-native";
 import Button_Icon from "../Button_Icon";
 
-import { getTimeText_FromMinutes } from "../../utils/Funtions";
-import { styles_text } from "../../styles/styles";
+import { getTimeText_FromMinutes } from "../../../utils/Funtions";
+import { styles_text } from "../../../styles/styles";
 
 
 

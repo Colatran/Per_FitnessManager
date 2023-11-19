@@ -1,13 +1,11 @@
 import { StyleSheet, View, Text } from "react-native";
-import { color_background_dark, color_background_light, styles_common, styles_text } from "../../styles/styles";
 import { FloorValue, getPhysicalState } from "../../utils/Funtions";
+import { _borderWidth_xs, _color_base_front, _space_l, _space_m, _space_xl, styles_common, styles_text } from "../../styles/styles";
 
 
 
 export default function IngredientCheck({ navigation, route }) {
   const { ingredient } = route.params;
-
-
 
   const label         = ingredient.label;
   const isSolid       = ingredient.isSolid;
@@ -27,32 +25,38 @@ export default function IngredientCheck({ navigation, route }) {
   const price_100 = 100 * unit_price / unit_weight;
 
 
+
   const gps = () => {return getPhysicalState(isSolid);}
 
   
 
   return (
     <View style={styles_common.container}>
-      <View style={{paddingLeft: 10, marginVertical: 10}}>
-        <Text style={styles_text.bold}>{label}</Text>
+      <View style={styles.container_label}>
+        <Text style={styles_text.title}>{label}</Text>
       </View>
 
-      <Parameter label={"Unit Price"}   value={`${unit_price}€`}/>
-      <Parameter label={"Unit Weight"}  value={`${unit_weight}(${gps()}) (${unit_servings} servings)`}/>
-      <Parameter label={"Serving Weight"}  value={`${unit_serving}(${gps()})`}/>
+      <View style={styles.container_parameters}>
+        <Parameter label={"Unit Price"}   value={`${unit_price}€`}/>
+        <Parameter label={"Unit Weight"}  value={`${unit_weight}(${gps()}) (${unit_servings} servings)`}/>
+        <Parameter label={"Serving Weight"}  value={`${unit_serving}(${gps()})`}/>
+      </View>
+      
+      <View >
 
+      </View>
       <View style={{flexDirection: "row", borderColor: "#fff", borderTopWidth: 1, borderBottomWidth: 1, marginTop: 20}}>
-        <View style={[styles.container, {backgroundColor: color_background_light}]}>
+        <View style={[styles.container, {backgroundColor: _color_base_front}]}>
           <Text style={styles_text.common}>per %~</Text>
         </View>
-        <View style={[styles.container, {backgroundColor: color_background_dark}]}>
+        <View style={[styles.container, {backgroundColor: _color_base_front}]}>
           <Text style={styles_text.bold}>100{gps()}</Text>
         </View>
-        <View style={[styles.container, {backgroundColor: color_background_dark}]}>
+        <View style={[styles.container, {backgroundColor: _color_base_front}]}>
           <Text style={styles_text.bold}>Serving</Text>
           <Text style={styles_text.common}>{unit_serving}{gps()}</Text>
         </View>
-        <View style={[styles.container, {backgroundColor: color_background_dark}]}>
+        <View style={[styles.container, {backgroundColor: _color_base_front}]}>
           <Text style={styles_text.bold}>Unit</Text>
           <Text style={styles_text.common}>{unit_weight}{gps()}</Text>
         </View>
@@ -68,9 +72,11 @@ export default function IngredientCheck({ navigation, route }) {
         <ParameterNut label={"Salt"}         value={nut_salt}      sufix={"g"}   wUnit={unit_weight}  wServing={unit_serving}/>
       </View>
 
-      <Parameter label={"Price Serving"}        value={`${FloorValue(unit_price / unit_servings)}€`}/>
-      <Parameter label={"Price Protein(100g)"}  value={nut_protein > 0 ? `${FloorValue(price_100 / nut_protein * 100)}€` : '--'}/>
-      <Parameter label={"Price 100cal"}         value={`${FloorValue(price_100 / nut_energy * 100)}€`}/>
+      <View style={styles.container_parameters}>
+        <Parameter label={"Price Serving"}        value={`${FloorValue(unit_price / unit_servings)}€`}/>
+        <Parameter label={"Price Protein(100g)"}  value={nut_protein > 0 ? `${FloorValue(price_100 / nut_protein * 100)}€` : '--'}/>
+        <Parameter label={"Price 100cal"}         value={`${FloorValue(price_100 / nut_energy * 100)}€`}/>
+      </View>
     </View>
   );
 }
@@ -82,7 +88,7 @@ function Parameter(props) {
   const value = props.value;
 
   return (
-    <View style={{paddingLeft: 20, flexDirection: "row"}}>
+    <View style={styles.container_parameter}>
       <View style={{flex:2}}><Text style={styles_text.common}>{label}:</Text></View>
       <View style={{flex:3}}><Text style={styles_text.common}>{value}</Text></View>
     </View>
@@ -96,17 +102,17 @@ function ParameterNut(props) {
   const wUnit = props.wUnit;
 
   return (
-    <View style={{flexDirection: "row", borderColor: "#fff", borderBottomWidth: 1,}}>
-      <View style={[styles.container, {backgroundColor: color_background_light}]}>
+    <View style={{flexDirection: "row", borderColor: "#fff", borderBottomWidth: 1}}>
+      <View style={[styles.container, {backgroundColor: _color_base_front}]}>
         <Text style={styles_text.bold}>{label}</Text>
       </View>
-      <View style={[styles.container, {backgroundColor: color_background_dark}]}>
+      <View style={[styles.container, {backgroundColor: _color_base_front}]}>
         <Text style={styles_text.common}>{FloorValue(value)}{sufix}</Text>
       </View>
-      <View style={[styles.container, {backgroundColor: color_background_dark}]}>
+      <View style={[styles.container, {backgroundColor: _color_base_front}]}>
         <Text style={styles_text.common}>{FloorValue(wServing * value / 100)}{sufix}</Text>
       </View>
-      <View style={[styles.container, {backgroundColor: color_background_dark}]}>
+      <View style={[styles.container, {backgroundColor: _color_base_front}]}>
         <Text style={styles_text.common}>{FloorValue(wUnit * value / 100)}{sufix}</Text>
       </View>
     </View>
@@ -120,5 +126,25 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 3,
     paddingLeft: 10,
+  },
+
+  container_label: {
+    paddingLeft: _space_m,
+    marginVertical: _space_m
+  },
+
+  container_parameters: {
+    paddingLeft: _space_xl,
+  },
+  container_parameter: {
+    flexDirection: "row"
+  },
+
+  table: {
+    flexDirection: "row",
+    marginTop: 20,
+    borderColor: "#fff",
+    borderTopWidth: _borderWidth_xs,
+    borderBottomWidth: _borderWidth_xs,
   }
 });

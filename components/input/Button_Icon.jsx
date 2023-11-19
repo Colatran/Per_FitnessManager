@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { _color_button, _color_icon, _iconSize_m, _size_xs } from '../styles/styles';
+import { _color_button, _color_icon, _iconSize_m, _size_xs } from '../../styles/styles';
 import Button from "./Button";
 
 

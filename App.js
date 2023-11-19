@@ -5,11 +5,10 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { UserProvider } from './utils/UserContext';
 
 import {
-  _color_baseBorder_front,
-  _color_base_front, _color_border_base_front,
-  _iconSize_m,
-  _space_l, _space_m, _space_s,
-  _textColor, _textShadowColor, _textShadowRadius, styles_text
+  _color_back_1, _color_back_1_border,
+  _iconSize_m, _space_l, _space_m, _space_s,
+  _textColor, _textShadowColor, _textShadowRadius,
+  styles_text
 } from './styles/styles';
 
 
@@ -51,8 +50,8 @@ export default function App() {
               height: 64,
               paddingTop: _space_s,
               paddingBottom: _space_m,
-              backgroundColor: _color_base_front,
-              borderTopColor: _color_baseBorder_front,
+              backgroundColor: _color_back_1,
+              borderTopColor: _color_back_1_border,
             },
             tabBarLabelStyle: {
               textShadowColor: _textShadowColor,
@@ -103,8 +102,8 @@ const StackOptions = (title) => {
   return {
     title: `  ${title}  `,
     headerStyle: {
-      backgroundColor: _color_base_front,
-      borderBottomColor: _color_baseBorder_front
+      backgroundColor: _color_back_1,
+      borderBottomColor: _color_back_1_border,
     },
     headerTintColor: _textColor,
     headerTitleStyle: styles_text.title,

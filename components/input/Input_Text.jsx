@@ -1,5 +1,5 @@
 import { StyleSheet, View, TextInput } from "react-native";
-import { color_background_input, styles_common } from "../styles/styles";
+import { _color_input, _space_m, _textColor, styles_common } from "../../styles/styles";
 
 
 export default function Input_Text(props) {
@@ -12,7 +12,7 @@ export default function Input_Text(props) {
   return (
     <View style={[styles_common.container_front, styles.container]}>
       <TextInput
-        style={[{flex: 1, marginHorizontal: 10, color: "#fff"}, style]}
+        style={[styles.input, style]}
         value={value}
         onChangeText={text => setValue(text)}
         placeholder={placeholder}
@@ -25,7 +25,12 @@ export default function Input_Text(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color_background_input,
+    backgroundColor: _color_input,
     flexDirection: 'row',
   },
+  input: {
+    flex: 1,
+    marginHorizontal: _space_m,
+    color: _textColor
+  }
 });

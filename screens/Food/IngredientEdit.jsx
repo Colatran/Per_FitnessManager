@@ -3,12 +3,16 @@ import { useState } from "react";
 import { ref_food_ingredients } from "../../firebase.config";
 import { addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 
-import { color_background_dark, color_background_light, styles_common, styles_text } from "../../styles/styles";
 import { getPhysicalState } from "../../utils/Funtions";
+import {
+  _borderWidth_xs, _space_l, _space_m, _space_xs,
+  _color_back_2, _color_front_0,
+  styles_common, styles_text
+} from "../../styles/styles";
 import Label from "../../components/Label";
-import Input_Text from "../../components/Input_Text";
-import Button_Icon from "../../components/Button_Icon";
-import Button_Footer_Form from "../../components/Button_Footer_Form";
+import Input_Text from "../../components/input/Input_Text";
+import Input_Boolean from "../../components/input/Input_Boolean";
+import Button_Footer_Form from "../../components/input/Button_Footer_Form";
 
 
 
@@ -18,8 +22,8 @@ export default function IngredientEdit({ navigation, route }) {
 
   const [saveLock, setSaveLock] = useState(false);
 
-  const [label,         setLabel]         = useState(isEdit ? ingredient.label              : "");
   const [recipeId,      setRecipeId]      = useState(isEdit ? ingredient.recipeId           : "");
+  const [label,         setLabel]         = useState(isEdit ? ingredient.label              : "");
   const [isSolid,       setIsSolid]       = useState(isEdit ? ingredient.isSolid            : true);
   const [unit_price,    setUnit_price]    = useState(isEdit ? `${ingredient.unit_price}`    : "0");
   const [unit_weight,   setUnit_weight]   = useState(isEdit ? `${ingredient.unit_weight}`   : "0");
@@ -101,38 +105,41 @@ export default function IngredientEdit({ navigation, route }) {
   return (
     <View style={styles_common.container}>
       <ScrollView>
+        <View style={[styles_common.container_front, styles.container]}>
 
-        <Label label="Label">
-          <Input_Text value={label} setValue={setLabel} placeholder={"Label"}/>
-        </Label>
-        <Label label="Is Solid">
-          <Button_Icon icon={isSolid ? "check" : ""} onPress={handleIsSolidOnPress}/>
-        </Label>
-        <Label label="Unit Price (eur)">
-          <Input_Text value={unit_price} setValue={setUnit_price} placeholder={""} keyboardType={"numeric"} />
-        </Label>
-        <Label label={`Unit Amount (${gps()})`}>
-          <Input_Text value={unit_weight} setValue={setUnit_weight} placeholder={""} keyboardType={"numeric"}/>
-        </Label>
-        <Label label={`Unit Servings`}>
-          <Input_Text value={unit_servings} setValue={setUnit_servings} placeholder={""} keyboardType={"numeric"}/>
-        </Label>
-
-        <Label label={`Nutrition (Per 100${gps()}): `}>
-          <View style={{marginLeft: 10, borderColor: "#fff", borderTopWidth: 1,}}>
-            <Parameter label="Energy (kcal)"      value={nut_energy}    setValue={setNut_energy}/>
-            <Parameter label="Fat (g)"            value={nut_fats}      setValue={setNut_fats}/>
-            <Parameter label="     Saturates (g)" value={nut_saturates} setValue={setNut_saturates}/>
-            <Parameter label="Carbohydrate (g)"   value={nut_carbs}     setValue={setNut_carbs}/>
-            <Parameter label="     Sugars (g)"    value={nut_sugars}    setValue={setNut_sugar}/>
-            <Parameter label="Protein (g)"        value={nut_protein}   setValue={setNut_protein}/>
-            <Parameter label="Fiber (g)"          value={nut_fiber}     setValue={setNut_fiber}/>
-            <Parameter label="Salt (g)"           value={nut_salt}      setValue={setNut_salt}/>
+          <View style={{marginBottom: _space_l}}>
+            <Label label="Label">
+              <Input_Text value={label} setValue={setLabel} placeholder={"Label"}/>
+            </Label>
+            <Label label="Is Solid">
+              <Input_Boolean isOn={isSolid} onPress={handleIsSolidOnPress}/>
+            </Label>
+            <Label label="Unit Price (eur)">
+              <Input_Text value={unit_price} setValue={setUnit_price} placeholder={""} keyboardType={"numeric"} />
+            </Label>
+            <Label label={`Unit Amount (${gps()})`}>
+              <Input_Text value={unit_weight} setValue={setUnit_weight} placeholder={""} keyboardType={"numeric"}/>
+            </Label>
+            <Label label={`Unit Servings`}>
+              <Input_Text value={unit_servings} setValue={setUnit_servings} placeholder={""} keyboardType={"numeric"}/>
+            </Label>
           </View>
-        </Label>
 
+          <Label label={`Nutrition (Per 100${gps()}): `}>
+            <View style={styles.container_table}>
+              <Parameter_Nut label="Calories (kcal)"    value={nut_energy}    setValue={setNut_energy}/>
+              <Parameter_Nut label="Fat (g)"            value={nut_fats}      setValue={setNut_fats}/>
+              <Parameter_Nut label="Saturates (g)"      value={nut_saturates} setValue={setNut_saturates} hasPadding={true}/>
+              <Parameter_Nut label="Carbohydrate (g)"   value={nut_carbs}     setValue={setNut_carbs}/>
+              <Parameter_Nut label="Sugars (g)"         value={nut_sugars}    setValue={setNut_sugar}     hasPadding={true}/>
+              <Parameter_Nut label="Fiber (g)"          value={nut_fiber}     setValue={setNut_fiber}     hasPadding={true}/>
+              <Parameter_Nut label="Protein (g)"        value={nut_protein}   setValue={setNut_protein}/>
+              <Parameter_Nut label="Salt (g)"           value={nut_salt}      setValue={setNut_salt}/>
+            </View>
+          </Label>
+
+        </View>
       </ScrollView>
-
       <Button_Footer_Form
         isEdit={isEdit}
         onPressSaveNew={() => handleSaveOnPress()}
@@ -145,17 +152,20 @@ export default function IngredientEdit({ navigation, route }) {
 
 
 
-function Parameter(props) {
+function Parameter_Nut(props) {
   const label = props.label;
   const value = props.value;
   const setValue = props.setValue;
+  const hasPadding = props.hasPadding;
+
+  const padding = hasPadding ? _space_l : 0;
 
   return (
-    <View style={{flexDirection: "row", borderColor: "#fff", borderBottomWidth: 1}}>
-      <View style={[styles.container, {backgroundColor: color_background_light}]}>
-        <Text style={styles_text.bold}>{label}</Text>
+    <View style={styles.container_parameter}>
+      <View style={styles.container_parameter_cell}>
+        <Text style={[styles_text.label, {paddingLeft: padding}]}>{label}</Text>
       </View>
-      <View style={[styles.container, {backgroundColor: color_background_dark}]}>
+      <View style={styles.container_parameter_cell}>
         <Input_Text value={value} setValue={setValue} placeholder={""} keyboardType={"numeric"}/>
       </View>
     </View>
@@ -166,8 +176,26 @@ function Parameter(props) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingVertical: 3,
-    paddingLeft: 10,
+    paddingHorizontal: _space_m,
+    paddingVertical: _space_l,
+    backgroundColor: _color_back_2,
+  },
+
+  container_table: {
+    borderColor: _color_front_0,
+    borderTopWidth: _borderWidth_xs
+  },
+
+  container_parameter: {
+    flexDirection: "row",
+    paddingHorizontal: _space_m,
+    alignItems: "center",
+    borderColor: _color_front_0,
+    borderBottomWidth: _borderWidth_xs,
+    paddingVertical: _space_xs,
+  },
+
+  container_parameter_cell: {
+    flex: 1
   }
 });

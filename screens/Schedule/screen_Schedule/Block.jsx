@@ -1,8 +1,8 @@
 import { View, Text, FlatList } from "react-native";
 import Button_Icon from "../Button_Icon";
 
-import { getDurationText_FromMinuts, getTimeText_FromMinutes } from "../../utils/Funtions";
-import { styles_text } from "../../styles/styles";
+import { getDurationText_FromMinuts, getTimeText_FromMinutes } from "../../../utils/Funtions";
+import { styles_text } from "../../../styles/styles";
 import Pin from "./Pin";
 
 

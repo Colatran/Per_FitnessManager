@@ -1,12 +1,11 @@
 import { View, Text } from "react-native";
 import { useContext } from "react";
 
-import { _icon_check, _icon_edit, styles_common, styles_text, styles_lists } from "../../styles/styles";
-
-import Button_Icon from "../../components/Button_Icon";
 import { UserContext } from "../../utils/UserContext";
+import { _icon_checkout, _icon_edit, styles_common, styles_text, styles_lists } from "../../styles/styles";
 import ScreenList from "../../components/screen/ScreenList";
-import Button_Footer_Add from "../../components/Button_Footer_Add";
+import Button_Icon from "../../components/input/Button_Icon";
+import Button_Footer_Add from "../../components/input/Button_Footer_Add";
 
 
 
@@ -46,7 +45,7 @@ function ListItem(props) {
     <View style={styles_lists.container}>
       <Button_Icon 
         style={styles_lists.button}
-        icon={_icon_check}
+        icon={_icon_checkout}
         onPress={() => handleOnPressCheck(item)}
       />
       

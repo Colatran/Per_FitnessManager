@@ -1,10 +1,10 @@
 import { View, Text } from "react-native";
 import { useContext, useEffect, useState } from "react";
 
-import { styles_common, styles_text } from "../../styles/styles";
-import { nut_blue, nut_green_01, nut_green_02, nut_green_03, nut_red, nut_silver, nut_yellow_01, nut_yellow_02 } from "../../styles/styles";
-import { UserContext } from "../../utils/UserContext";
-import { FloorValue } from "../../utils/Funtions";
+import { styles_common, styles_text } from "../../../styles/styles";
+import { nut_blue, nut_green_01, nut_green_02, nut_green_03, nut_red, nut_silver, nut_yellow_01, nut_yellow_02 } from "../../../styles/styles";
+import { UserContext } from "../../../utils/UserContext";
+import { FloorValue } from "../../../utils/Funtions";
 
 
 

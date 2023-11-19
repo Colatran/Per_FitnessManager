@@ -2,8 +2,8 @@ import { StyleSheet, View, Text, FlatList, ScrollView} from "react-native";
 import { useContext, useEffect, useState } from "react";
 
 import { color_background_light, styles_common, styles_text } from "../../styles/styles";
-import Slider from "../../components/Slider";
-import Block from "../../components/screen_Schedule/Block";
+//import Slider from "../../components/Slider";
+//import Block from "../../components/screen_Schedule/Block";
 
 
 

@@ -1,7 +1,7 @@
 import { StyleSheet, View, Text } from "react-native";
 
 import { _color_button, _size_m, _space_m, styles_common, styles_text } from "../../styles/styles";
-import Button from "../../components/Button";
+import Button from "../../components/input/Button";
 
 
 

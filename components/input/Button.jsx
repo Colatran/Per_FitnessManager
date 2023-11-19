@@ -1,5 +1,5 @@
 import { Pressable, View } from "react-native";
-import { _color_button, android_ripple_style, styles_common } from "../styles/styles";
+import { _color_button, android_ripple_style, styles_common } from "../../styles/styles";
 import { StyleSheet } from "react-native";
 
 
@@ -10,13 +10,15 @@ export default function Button(props) {
 
   return (
     <View style={[styles_common.container_front, styles.container, style]}>
-      <Pressable
-        style={styles.pressable}
-        android_ripple={android_ripple_style}
-        onPress={onPress}
-      >
-        {props.children}
-      </Pressable>
+      <View style={{flex:1}}>
+        <Pressable
+          style={styles.pressable}
+          android_ripple={android_ripple_style}
+          onPress={onPress}
+        >
+          {props.children}
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -25,6 +27,7 @@ export default function Button(props) {
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: "row",
     backgroundColor: _color_button,
   },
 

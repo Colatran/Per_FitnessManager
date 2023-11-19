@@ -1,18 +1,17 @@
 import { View, Text, ScrollView, FlatList, StyleSheet } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import { ref_food_ingredients, ref_food_recipes } from "../../firebase.config";
-import { addDoc, deleteDoc, doc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
-import { color_background_dark, color_background_input, color_button_green, color_button_red, styles_common, styles_text } from "../../styles/styles";
+import { addDoc, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 
-import Input_Text from "../../components/Input_Text";
-import Button_Footer_Form from "../../components/Button_Footer_Form";
-import Button_Icon from "../../components/Button_Icon";
-import Label from "../../components/Label";
-import Button from "../../components/Button";
-import Popup from "../../components/Popup";
 import { UserContext } from "../../utils/UserContext";
+import { color_background_dark, color_background_input, color_button_green, color_button_red, styles_common, styles_text } from "../../styles/styles";
+import Label from "../../components/Label";
+import Popup from "../../components/Popup";
+import Input_Text from "../../components/input/Input_Text";
+import Button_Footer_Form from "../../components/input/Button_Footer_Form";
+import Button_Icon from "../../components/input/Button_Icon";
+import Button from "../../components/input/Button";
 
 
 
