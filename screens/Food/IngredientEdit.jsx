@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, ScrollView, TextInput } from "react-native";
+import { StyleSheet, View, Text, ScrollView } from "react-native";
 import { useState } from "react";
 import { ref_food_ingredients } from "../../firebase.config";
 import { addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";

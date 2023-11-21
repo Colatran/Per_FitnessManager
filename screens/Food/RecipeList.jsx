@@ -41,7 +41,6 @@ function ListItem(props) {
   return (
     <View style={styles_lists.container}>
       <Button_Icon
-        style={styles_lists.button}
         icon={_icon_checkout}
         onPress={() => handleOnPressCheck(item)}
       />
@@ -51,7 +50,6 @@ function ListItem(props) {
       </View>
 
       <Button_Icon
-        style={styles_lists.button}
         icon={_icon_edit}
         onPress={() => handleEditOnPress(item)}
       />

@@ -45,10 +45,12 @@ export const _textShadowRadius_title = 10;
 export const _color_icon = _color_front_0;
 export const _iconSize_m = 30;
 
+export const _icon_add = 'plus';
 export const _icon_edit = 'pencil';
 export const _icon_checkout = 'eye';
+export const _icon_yes = 'check';
+export const _icon_close = 'close';
 export const _icon_save = 'content-save';
-export const _icon_add = 'content-save';
 export const _icon_delete = 'delete-forever';
 export const _icon_boolean_true = 'check';
 export const _icon_boolean_false = '';
@@ -71,10 +73,10 @@ export const styles_common = StyleSheet.create({
 
   form: {
     borderRadius: _borderRadius_m,
-    paddingHorizontal: _space_m,
-    paddingVertical: _space_l,
     backgroundColor: _color_back_2,
     elevation: _elevation_s,
+    paddingHorizontal: _space_m,
+    paddingVertical: _space_l,
   }
 });
 
@@ -122,24 +124,45 @@ export const styles_lists = StyleSheet.create({
     alignItems: 'center',
   },
 
+  container_item: {
+    paddingHorizontal: _space_m,
+    paddingVertical: _space_s,
+    marginVertical: _space_xs,
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  
   container_label: {
     marginHorizontal: _space_s,
     flex: 1,
   },
-
-  button: {
-    marginHorizontal: _space_xs,
-  }
 });
 
-export const styles_footer = StyleSheet.create({
+export const styles_buttons = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "flex-end",
     marginVertical: _space_l,
   },
-});
+  container_button: {
+    flex: 1,
+    flexDirection: "row"
+  },
 
+  button: {
+    flex: 1,
+  },
+  button_y: {
+    backgroundColor: _color_button_green,
+  },
+  button_n: {
+    backgroundColor: _color_button_red,
+  },
+
+  button_seperator: {
+    marginHorizontal: _space_s,
+  }
+});
 
 
 

@@ -1,3 +1,7 @@
+export const FloorValue = (value) => {return  Math.floor(value * Math.pow(10, 2)) / Math.pow(10, 2);}
+
+
+
 export function getHoursNMinuts_FromMinutes(minutes) {
   return {
     h: parseInt(minutes/60),
@@ -22,6 +26,8 @@ export function getDurationText_FromMinuts(minutes) {
 }
 
 
-export const FloorValue = (value) => {return  Math.floor(value * Math.pow(10, 2)) / Math.pow(10, 2);}
 
-export const getPhysicalState = (isSolid) => {return isSolid ? "g" : "ml"}
+export const _measure_grams = "g";
+export const _measure_milliliters = "ml";
+
+export const getPhysicalState = (isSolid) => {return isSolid ? _measure_grams : _measure_milliliters}

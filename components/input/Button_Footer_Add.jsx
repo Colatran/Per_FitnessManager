@@ -1,17 +1,18 @@
 import { StyleSheet, View } from "react-native";
-import { _color_button_green, _space_l, styles_footer } from "../../styles/styles";
+import { _color_button_green, _icon_add, styles_buttons } from "../../styles/styles";
 import Button_Icon from "./Button_Icon";
 
 
 
 export default function Button_Footer_Add(props) {
-  const onPressAdd = props.onPressAdd
+  const style = props.style;
+  const onPressAdd = props.onPressAdd;
 
   return (
-    <View style={styles_footer.container}>
+    <View style={[styles_buttons.container, style]}>
       <Button_Icon 
         style={styles.button}
-        icon="plus"
+        icon={_icon_add}
         onPress={onPressAdd}
       />
     </View>
