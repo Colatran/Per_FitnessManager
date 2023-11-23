@@ -10,7 +10,7 @@ import { color_background_dark, color_background_input, color_button_green, colo
 import Label from "../../components/Label";
 import Popup from "../../components/Popup";
 import Input_Text from "../../components/input/Input_Text";
-import Button_Footer_Form from "../../components/input/Button_Footer_Form";
+import Button_Footer_Form from "../../components/screen/Button_Footer_Form";
 import Button_Icon from "../../components/input/Button_Icon";
 import Button from "../../components/input/Button";
 

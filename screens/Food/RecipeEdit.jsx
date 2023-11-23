@@ -8,18 +8,21 @@ import {
   _color_back_0, _color_back_1, _color_back_2, _color_button_green, _color_button_red,
   _icon_edit,
   _space_l, _space_m, _space_xl,
+  styles_buttons,
   styles_common, styles_lists, styles_text
 } from "../../styles/styles";
 import Label from "../../components/Label";
 import Popup from "../../components/Popup";
 import Input_Text from "../../components/input/Input_Text";
-import Button_Footer_Form from "../../components/input/Button_Footer_Form";
+import Button_Footer_Form from "../../components/screen/Button_Footer_Form";
+import Button_Footer_Add from "../../components/screen/Button_Footer_Add";
 import Button_Icon from "../../components/input/Button_Icon";
 import Input_Boolean from "../../components/input/Input_Boolean";
 import List from "../../components/List";
-import Button_Footer_Add from "../../components/input/Button_Footer_Add";
 import { getPhysicalState } from "../../utils/Funtions";
-import Button_Footer_YesClose from "../../components/input/Button_Footer_YesClose";
+import Button_YesNo from "../../components/screen/Button_YesNo";
+import Button_Delete from "../../components/screen/Button_Delete";
+import { _recipeEditScreen_deleteIngredient } from "../../utils/Messages";
 
 
 
@@ -214,10 +217,10 @@ export default function RecipeEdit({ navigation, route }) {
   const popupAmountEdit_save = () => {
     changeIngredientAmount(amountEdit_index, amountEdit_value);
     setAmountEdit_visible(false);
-  } 
+  }
   const popupAmountEdit_close = () => {
     setAmountEdit_visible(false);
-  } 
+  }
 
 
 
@@ -283,18 +286,29 @@ export default function RecipeEdit({ navigation, route }) {
     <View style={styles_common.container}>
 
       <Popup isVisible={amountEdit_visible}>
-        <View style={{ flex: 1, margin: _space_xl, justifyContent: "flex-end" }}>
           <View style={styles_common.form}>
-            <View style={{alignItems: "center"}}>
+            <View style={{ alignItems: "center" }}>
               <Text style={styles_text.bold}>{amountEdit_label}</Text>
             </View>
             <Label label={"Amount (" + getPhysicalState(amountEdit_isSolid) + ")"}>
-              <Input_Text value={amountEdit_value} setValue={setAmountEdit_value} placeholder={""} keyboardType={"numeric"} />
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ flex: 1 }}>
+                  <Input_Text value={amountEdit_value} setValue={setAmountEdit_value} placeholder={""} keyboardType={"numeric"} />
+                </View>
+              </View>
             </Label>
+
+            <View style={{ alignItems: "flex-end" }}>
+              <Button_Delete onPress={handleRemoveIngredientOnPress} message={_recipeEditScreen_deleteIngredient}/>
+            </View>
           </View>
-          <Button_Footer_YesClose onPressYes={onPress_PopupAmountEdit_Save} onPressClose={onPress_PopupAmountEdit_Close} />
+
+          <View style={styles_buttons.container_footer}>
+            <Button_YesNo style={styles_buttons.button_fill} onPressYes={onPress_PopupAmountEdit_Save} onPressNo={onPress_PopupAmountEdit_Close}/>
+          </View>
+        <View style={{ flex: 1 }}>
+
         </View>
-        <View style={{flex: 1}}/>
       </Popup>
 
 
@@ -374,5 +388,5 @@ const styles = StyleSheet.create({
   },
 
 
-  
+
 });

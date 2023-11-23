@@ -5,7 +5,7 @@ import { UserContext } from "../../utils/UserContext";
 import { _icon_checkout, _icon_edit, styles_common, styles_text, styles_lists } from "../../styles/styles";
 import List from "../../components/List";
 import Button_Icon from "../../components/input/Button_Icon";
-import Button_Footer_Add from "../../components/input/Button_Footer_Add";
+import Button_Footer_Add from "../../components/screen/Button_Footer_Add";
 
 
 
@@ -21,7 +21,7 @@ export default function MealList({ navigation }) {
       <List data={mealDocs}>
         <ListItem navigation={navigation}/>
       </List>
-      <Button_Footer_Add onPressAdd={handleOnPressAdd}/>
+      <Button_Footer_Add onPress={handleOnPressAdd}/>
     </View>
   );
 }

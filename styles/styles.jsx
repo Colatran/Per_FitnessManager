@@ -21,9 +21,11 @@ export const _color_back_1        = '#252526';
 export const _color_back_1_border = '#2d2d30';
 export const _color_back_2        = '#3e3e42';
 export const _color_transparent_0 = _color_back_0 + 'f0';
-
 export const _color_front_0       = '#d1d1d1';
 export const _color_front_1       = '#c0c0c0';
+export const _color_warning_0     = '#cc3300';
+export const _color_warning_1     = '#ffcc00';
+
 
 export const _color_input             = _color_back_1;
 export const _color_button            = _color_back_2;
@@ -44,16 +46,18 @@ export const _textShadowRadius_title = 10;
 
 export const _color_icon = _color_front_0;
 export const _iconSize_m = 30;
+export const _iconSize_l = 60;
 
 export const _icon_add = 'plus';
 export const _icon_edit = 'pencil';
 export const _icon_checkout = 'eye';
 export const _icon_yes = 'check';
-export const _icon_close = 'close';
+export const _icon_no = 'close';
 export const _icon_save = 'content-save';
 export const _icon_delete = 'delete-forever';
 export const _icon_boolean_true = 'check';
 export const _icon_boolean_false = '';
+export const _icon_alert = 'alert';
 
 
 
@@ -114,6 +118,10 @@ export const styles_text = StyleSheet.create({
 
   bold_black: {
     fontWeight: 'bold',
+  },
+
+  centred: {
+    textAlign: 'center'
   }
 });
 
@@ -139,17 +147,15 @@ export const styles_lists = StyleSheet.create({
 });
 
 export const styles_buttons = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-    marginVertical: _space_l,
-  },
-  container_button: {
-    flex: 1,
-    flexDirection: "row"
+  seperator: {
+    marginHorizontal: _space_s,
   },
 
-  button: {
+  sided: {
+    flexDirection: "row",
+  },
+
+  button_fill: {
     flex: 1,
   },
   button_y: {
@@ -159,9 +165,15 @@ export const styles_buttons = StyleSheet.create({
     backgroundColor: _color_button_red,
   },
 
-  button_seperator: {
-    marginHorizontal: _space_s,
-  }
+  container_footer: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    marginVertical: _space_l,
+  },
+  container_button: {
+    flex: 1,
+    flexDirection: "row"
+  },
 });
 
 

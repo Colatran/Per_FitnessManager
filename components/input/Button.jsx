@@ -1,6 +1,6 @@
+import { StyleSheet } from "react-native";
 import { Pressable, View } from "react-native";
 import { _color_button, android_ripple_style, styles_common } from "../../styles/styles";
-import { StyleSheet } from "react-native";
 
 
 
@@ -22,8 +22,6 @@ export default function Button(props) {
     </View>
   );
 }
-
-
 
 const styles = StyleSheet.create({
   container: {

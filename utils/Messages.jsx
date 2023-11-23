@@ -1,0 +1,1 @@
+export const _recipeEditScreen_deleteIngredient = "Are you sure you want to delete this ingredient from the recipe?"

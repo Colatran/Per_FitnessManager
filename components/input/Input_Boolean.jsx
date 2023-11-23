@@ -2,7 +2,7 @@ import { _color_input, _icon_boolean_false, _icon_boolean_true } from "../../sty
 import Button_Icon from "../../components/input/Button_Icon";
 
 
-export default function INput_Boolean(props) {
+export default function Input_Boolean(props) {
   const isOn = props.isOn;
   const onPress = props.onPress;
 

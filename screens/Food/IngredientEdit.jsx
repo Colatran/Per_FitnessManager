@@ -12,7 +12,7 @@ import {
 import Label from "../../components/Label";
 import Input_Text from "../../components/input/Input_Text";
 import Input_Boolean from "../../components/input/Input_Boolean";
-import Button_Footer_Form from "../../components/input/Button_Footer_Form";
+import Button_Footer_Form from "../../components/screen/Button_Footer_Form";
 
 
 
