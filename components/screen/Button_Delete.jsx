@@ -2,7 +2,7 @@ import { View, Text } from 'react-native';
 import { useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { _color_warning_0, _iconSize_l, _iconSize_m, _icon_alert, _icon_delete, styles_buttons, styles_common, styles_text } from '../../styles/styles';
+import { _color_warning_0, _iconSize_l, _icon_alert, _icon_delete, styles_buttons, styles_common, styles_text } from '../../styles/styles';
 import Button_Icon from '../input/Button_Icon';
 import Button_YesNo from './Button_YesNo';
 import Popup from '../Popup';

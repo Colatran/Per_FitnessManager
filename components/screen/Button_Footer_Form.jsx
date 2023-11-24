@@ -9,6 +9,7 @@ export default function Button_Footer_Form(props) {
   const onPressAdd = props.onPressAdd;
   const onPressSave = props.onPressSave;
   const onPressDelete = props.onPressDelete;
+  const message = props.message;
 
   return (
     <View style={styles_buttons.container_footer}>
@@ -18,6 +19,7 @@ export default function Button_Footer_Form(props) {
         onPressAdd={onPressAdd}
         onPressSave={onPressSave}
         onPressDelete={onPressDelete}
+        message={message}
       />
     </View>
   );

@@ -9,12 +9,14 @@ export default function Button_AddSaveDelete(props) {
   const onPressAdd = props.onPressAdd;
   const onPressSave = props.onPressSave;
   const onPressDelete = props.onPressDelete;
+  const message = props.message;
 
   return isEdit ? (
     <Button_SaveDelete
       onPressSave={onPressSave}
       onPressDelete={onPressDelete}
       style={style}
+      message={message}
     />
   ) : (
     <Button_Add

@@ -1,16 +1,15 @@
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { ref_food_ingredients, ref_food_recipes } from "../../firebase.config";
 import { addDoc, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 
 import { UserContext } from "../../utils/UserContext";
 import {
-  _color_back_0, _color_back_1, _color_back_2, _color_button_green, _color_button_red,
-  _icon_edit,
-  _space_l, _space_m, _space_xl,
-  styles_buttons,
-  styles_common, styles_lists, styles_text
+  _color_back_0, _icon_edit, _space_l, _space_m,
+  styles_buttons, styles_common, styles_lists, styles_text
 } from "../../styles/styles";
+import { _recipeEditScreen_deleteIngredient, _recipeEditScreen_deleteRecipe } from "../../utils/Messages";
+import { getPhysicalState } from "../../utils/Funtions";
 import Label from "../../components/Label";
 import Popup from "../../components/Popup";
 import Input_Text from "../../components/input/Input_Text";
@@ -19,10 +18,10 @@ import Button_Footer_Add from "../../components/screen/Button_Footer_Add";
 import Button_Icon from "../../components/input/Button_Icon";
 import Input_Boolean from "../../components/input/Input_Boolean";
 import List from "../../components/List";
-import { getPhysicalState } from "../../utils/Funtions";
 import Button_YesNo from "../../components/screen/Button_YesNo";
 import Button_Delete from "../../components/screen/Button_Delete";
-import { _recipeEditScreen_deleteIngredient } from "../../utils/Messages";
+import Button_Close from "../../components/screen/Button_Close";
+import Button_Add from "../../components/screen/Button_Add";
 
 
 
@@ -36,21 +35,27 @@ export default function RecipeEdit({ navigation, route }) {
 
 
 
-  const [saveLock, setSaveLock] = useState(false);
-  const [lockSwitch, setLockSwitch] = useState(false);
+  const [screen_finished_incIngredientDocs, setScreen_finished_incIngredientDocs] = useState(false);
+  const [screen_finished_ingredients, setScreen_finished_ingredients] = useState(false);
+  const [screen_effectLocked, setScreen_effectLocked] = useState(true);
 
-  const [amountEdit_visible, setAmountEdit_visible] = useState(false);
+  const [amountEdit_popup, setAmountEdit_popup] = useState(false);
   const [amountEdit_index, setAmountEdit_index] = useState(0);
   const [amountEdit_value, setAmountEdit_value] = useState(0);
   const [amountEdit_label, setAmountEdit_label] = useState("");
   const [amountEdit_isSolid, setAmountEdit_isSolid] = useState(true);
+  const [addIngredient_popup, setAddIngredient_popup] = useState(false);
 
   const [incIngredientDocs, setIngredientDocs] = useState([]);
-
+  
+  const [ingredients, setIngredients] = useState([]);
   const [label, setLabel] = useState(isEdit ? recipe.label : "");
   const [servings, setServings] = useState(isEdit ? `${recipe.servings}` : "1");
   const [isSolid, setIsSolid] = useState(isEdit ? recipe.isSolid : true);
-  const [ingredients, setIngredients] = useState([]);
+
+  const [saveLock, setSaveLock] = useState(false);
+
+
 
 
 
@@ -83,8 +88,33 @@ export default function RecipeEdit({ navigation, route }) {
   }
   useEffect(() => {
     Start();
-    return;
   }, []);
+
+  useEffect(() => {
+    if(screen_effectLocked) setScreen_finished_incIngredientDocs(true);
+  }, [incIngredientDocs]);
+  useEffect(() => {
+    if(screen_effectLocked) setScreen_finished_ingredients(true);
+  }, [ingredients]);
+
+  useEffect(() => {
+    if(screen_finished_incIngredientDocs && screen_finished_ingredients)
+      setScreen_effectLocked(false);
+    return;
+  }, [screen_finished_incIngredientDocs, screen_finished_ingredients]);
+
+
+
+  useEffect (() => {
+    if (screen_effectLocked) return;
+
+    const newIndex = ingredients.length - 1;
+    popupAmountEdit_set(newIndex);
+    setAddIngredient_popup(false);
+    setScreen_lock_switchIngredient(false);
+  }, [ingredients]);
+
+
 
 
 
@@ -137,7 +167,7 @@ export default function RecipeEdit({ navigation, route }) {
     })
   }
 
-  const addIngredient = async (index) => {
+  const addIngredient = (index) => {
     const ingDoc = incIngredientDocs[index];
     const newIng = { ingredientId: ingDoc.id, amount: `${FloorValue(ingDoc.unit_weight / ingDoc.unit_servings)}`, ingredient: ingDoc };
     setIngredients([...ingredients, newIng]);
@@ -159,6 +189,7 @@ export default function RecipeEdit({ navigation, route }) {
     newIngredients[index].amount = value;
     setIngredients(newIngredients);
   }
+
   const saveRecipe = async () => {
     const ingredietData = ingredients.map((item) => ({ ingredientId: item.ingredientId, amount: item.amount }));
 
@@ -202,7 +233,6 @@ export default function RecipeEdit({ navigation, route }) {
     return deleteDoc(docRef);
   }
 
-
   const toggleIsSolid = () => {
     setIsSolid(!isSolid);
   }
@@ -212,51 +242,43 @@ export default function RecipeEdit({ navigation, route }) {
     setAmountEdit_value(ingredients[index].amount);
     setAmountEdit_label(ingredients[index].ingredient.label);
     setAmountEdit_isSolid(ingredients[index].ingredient.isSolid);
-    setAmountEdit_visible(true);
-  }
-  const popupAmountEdit_save = () => {
-    changeIngredientAmount(amountEdit_index, amountEdit_value);
-    setAmountEdit_visible(false);
-  }
-  const popupAmountEdit_close = () => {
-    setAmountEdit_visible(false);
+    setAmountEdit_popup(true);
   }
 
 
+  
 
 
-
-
-  const handleOnPress_IsSolid = () => {
+  const onPress_IsSolid = () => {
     toggleIsSolid();
   }
 
-  const onPress_IngredientList_Edit = (index) => {
+  const onPress_IngredientList_AddIngredient = () => {
+    setAddIngredient_popup(true);
+  }
+  const onPress_IngredientList_Item_Edit = (index) => {
     popupAmountEdit_set(index);
   }
+
   const onPress_PopupAmountEdit_Save = () => {
-    popupAmountEdit_save();
+    changeIngredientAmount(amountEdit_index, amountEdit_value);
+    setAmountEdit_popup(false);
   }
   const onPress_PopupAmountEdit_Close = () => {
-    popupAmountEdit_close();
+    setAmountEdit_popup(false);
+  }
+  const onPress_PopupAmountEdit_Delete = (index) => {
+    removeIngredient(index);
   }
 
-  const handleAddIngredientOnPress = (index) => {
-    if (lockSwitch) return;
-    setLockSwitch(true);
-
-    addIngredient(index)
-      .then(() => setLockSwitch(false));
+  const onPress_PopupAddIngredient_ListItem_Add = (index) => {
+    addIngredient(index);
   }
-  const handleRemoveIngredientOnPress = (index) => {
-    if (lockSwitch) return;
-    setLockSwitch(true);
-
-    removeIngredient(index)
-      .then(() => setLockSwitch(false));
+  const onPress_PopupAddIngredient_Close = () => {
+    setAddIngredient_popup(false);
   }
 
-  const handleSaveOnPress = () => {
+  const onPress_Save = () => {
     if (saveLock) return;
     setSaveLock(true);
 
@@ -270,7 +292,7 @@ export default function RecipeEdit({ navigation, route }) {
         setSaveLock(false)
       });
   }
-  const handleDeleteOnPress = () => {
+  const onPress_Delete = () => {
     deleteRecipe()
       .then(() => {
         navigation.goBack();
@@ -285,33 +307,42 @@ export default function RecipeEdit({ navigation, route }) {
   return (
     <View style={styles_common.container}>
 
-      <Popup isVisible={amountEdit_visible}>
-          <View style={styles_common.form}>
-            <View style={{ alignItems: "center" }}>
-              <Text style={styles_text.bold}>{amountEdit_label}</Text>
-            </View>
-            <Label label={"Amount (" + getPhysicalState(amountEdit_isSolid) + ")"}>
-              <View style={{ flexDirection: "row" }}>
-                <View style={{ flex: 1 }}>
-                  <Input_Text value={amountEdit_value} setValue={setAmountEdit_value} placeholder={""} keyboardType={"numeric"} />
-                </View>
+      <Popup isVisible={amountEdit_popup}>
+        <View style={styles_common.form}>
+          <View style={{ alignItems: "center" }}>
+            <Text style={styles_text.bold}>{amountEdit_label}</Text>
+          </View>
+          <Label label={"Amount (" + getPhysicalState(amountEdit_isSolid) + ")"}>
+            <View style={{ flexDirection: "row" }}>
+              <View style={{ flex: 1 }}>
+                <Input_Text value={amountEdit_value} setValue={setAmountEdit_value} placeholder={""} keyboardType={"numeric"} />
               </View>
-            </Label>
-
-            <View style={{ alignItems: "flex-end" }}>
-              <Button_Delete onPress={handleRemoveIngredientOnPress} message={_recipeEditScreen_deleteIngredient}/>
             </View>
-          </View>
+          </Label>
 
-          <View style={styles_buttons.container_footer}>
-            <Button_YesNo style={styles_buttons.button_fill} onPressYes={onPress_PopupAmountEdit_Save} onPressNo={onPress_PopupAmountEdit_Close}/>
+          <View style={{ alignItems: "flex-end" }}>
+            <Button_Delete onPress={onPress_PopupAmountEdit_Delete} message={_recipeEditScreen_deleteIngredient} />
           </View>
-        <View style={{ flex: 1 }}>
+        </View>
 
+        <View style={styles_buttons.container_footer}>
+          <Button_YesNo style={styles_buttons.button_fill} onPressYes={onPress_PopupAmountEdit_Save} onPressNo={onPress_PopupAmountEdit_Close} />
         </View>
       </Popup>
 
+      <Popup isVisible={addIngredient_popup}>
+        <View style={{ flex: 1 }} />
+        <View style={[styles_common.form, { flex: 4 }]}>
+          <List data={incIngredientDocs}>
+            <ListItem_IngredientToAdd onPressAdd={onPress_PopupAddIngredient_ListItem_Add} />
+          </List>
+        </View>
 
+        <View style={styles_buttons.container_footer}>
+          <Button_Close style={styles_buttons.button_fill} onPress={onPress_PopupAddIngredient_Close} />
+        </View>
+        <View style={{ flex: 1 }} />
+      </Popup>
 
       <View style={[styles_common.form, styles.form]}>
         <View style={{ marginBottom: _space_l }}>
@@ -319,7 +350,7 @@ export default function RecipeEdit({ navigation, route }) {
             <Input_Text value={label} setValue={setLabel} placeholder={"Label"} />
           </Label>
           <Label label="Is Solid">
-            <Input_Boolean isOn={isSolid} onPress={handleOnPress_IsSolid} />
+            <Input_Boolean isOn={isSolid} onPress={onPress_IsSolid} />
           </Label>
           <Label label="Servings">
             <Input_Text value={servings} setValue={setServings} placeholder={""} keyboardType={"numeric"} />
@@ -329,11 +360,11 @@ export default function RecipeEdit({ navigation, route }) {
         <Label label="Ingredients" style={{ flex: 1 }}>
           <View style={[styles_common.container_front, styles.container_list]}>
             <List data={ingredients}>
-              <ListItem_IngredientAdded onPressEdit={(index) => onPress_IngredientList_Edit(index)} />
+              <ListItem_IngredientAdded onPressEdit={(index) => onPress_IngredientList_Item_Edit(index)} />
             </List>
             <Button_Footer_Add
               style={{ marginVertical: _space_m }}
-              onPressDelete={() => { }}
+              onPress={onPress_IngredientList_AddIngredient}
             />
           </View>
         </Label>
@@ -341,9 +372,10 @@ export default function RecipeEdit({ navigation, route }) {
 
       <Button_Footer_Form
         isEdit={isEdit}
-        onPressSaveNew={() => handleSaveOnPress()}
-        onPressSave={() => handleSaveOnPress()}
-        onPressDelete={() => handleDeleteOnPress()}
+        onPressSaveNew={() => onPress_Save()}
+        onPressSave={() => onPress_Save()}
+        onPressDelete={() => onPress_Delete()}
+        message={_recipeEditScreen_deleteRecipe}
       />
     </View>
   );
@@ -356,7 +388,7 @@ function ListItem_IngredientAdded(props) {
 
   const state = getPhysicalState(item.ingredient.isSolid);
 
-  const onPressEdit = () => {
+  const onPress = () => {
     props.onPressEdit(index);
   };
 
@@ -368,11 +400,32 @@ function ListItem_IngredientAdded(props) {
       </View>
       <Button_Icon
         icon={_icon_edit}
-        onPress={onPressEdit}
+        onPress={onPress}
       />
     </View>
   );
 }
+
+function ListItem_IngredientToAdd(props) {
+  const { item, index } = props;
+
+  const onPress = () => {
+    props.onPressAdd(index);
+  };
+
+  return  item.include ? (
+    <View style={styles_lists.container}>
+      <View style={[styles_lists.container_label, { flexDirection: "row" }]}>
+        <Text style={styles_text.label}>{item.label}</Text>
+      </View>
+      <Button_Add onPress={onPress} />
+    </View>
+  ) : (
+    <></>
+  );
+}
+
+
 
 
 
@@ -386,7 +439,4 @@ const styles = StyleSheet.create({
     padding: _space_m,
     backgroundColor: _color_back_0,
   },
-
-
-
 });

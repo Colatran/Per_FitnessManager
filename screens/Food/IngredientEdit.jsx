@@ -13,6 +13,7 @@ import Label from "../../components/Label";
 import Input_Text from "../../components/input/Input_Text";
 import Input_Boolean from "../../components/input/Input_Boolean";
 import Button_Footer_Form from "../../components/screen/Button_Footer_Form";
+import { _ingredientEditScreen_deleteIngredient } from "../../utils/Messages";
 
 
 
@@ -143,6 +144,7 @@ export default function IngredientEdit({ navigation, route }) {
         onPressSaveNew={() => handleSaveOnPress()}
         onPressSave={() => handleSaveOnPress()}
         onPressDelete={() => handleDeleteOnPress()}
+        message={_ingredientEditScreen_deleteIngredient}
       />
     </View>
   );

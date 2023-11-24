@@ -9,12 +9,13 @@ export default function Button_SaveDelete(props) {
   const style = props.style;
   const onPressSave = props.onPressSave;
   const onPressDelete = props.onPressDelete;
+  const message = props.message;
 
   return (
     <View style={styles_buttons.sided}>
       <Button_Save style={style} onPress={onPressSave} />
       <View style={styles_buttons.seperator} />
-      <Button_Delete style={style} onPress={onPressDelete} />
+      <Button_Delete style={style} onPress={onPressDelete} message={message}/>
     </View>
   );
 }
