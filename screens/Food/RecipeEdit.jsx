@@ -320,11 +320,7 @@ export default function RecipeEdit({ navigation, route }) {
             <Text style={styles_text.bold}>{amountEdit_label}</Text>
           </View>
           <Label label={"Amount (" + getPhysicalState(amountEdit_isSolid) + ")"}>
-            <View style={{ flexDirection: "row" }}>
-              <View style={{ flex: 1 }}>
-                <Input_Text value={amountEdit_value} setValue={setAmountEdit_value} placeholder={""} keyboardType={"numeric"} />
-              </View>
-            </View>
+            <Input_Text value={amountEdit_value} setValue={setAmountEdit_value} placeholder={""} keyboardType={"numeric"} />
           </Label>
 
           <View style={{ alignItems: "flex-end" }}>
@@ -341,7 +337,7 @@ export default function RecipeEdit({ navigation, route }) {
         <View style={{ flex: 1 }} />
         <View style={[styles_common.form, { flex: 4 }]}>
           <List data={incIngredientDocs}>
-            <ListItem_IngredientToAdd onPressAdd={onPress_PopupAddIngredient_ListItem_Add} />
+            <ListItem_IngredientToAdd onPressAdd={onPress_PopupAddIngredient_ListItem_Add}/>
           </List>
         </View>
 

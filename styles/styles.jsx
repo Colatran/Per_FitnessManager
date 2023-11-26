@@ -58,6 +58,7 @@ export const _icon_delete = 'delete-forever';
 export const _icon_boolean_true = 'check';
 export const _icon_boolean_false = '';
 export const _icon_alert = 'alert';
+export const _icon_edit_list = 'file-document-edit';
 
 
 
@@ -157,6 +158,9 @@ export const styles_buttons = StyleSheet.create({
   },
   button_n: {
     backgroundColor: _color_button_red,
+  },
+  button_edit: {
+    backgroundColor: _color_button,
   },
 
   container_footer: {
