@@ -126,19 +126,13 @@ export const styles_text = StyleSheet.create({
 });
 
 export const styles_lists = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    flex: 1,
-    alignItems: 'center',
-  },
-
-  container_item: {
+  container_item: [styles_common.container_front, {
     paddingHorizontal: _space_m,
     paddingVertical: _space_s,
     marginVertical: _space_xs,
     flexDirection: "row",
     alignItems: "center"
-  },
+  }],
   
   container_label: {
     marginHorizontal: _space_s,
@@ -190,9 +184,6 @@ export const android_ripple_style = {
 
 
 //LEGACY
- const background_dark    = '#212121';
- const background_light   = '#343434';
- const background_input   = '#515151';
  const nut_blue       = '#5588ff';
  const nut_yellow_01  = '#f9a73e';
  const nut_yellow_02  = '#bf710d';

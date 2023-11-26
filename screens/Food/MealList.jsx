@@ -39,7 +39,7 @@ function ListItem(props) {
   }
 
   return (
-    <View style={styles_lists.container}>
+    <View style={styles_lists.container_item}>
       <Button_Icon
         icon={_icon_checkout}
         onPress={() => handleOnPressCheck(item)}

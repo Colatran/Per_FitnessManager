@@ -393,7 +393,7 @@ function ListItem_IngredientAdded(props) {
   };
 
   return (
-    <View style={styles_lists.container}>
+    <View style={styles_lists.container_item}>
       <View style={[styles_lists.container_label, { flexDirection: "row" }]}>
         <Text style={[styles_text.common, { flex: 1 }]}>{item.amount} {state}</Text>
         <Text style={[styles_text.label, { flex: 3 }]}>{item.ingredient.label}</Text>
@@ -414,7 +414,7 @@ function ListItem_IngredientToAdd(props) {
   };
 
   return  item.include ? (
-    <View style={styles_lists.container}>
+    <View style={styles_lists.container_item}>
       <View style={[styles_lists.container_label, { flexDirection: "row" }]}>
         <Text style={styles_text.label}>{item.label}</Text>
       </View>
