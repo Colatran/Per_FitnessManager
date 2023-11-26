@@ -141,7 +141,7 @@ export default function IngredientEdit({ navigation, route }) {
       </ScrollView>
       <Button_Footer_Form
         isEdit={isEdit}
-        onPressSaveNew={() => handleSaveOnPress()}
+        onPressAdd={() => handleSaveOnPress()}
         onPressSave={() => handleSaveOnPress()}
         onPressDelete={() => handleDeleteOnPress()}
         message={_ingredientEditScreen_deleteIngredient}

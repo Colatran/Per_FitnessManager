@@ -4,24 +4,23 @@ import { ref_food_ingredients, ref_food_recipes } from "../../firebase.config";
 import { addDoc, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 
 import { UserContext } from "../../utils/UserContext";
-import {
-  _color_back_0, _icon_edit, _space_l, _space_m,
+import { _color_back_0, _icon_edit, _space_l, _space_m,
   styles_buttons, styles_common, styles_lists, styles_text
 } from "../../styles/styles";
 import { _recipeEditScreen_deleteIngredient, _recipeEditScreen_deleteRecipe } from "../../utils/Messages";
 import { getPhysicalState } from "../../utils/Funtions";
+import List from "../../components/List";
 import Label from "../../components/Label";
 import Popup from "../../components/Popup";
 import Input_Text from "../../components/input/Input_Text";
+import Input_Boolean from "../../components/input/Input_Boolean";
+import Button_Icon from "../../components/input/Button_Icon";
 import Button_Footer_Form from "../../components/screen/Button_Footer_Form";
 import Button_Footer_Add from "../../components/screen/Button_Footer_Add";
-import Button_Icon from "../../components/input/Button_Icon";
-import Input_Boolean from "../../components/input/Input_Boolean";
-import List from "../../components/List";
 import Button_YesNo from "../../components/screen/Button_YesNo";
-import Button_Delete from "../../components/screen/Button_Delete";
 import Button_Close from "../../components/screen/Button_Close";
 import Button_Add from "../../components/screen/Button_Add";
+import Button_Delete from "../../components/screen/Button_Delete";
 
 
 
@@ -40,6 +39,7 @@ export default function RecipeEdit({ navigation, route }) {
   const [screen_effectLocked, setScreen_effectLocked] = useState(true);
 
   const [amountEdit_popup, setAmountEdit_popup] = useState(false);
+  const [amountEdit_fromEditing, setAmountEdit_fromEditing] = useState(false);
   const [amountEdit_index, setAmountEdit_index] = useState(0);
   const [amountEdit_value, setAmountEdit_value] = useState(0);
   const [amountEdit_label, setAmountEdit_label] = useState("");
@@ -107,11 +107,11 @@ export default function RecipeEdit({ navigation, route }) {
 
   useEffect (() => {
     if (screen_effectLocked) return;
+    if (!amountEdit_fromEditing) return;
 
     const newIndex = ingredients.length - 1;
     popupAmountEdit_set(newIndex);
     setAddIngredient_popup(false);
-    setScreen_lock_switchIngredient(false);
   }, [ingredients]);
 
 
@@ -178,6 +178,7 @@ export default function RecipeEdit({ navigation, route }) {
   const removeIngredient = async (index) => {
     const ingId = ingredients[index].ingredientId;
     const indexDoc = incIngredientDocs.findIndex(item => item.id === ingId);
+
     incIngredientDocs[indexDoc].include = true;
     setIngredientDocs(incIngredientDocs);
 
@@ -254,6 +255,7 @@ export default function RecipeEdit({ navigation, route }) {
   }
 
   const onPress_IngredientList_AddIngredient = () => {
+    setAmountEdit_fromEditing (true);
     setAddIngredient_popup(true);
   }
   const onPress_IngredientList_Item_Edit = (index) => {
@@ -261,14 +263,17 @@ export default function RecipeEdit({ navigation, route }) {
   }
 
   const onPress_PopupAmountEdit_Save = () => {
+    setAmountEdit_fromEditing(false);
     changeIngredientAmount(amountEdit_index, amountEdit_value);
     setAmountEdit_popup(false);
   }
   const onPress_PopupAmountEdit_Close = () => {
     setAmountEdit_popup(false);
   }
-  const onPress_PopupAmountEdit_Delete = (index) => {
-    removeIngredient(index);
+  const onPress_PopupAmountEdit_Delete = () => {
+    setAmountEdit_fromEditing(false);
+    removeIngredient(amountEdit_index);
+    setAmountEdit_popup(false);
   }
 
   const onPress_PopupAddIngredient_ListItem_Add = (index) => {
@@ -304,6 +309,8 @@ export default function RecipeEdit({ navigation, route }) {
 
 
 
+
+  
   return (
     <View style={styles_common.container}>
 
@@ -372,7 +379,7 @@ export default function RecipeEdit({ navigation, route }) {
 
       <Button_Footer_Form
         isEdit={isEdit}
-        onPressSaveNew={() => onPress_Save()}
+        onPressAdd={() => onPress_Save()}
         onPressSave={() => onPress_Save()}
         onPressDelete={() => onPress_Delete()}
         message={_recipeEditScreen_deleteRecipe}
