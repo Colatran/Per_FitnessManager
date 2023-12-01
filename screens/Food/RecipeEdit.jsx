@@ -185,7 +185,7 @@ export default function RecipeEdit({ navigation, route }) {
     ingredients.splice(index, 1);
     setIngredients(ingredients);
   }
-  const changeIngredientAmount = async (index, value) => {
+  const updateIngredientAmount = async (index, value) => {
     const newIngredients = [...ingredients];
     newIngredients[index].amount = value;
     setIngredients(newIngredients);
@@ -264,7 +264,7 @@ export default function RecipeEdit({ navigation, route }) {
 
   const onPress_PopupAmountEdit_Save = () => {
     setAmountEdit_fromEditing(false);
-    changeIngredientAmount(amountEdit_index, amountEdit_value);
+    updateIngredientAmount(amountEdit_index, amountEdit_value);
     setAmountEdit_popup(false);
   }
   const onPress_PopupAmountEdit_Close = () => {

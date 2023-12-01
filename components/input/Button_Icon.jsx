@@ -13,7 +13,7 @@ export default function Button_Icon(props) {
 
   return (
     <Button onPress={onPress} style={[styles.button, style]}>
-      <Icon name={icon} size={size ? size : _iconSize_m} color={color ? color : _color_icon} />
+      <Icon name={icon} size={size ? size : _iconSize_m} color={color ? color : _color_icon}/>
       {props.children}
     </Button>
   );

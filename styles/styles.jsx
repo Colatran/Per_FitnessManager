@@ -25,6 +25,7 @@ export const _color_front_0       = '#d1d1d1';
 export const _color_front_1       = '#c0c0c0';
 export const _color_warning_0     = '#cc3300';
 export const _color_warning_1     = '#ffcc00';
+export const _color_favourite     = '#ffd700';
 
 
 export const _color_input             = _color_back_1;
@@ -59,6 +60,7 @@ export const _icon_boolean_true = 'check';
 export const _icon_boolean_false = '';
 export const _icon_alert = 'alert';
 export const _icon_edit_list = 'file-document-edit';
+export const _icon_favourite = 'star';
 
 
 
@@ -82,6 +84,11 @@ export const styles_common = StyleSheet.create({
     elevation: _elevation_s,
     paddingHorizontal: _space_m,
     paddingVertical: _space_l,
+  },
+
+  icon_margin: {
+    width: 30,
+    height: 31,
   }
 });
 
