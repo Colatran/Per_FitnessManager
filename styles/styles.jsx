@@ -61,6 +61,7 @@ export const _icon_boolean_false = '';
 export const _icon_alert = 'alert';
 export const _icon_edit_list = 'file-document-edit';
 export const _icon_favourite = 'star';
+export const _icon_select = 'cursor-pointer';
 
 
 
@@ -149,6 +150,13 @@ export const styles_lists = StyleSheet.create({
 });
 
 export const styles_buttons = StyleSheet.create({
+  button: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: _size_xs,
+    width: _size_xs,
+  },
+
   seperator: {
     marginHorizontal: _space_s,
   },

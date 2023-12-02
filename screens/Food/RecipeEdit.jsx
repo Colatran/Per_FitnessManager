@@ -8,7 +8,7 @@ import { _color_back_0, _icon_edit, _space_l, _space_m,
   styles_buttons, styles_common, styles_lists, styles_text
 } from "../../styles/styles";
 import { _recipeEditScreen_deleteIngredient, _recipeEditScreen_deleteRecipe } from "../../utils/Messages";
-import { getPhysicalState } from "../../utils/Funtions";
+import { getPhysicalState } from "../../utils/Functions";
 import List from "../../components/List";
 import Label from "../../components/Label";
 import Popup from "../../components/Popup";

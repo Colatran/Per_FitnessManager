@@ -1,28 +1,28 @@
 import { StyleSheet, View, Text, ScrollView } from "react-native";
 import { useState } from "react";
-import { ref_food_ingredients } from "../../firebase.config";
 import { addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 
-import { getPhysicalState } from "../../utils/Funtions";
+import { make_ingredient, ref_food_ingredients } from "../../firebase.config";
+import { getPhysicalState } from "../../utils/Functions";
 import {
-  _borderWidth_xs, _space_l, _space_m, _space_xs,
-  _color_back_2, _color_front_0,
-  styles_common, styles_text, _icon_edit, _icon_edit_list, styles_buttons, styles_lists, _space_s
+  _borderWidth_xs, _space_l, _space_m, _space_s, _space_xs,
+  _color_front_0, _icon_edit_list,
+  styles_common, styles_text, styles_buttons, styles_lists
 } from "../../styles/styles";
+import { _ingredientEditScreen_deleteIngredient, _ingredientEditScreen_deleteServing, _recipeEditScreen_deleteRecipe } from "../../utils/Messages";
+
 import Label from "../../components/Label";
+import Popup from "../../components/Popup";
+import List from "../../components/List";
 import Input_Text from "../../components/input/Input_Text";
 import Input_Boolean from "../../components/input/Input_Boolean";
-import Button_Footer_Form from "../../components/screen/Button_Footer_Form";
-import { _ingredientEditScreen_deleteIngredient, _ingredientEditScreen_deleteServing, _recipeEditScreen_deleteRecipe } from "../../utils/Messages";
 import Button_Icon from "../../components/input/Button_Icon";
-import Popup from "../../components/Popup";
-import Button_Close from "../../components/screen/Button_Close";
-import Button_Edit from "../../components/screen/Button_Edit";
-import Button_Add from "../../components/screen/Button_Add";
+import Button_Footer_Form from "../../components/screen/Button_Footer_Form";
 import Button_YesNo from "../../components/screen/Button_YesNo";
+import Button_Add from "../../components/screen/Button_Add";
 import Button_Delete from "../../components/screen/Button_Delete";
-import List from "../../components/List";
-import Icon_Favourite from "../../components/Icon_Favourite";
+import Button_Edit from "../../components/screen/Button_Edit";
+import Button_Close from "../../components/screen/Button_Close";
 import Button_Favourite from "../../components/screen/Button_Favourite";
 
 
@@ -47,7 +47,7 @@ export default function IngredientEdit({ navigation, route }) {
   const [unit_weight,   setUnit_weight]   = useState(isEdit ? `${ingredient.unit_weight}`   : "0");
   const [servings,      setServings]      = useState(isEdit ? ingredient.servings ? ingredient.servings : [] : []);
   const [servings_fav,  setServings_fav]  = useState(isEdit ? ingredient.servings_fav       : "0");
-  const [nut_energy,    setNut_energy]    = useState(isEdit ? `${ingredient.nut_energy}`    : "0");
+  const [nut_calories,  setNut_calories]  = useState(isEdit ? `${ingredient.nut_calories}`    : "0");
   const [nut_fats,      setNut_fats]      = useState(isEdit ? `${ingredient.nut_fats}`      : "0");
   const [nut_saturates, setNut_saturates] = useState(isEdit ? `${ingredient.nut_saturates}` : "0");
   const [nut_carbs,     setNut_carbs]     = useState(isEdit ? `${ingredient.nut_carbs}`     : "0");
@@ -58,26 +58,9 @@ export default function IngredientEdit({ navigation, route }) {
 
 
 
-
-
   const saveIngredient = async () => {
-    const data = {
-      label:          label,
-      recipeId:       recipeId,
-      isSolid:        isSolid,
-      unit_price:     parseFloat(unit_price),
-      unit_weight:    parseFloat(unit_weight),
-      servings:       servings,
-      servings_fav:   servings_fav,
-      nut_energy:     parseFloat(nut_energy),
-      nut_fats:       parseFloat(nut_fats),
-      nut_saturates:  parseFloat(nut_saturates),
-      nut_carbs:      parseFloat(nut_carbs),
-      nut_sugars:     parseFloat(nut_sugars),
-      nut_protein:    parseFloat(nut_protein),
-      nut_fiber:      parseFloat(nut_fiber),
-      nut_salt:       parseFloat(nut_salt),
-    }
+    const data = make_ingredient(recipeId, label, isSolid, unit_price, unit_weight, servings, servings_fav,
+      nut_calories, nut_fats, nut_saturates, nut_carbs, nut_sugars, nut_protein, nut_fiber, nut_salt);
 
     if(ingredient) {
       const docRef = doc(ref_food_ingredients, ingredient.id);
@@ -136,10 +119,6 @@ export default function IngredientEdit({ navigation, route }) {
     setServingsEdit_editServing_amount(0);
     setServingsEdit_editServing_popup(true);
   }
-
-  
-
-
 
 
 
@@ -204,9 +183,7 @@ export default function IngredientEdit({ navigation, route }) {
   }
 
 
-
-
-
+  
   return (
     <View style={styles_common.container}>
 
@@ -277,9 +254,9 @@ export default function IngredientEdit({ navigation, route }) {
           </Label>
         </View>
 
-        <Label label={`Nutrition (Per 100${gps()}): `}>
+        <Label label={`Nutrition (Per 100${gps()}):`}>
           <View style={styles.container_table}>
-            <Parameter_Nut label="Calories (kcal)"    value={nut_energy}    setValue={setNut_energy}/>
+            <Parameter_Nut label="Calories (kcal)"    value={nut_calories}    setValue={setNut_calories}/>
             <Parameter_Nut label="Fat (g)"            value={nut_fats}      setValue={setNut_fats}/>
             <Parameter_Nut label="Saturates (g)"      value={nut_saturates} setValue={setNut_saturates} hasPadding={true}/>
             <Parameter_Nut label="Carbohydrate (g)"   value={nut_carbs}     setValue={setNut_carbs}/>
@@ -365,10 +342,10 @@ const styles = StyleSheet.create({
   container_parameter: {
     flexDirection: "row",
     paddingHorizontal: _space_m,
+    paddingVertical: _space_xs,
     alignItems: "center",
     borderColor: _color_front_0,
     borderBottomWidth: _borderWidth_xs,
-    paddingVertical: _space_xs,
   },
 
   container_parameter_cell: {

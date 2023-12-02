@@ -8,14 +8,12 @@ export function getHoursNMinuts_FromMinutes(minutes) {
     m: parseInt(minutes%60),
   }
 }
-
 export function getTimeText_FromMinutes(minutes) {
   const hm = getHoursNMinuts_FromMinutes(minutes);
   const h = hm.h.toString().padStart(2, '0');
   const m = hm.m.toString().padStart(2, '0');
   return `${h}:${m}`;
 }
-
 export function getDurationText_FromMinuts(minutes) {
   const hm = getHoursNMinuts_FromMinutes(minutes);
   
@@ -29,5 +27,4 @@ export function getDurationText_FromMinuts(minutes) {
 
 export const _measure_grams = "g";
 export const _measure_milliliters = "ml";
-
 export const getPhysicalState = (isSolid) => {return isSolid ? _measure_grams : _measure_milliliters}
