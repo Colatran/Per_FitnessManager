@@ -1,6 +1,11 @@
-export const FloorValue = (value) => {return  Math.floor(value * Math.pow(10, 2)) / Math.pow(10, 2);}
+export const _char_price = '€';
+export const _measure_grams = "g";
+export const _measure_milliliters = "ml";
 
 
+
+export const FloorValue = (value) => { return Math.floor(value * Math.pow(10, 2)) / Math.pow(10, 2); }
+export const GetPrice = (value) => { return `${FloorValue(value).toFixed(2)}${_char_price}`; }
 
 export function getHoursNMinuts_FromMinutes(minutes) {
   return {
@@ -23,8 +28,6 @@ export function getDurationText_FromMinuts(minutes) {
   return `${h}${m}`;
 }
 
-
-
-export const _measure_grams = "g";
-export const _measure_milliliters = "ml";
-export const getPhysicalState = (isSolid) => {return isSolid ? _measure_grams : _measure_milliliters}
+export const getPhysicalState = (isSolid) => {
+  return isSolid ? _measure_grams : _measure_milliliters
+}

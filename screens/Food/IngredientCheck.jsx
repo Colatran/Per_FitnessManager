@@ -1,23 +1,17 @@
 import { StyleSheet, View, Text } from "react-native";
 import { useState } from "react";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { FloorValue, getPhysicalState } from "../../utils/Functions";
+import { FloorValue, GetPrice, getPhysicalState } from "../../utils/Functions";
 import { 
   _borderWidth_xs,
-  _color_back_0, _color_back_1,
-  _color_icon,
-  _iconSize_m,
-  _icon_alert,
-  _icon_select,
+  _color_back_0, _color_back_1, _color_icon,
+  _iconSize_m, _icon_alert, _icon_select,
   _size_xs,
   _space_l, _space_m, _space_s, _space_xl,
-  styles_buttons,
-  styles_common, styles_lists, styles_text } from "../../styles/styles";
+  styles_buttons, styles_common, styles_lists, styles_text } from "../../styles/styles";
 import Popup from "../../components/Popup";
+import List from "../../components/List";
 import Label from "../../components/Label";
 import Button_Close from "../../components/screen/Button_Close";
-import List from "../../components/List";
-import Button from "../../components/input/Button";
 import Button_Select from "../../components/screen/Button_Select";
 
 
@@ -46,10 +40,6 @@ export default function IngredientCheck({ navigation, route }) {
 
 
 
-  const price_100 = 100 * unit_price / unit_weight;
-  
-
-  
   const setServing = (index) => {
     setServing_amount(servings[index].amount);
     setServing_label(servings[index].label);
@@ -57,9 +47,16 @@ export default function IngredientCheck({ navigation, route }) {
 
 
 
-  const gps = () => {
-    return getPhysicalState(isSolid);
-  }
+
+  const price_100 = 100 * unit_price / unit_weight;
+  const gps = () => { return getPhysicalState(isSolid); }
+
+  const _unit_price = GetPrice(unit_price);
+  const _unit_weight = `${FloorValue(unit_weight)}${gps()}`;
+  const _price_100_prot = nut_protein > 0 ? GetPrice(price_100 / nut_protein * 100) : '--';
+  const _price_100_cal = GetPrice(price_100 / nut_calories * 100);
+  const _serving_weight = `${FloorValue(serving_amount)}${gps()}`;
+  const _serving_price = GetPrice(serving_amount * unit_price / unit_weight);
 
   const onPress_selectServing = () => {
     setServingSelect_popup(true);
@@ -102,10 +99,10 @@ export default function IngredientCheck({ navigation, route }) {
 
         <View style={styles.container_data}>
           <View style={styles.container_section}>
-            <Parameter label={"Unit Price"}           value={`${unit_price}€`}/>
-            <Parameter label={"Unit Weight"}          value={`${unit_weight}(${gps()})`}/>
-            <Parameter label={"Price Protein(100g)"}  value={nut_protein > 0 ? `${FloorValue(price_100 / nut_protein * 100)}€` : '--'}/>
-            <Parameter label={"Price 100cal"}         value={`${FloorValue(price_100 / nut_calories * 100)}€`}/>
+            <Parameter label={"Unit Price"}           value={_unit_price}/>
+            <Parameter label={"Unit Weight"}          value={_unit_weight}/>
+            <Parameter label={"Price Protein(100g)"}  value={_price_100_prot}/>
+            <Parameter label={"Price 100cal"}         value={_price_100_cal}/>
           </View>
 
           <Label label={'Serving:'}>
@@ -119,8 +116,8 @@ export default function IngredientCheck({ navigation, route }) {
                     <Button_Select onPress={onPress_selectServing} style={styles_buttons.button_fill}/>
                   </View>
                 </View>
-                <Parameter label={"Weight"}  value={`${serving_amount}${gps()}`}/>
-                <Parameter label={"Serving Price"}  value={`${serving_amount * unit_price / unit_weight}€`}/>
+                <Parameter label={"Weight"}  value={_serving_weight}/>
+                <Parameter label={"Serving Price"}  value={_serving_price}/>
               </View>
             </View>
           </Label>
@@ -135,7 +132,7 @@ export default function IngredientCheck({ navigation, route }) {
                   <Text style={styles_text.common}>100{gps()}</Text>
                 </View>
                 <View style={[styles.container_nutrient_parameter, {flexDirection: "row", marginRight: _space_m}]}>
-                  <Text style={styles_text.common}>{serving_amount}{gps()}</Text>
+                  <Text style={styles_text.common}>{_serving_weight}</Text>
                 </View>
               </View>
               <View style={{backgroundColor: _color_back_1}}>
@@ -173,8 +170,7 @@ function ParameterNut(props) {
   const label = props.label;
   const value = props.value;
   const sufix = props.sufix;
-  const wServing = props.wServing;
-  const even = props.even;
+  const serving = props.serving;
 
 
   return (
@@ -186,7 +182,7 @@ function ParameterNut(props) {
         <Text style={styles_text.common}>{FloorValue(value)}{sufix}</Text>
       </View>
       <View style={[styles.container_nutrient_parameter]}>
-        <Text style={styles_text.common}>{FloorValue(wServing * value / 100)}{sufix}</Text>
+        <Text style={styles_text.common}>{FloorValue(serving * value / 100)}{sufix}</Text>
       </View>
     </View>
   );
@@ -247,7 +243,7 @@ const styles = StyleSheet.create({
   container_nutrient: {
     flexDirection: "row",
     alignItems: "center",
-    borderBottomWidth: _borderWidth_xs,
+    borderTopWidth: _borderWidth_xs,
     borderColor: _color_back_0
   },
 
@@ -256,7 +252,4 @@ const styles = StyleSheet.create({
     paddingLeft: _space_xl,
     paddingVertical: _space_s,
   },
-
-
-  
 });

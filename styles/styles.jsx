@@ -65,7 +65,6 @@ export const _icon_select = 'cursor-pointer';
 
 
 
-
 export const styles_common = StyleSheet.create({
   container: {
     flex: 1,
