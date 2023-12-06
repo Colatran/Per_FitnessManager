@@ -5,6 +5,7 @@ import { addDoc, deleteDoc, doc, getDocs, query, updateDoc, where } from "fireba
 
 import { UserContext } from "../../utils/UserContext";
 import { _color_back_0, _icon_edit, _space_l, _space_m,
+  _space_s,
   styles_buttons, styles_common, styles_lists, styles_text
 } from "../../styles/styles";
 import { _recipeEditScreen_deleteIngredient, _recipeEditScreen_deleteRecipe } from "../../utils/Messages";
@@ -21,6 +22,7 @@ import Button_YesNo from "../../components/screen/Button_YesNo";
 import Button_Close from "../../components/screen/Button_Close";
 import Button_Add from "../../components/screen/Button_Add";
 import Button_Delete from "../../components/screen/Button_Delete";
+import Button_Select from "../../components/screen/Button_Select";
 
 
 
@@ -270,6 +272,9 @@ export default function RecipeEdit({ navigation, route }) {
   const onPress_PopupAmountEdit_Close = () => {
     setAmountEdit_popup(false);
   }
+  const onPress_PopupAmountEdit_Select = () => {
+    
+  }
   const onPress_PopupAmountEdit_Delete = () => {
     setAmountEdit_fromEditing(false);
     removeIngredient(amountEdit_index);
@@ -314,17 +319,24 @@ export default function RecipeEdit({ navigation, route }) {
   return (
     <View style={styles_common.container}>
 
+
+
       <Popup isVisible={amountEdit_popup}>
         <View style={styles_common.form}>
           <View style={{ alignItems: "center" }}>
             <Text style={styles_text.bold}>{amountEdit_label}</Text>
           </View>
           <Label label={"Amount (" + getPhysicalState(amountEdit_isSolid) + ")"}>
-            <Input_Text value={amountEdit_value} setValue={setAmountEdit_value} placeholder={""} keyboardType={"numeric"} />
+            <Input_Text 
+              value={amountEdit_value} setValue={setAmountEdit_value} 
+              placeholder={""} keyboardType={"numeric"} style={{alignItems: "center"}}
+            />
+            <View style={{flexDirection: "row", marginTop: _space_m}}>
+              <Button_Select onPress={onPress_PopupAmountEdit_Select} style={styles_buttons.button_fill}/>
+            </View>
           </Label>
-
-          <View style={{ alignItems: "flex-end" }}>
-            <Button_Delete onPress={onPress_PopupAmountEdit_Delete} message={_recipeEditScreen_deleteIngredient} />
+          <View style={{alignItems: "flex-end"}}>
+            <Button_Delete onPress={onPress_PopupAmountEdit_Delete} message={_recipeEditScreen_deleteIngredient}/>
           </View>
         </View>
 

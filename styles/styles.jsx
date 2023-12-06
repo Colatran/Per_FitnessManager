@@ -32,6 +32,7 @@ export const _color_input             = _color_back_1;
 export const _color_button            = _color_back_2;
 export const _color_button_green      = '#306844';
 export const _color_button_red        = '#940000';
+export const _color_button_blue       = '#005073';
 export const _color_androidRipple     = '#fff';
 
 export const _textColor = _color_front_0;
@@ -174,7 +175,10 @@ export const styles_buttons = StyleSheet.create({
     backgroundColor: _color_button_red,
   },
   button_edit: {
-    backgroundColor: _color_button,
+    backgroundColor: _color_button_blue,
+  },
+  button_check: {
+    backgroundColor: _color_button_blue,
   },
 
   container_footer: {

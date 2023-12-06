@@ -1,10 +1,10 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { useContext } from "react";
 
 import { UserContext } from "../../utils/UserContext";
-import { _icon_checkout, _icon_edit, styles_common, styles_text, styles_lists } from "../../styles/styles";
+import { _icon_checkout, _icon_edit, styles_common, _space_s } from "../../styles/styles";
 import List from "../../components/List";
-import Button_Icon from "../../components/input/Button_Icon";
+import ListItem_EditCheck from "../../components/screen/ListItem_EditCheck";
 import Button_Footer_Add from "../../components/screen/Button_Footer_Add";
 
 
@@ -34,33 +34,20 @@ function ListItem(props) {
 
   const isRecipe = item.recipeId == "";
 
-  const handleOnPressCheck = (item) => {
-    navigation.navigate("IngredientCheck", {ingredient: item});
-  }
-  const handleOnPressEdit = (item) => {
+  const onPress_Edit = (item) => {
     navigation.navigate("IngredientEdit", {ingredient: item});
+  }
+  const onPress_Check = (item) => {
+    navigation.navigate("IngredientCheck", {ingredient: item});
   }
 
   return (
-    <View style={styles_lists.container_item}>
-      <Button_Icon
-        icon={_icon_checkout}
-        onPress={() => handleOnPressCheck(item)}
-      />
-      
-      <View style={styles_lists.container_label}>
-        <Text style={styles_text.common}>{item.label}</Text>
-      </View>
-
-      {
-        isRecipe ?
-          <Button_Icon
-            icon={_icon_edit}
-            onPress={() => handleOnPressEdit(item)}
-          />
-          :
-          <></>
-      }
-    </View>
+    <ListItem_EditCheck
+      label={item.label}
+      showEdit={isRecipe}
+      showCheck={true}
+      onPressEdit={() => onPress_Edit(item)}
+      onPressCheck={() => onPress_Check(item)}
+    />
   );
 }

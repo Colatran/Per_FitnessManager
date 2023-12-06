@@ -7,12 +7,10 @@ import {
   _iconSize_m, _icon_alert, _icon_select,
   _size_xs,
   _space_l, _space_m, _space_s, _space_xl,
-  styles_buttons, styles_common, styles_lists, styles_text } from "../../styles/styles";
-import Popup from "../../components/Popup";
-import List from "../../components/List";
+  styles_buttons, styles_common, styles_text } from "../../styles/styles";
 import Label from "../../components/Label";
-import Button_Close from "../../components/screen/Button_Close";
 import Button_Select from "../../components/screen/Button_Select";
+import Popup_ServingList from "../../components/screen/Popup_ServingList";
 
 
 
@@ -47,7 +45,6 @@ export default function IngredientCheck({ navigation, route }) {
 
 
 
-
   const price_100 = 100 * unit_price / unit_weight;
   const gps = () => { return getPhysicalState(isSolid); }
 
@@ -74,23 +71,13 @@ export default function IngredientCheck({ navigation, route }) {
 
   return (
     <View style={styles_common.container}>
-      <Popup isVisible={servingSelect_popup}>
-        <View style={{flex: 1}}/>
-        <View style={[styles_common.form, {flex: 4}]}>
-          <View style={{flex: 1}}>
-            <List data={servings}>
-              <ListItem_Serving 
-                gps={gps()} 
-                onPressSelect={onPress_popupServingSelect_select}
-              />
-            </List>
-          </View>
-        </View>
-        <View style={styles_buttons.container_footer}>
-          <Button_Close style={styles_buttons.button_fill} onPress={onPress_popupServingSelect_close} />
-        </View>
-        <View style={{ flex: 1 }}/>
-      </Popup>
+      <Popup_ServingList
+        list={servings}
+        isUp={servingSelect_popup}
+        onPressSelect={onPress_popupServingSelect_select}
+        onPressClose={onPress_popupServingSelect_close}
+        gps={gps()}
+      />
 
       <View style={styles_common.form}>
         <View style={styles.container_label}>
@@ -184,26 +171,6 @@ function ParameterNut(props) {
       <View style={[styles.container_nutrient_parameter]}>
         <Text style={styles_text.common}>{FloorValue(serving * value / 100)}{sufix}</Text>
       </View>
-    </View>
-  );
-}
-
-function ListItem_Serving(props) {
-  const { item, index } = props;
-
-  const gps = props.gps;
-
-  const onPressSelect = () => {
-    props.onPressSelect(index);
-  };
-
-  return (
-    <View style={styles_lists.container_item}>
-      <View style={[styles_lists.container_label, { flexDirection: "row", alignItems: "center" }]}>
-        <Text style={[styles_text.common, {flex: 1}]}>{item.amount}{gps}</Text>
-        <Text style={[styles_text.label, {flex: 3}]}>{item.label}</Text>
-      </View>
-      <Button_Select onPress={onPressSelect}/>
     </View>
   );
 }
