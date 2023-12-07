@@ -135,6 +135,12 @@ export const styles_text = StyleSheet.create({
 });
 
 export const styles_lists = StyleSheet.create({
+  container_list: {
+    flex: 1,
+    paddingHorizontal: _space_m,
+    backgroundColor: _color_back_0,
+  },
+
   container_item: [styles_common.container_front, {
     paddingHorizontal: _space_m,
     paddingVertical: _space_s,

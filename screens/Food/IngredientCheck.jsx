@@ -73,7 +73,7 @@ export default function IngredientCheck({ navigation, route }) {
     <View style={styles_common.container}>
       <Popup_ServingList
         list={servings}
-        isUp={servingSelect_popup}
+        isVisible={servingSelect_popup}
         onPressSelect={onPress_popupServingSelect_select}
         onPressClose={onPress_popupServingSelect_close}
         gps={gps()}

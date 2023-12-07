@@ -16,19 +16,19 @@ import Button_Select from "./Button_Select";
 
 export default function Popup_ServingList(props) {
   const list = props.list;
-  const isUp = props.isUp;
+  const isVisible = props.isVisible;
   const onPressSelect = props.onPressSelect;
   const onPressClose = props.onPressClose;
   const gps = props.gps;
 
   return (
-    <Popup isVisible={isUp}>
+    <Popup isVisible={isVisible}>
       <View style={{flex: 1}}/>
       <View style={[styles_common.form, {flex: 4}]}>
         <View style={{flex: 1}}>
           <List data={list}>
-            <ListItem_Serving 
-              gps={gps} 
+            <ListItem
+              gps={gps}
               onPressSelect={onPressSelect}
             />
           </List>
@@ -42,7 +42,9 @@ export default function Popup_ServingList(props) {
   );
 }
 
-function ListItem_Serving(props) {
+
+
+function ListItem(props) {
   const { item, index } = props;
 
   const gps = props.gps;

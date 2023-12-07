@@ -24,6 +24,7 @@ import Button_Delete from "../../components/screen/Button_Delete";
 import Button_Edit from "../../components/screen/Button_Edit";
 import Button_Close from "../../components/screen/Button_Close";
 import Button_Favourite from "../../components/screen/Button_Favourite";
+import Display_Serving from "./components/Display_Serving";
 
 
 
@@ -300,9 +301,8 @@ function ListItem_Serving(props) {
       <View style={[styles_lists.container_label, { flexDirection: "row", alignItems: "center" }]}>
         <View style={{marginRight: _space_s}}>
           <Button_Favourite isFavourite={favIndex == index} onPress={onPressFavourite}/>
-        </View> 
-        <Text style={[styles_text.common, {flex: 1}]}>{item.amount}{gps}</Text>
-        <Text style={[styles_text.label, {flex: 3}]}>{item.label}</Text>
+        </View>
+        <Display_Serving gps={gps} flex={3} amount={item.amount} label={item.label}/>
       </View>
       <Button_Edit onPress={onPressEdit}/>
     </View>

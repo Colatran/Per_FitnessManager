@@ -18,23 +18,8 @@ export default function ListItem_EditCheck(props) {
       <View style={styles_lists.container_label}>
         <Text style={styles_text.common}>{label}</Text>
       </View>
-      {
-        showEdit ?
-        <Button_Edit
-          onPress={onPressEdit}
-          style={{ marginRight: _space_s }}
-        />
-        :
-        <></>
-      }
-      {
-        showCheck ?
-        <Button_Check
-          onPress={onPressCheck}
-        />
-        :
-        <></>
-      }
+      { showEdit ? <Button_Edit onPress={onPressEdit} style={{ marginRight: _space_s }}/> : <></>}
+      { showCheck ? <Button_Check onPress={onPressCheck}/> : <></> }
     </View>
   );
 }
