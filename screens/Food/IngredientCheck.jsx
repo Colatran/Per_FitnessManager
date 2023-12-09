@@ -7,10 +7,11 @@ import {
   _iconSize_m, _icon_alert, _icon_select,
   _size_xs,
   _space_l, _space_m, _space_s, _space_xl,
-  styles_buttons, styles_common, styles_text } from "../../styles/styles";
+  styles_buttons, styles_common, styles_lists, styles_text } from "../../styles/styles";
 import Label from "../../components/Label";
 import Button_Select from "../../components/screen/Button_Select";
 import Popup_ServingList from "../../components/screen/Popup_ServingList";
+import List from "../../components/List";
 
 
 
@@ -59,9 +60,6 @@ export default function IngredientCheck({ navigation, route }) {
     setServingSelect_popup(true);
   }
 
-  const onPress_popupServingSelect_close = () => {
-    setServingSelect_popup(false)
-  }
   const onPress_popupServingSelect_select = (index) => {
     setServing(index);
     setServingSelect_popup(false)
@@ -71,13 +69,14 @@ export default function IngredientCheck({ navigation, route }) {
 
   return (
     <View style={styles_common.container}>
-      <Popup_ServingList
-        list={servings}
-        isVisible={servingSelect_popup}
-        onPressSelect={onPress_popupServingSelect_select}
-        onPressClose={onPress_popupServingSelect_close}
-        gps={gps()}
-      />
+      <Popup_ServingList isVisible={servingSelect_popup} setIsVisible={setServingSelect_popup}>
+        <List data={servings}>
+          <ListItem
+            gps={gps()}
+            onPressSelect={onPress_popupServingSelect_select}
+          />
+        </List>
+      </Popup_ServingList>
 
       <View style={styles_common.form}>
         <View style={styles.container_label}>
@@ -171,6 +170,26 @@ function ParameterNut(props) {
       <View style={[styles.container_nutrient_parameter]}>
         <Text style={styles_text.common}>{FloorValue(serving * value / 100)}{sufix}</Text>
       </View>
+    </View>
+  );
+}
+
+function ListItem(props) {
+  const { item, index } = props;
+
+  const gps = props.gps;
+
+  const onPressSelect = () => {
+    props.onPressSelect(index);
+  };
+
+  return (
+    <View style={styles_lists.container_item}>
+      <View style={[styles_lists.container_label, { flexDirection: "row", alignItems: "center" }]}>
+        <Text style={[styles_text.common, {flex: 1}]}>{item.amount}{gps}</Text>
+        <Text style={[styles_text.label, {flex: 3}]}>{item.label}</Text>
+      </View>
+      <Button_Select onPress={onPressSelect}/>
     </View>
   );
 }

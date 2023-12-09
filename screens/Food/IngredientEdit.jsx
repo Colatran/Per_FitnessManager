@@ -25,6 +25,7 @@ import Button_Edit from "../../components/screen/Button_Edit";
 import Button_Close from "../../components/screen/Button_Close";
 import Button_Favourite from "../../components/screen/Button_Favourite";
 import Display_Serving from "./components/Display_Serving";
+import Popup_ServingList from "../../components/screen/Popup_ServingList";
 
 
 
@@ -117,7 +118,7 @@ export default function IngredientEdit({ navigation, route }) {
   const set_popupServing_Add = () => {
     setServingsEdit_editServing_add(true);
     setServingsEdit_editServing_label("");
-    setServingsEdit_editServing_amount(0);
+    setServingsEdit_editServing_amount("");
     setServingsEdit_editServing_popup(true);
   }
 
@@ -157,9 +158,6 @@ export default function IngredientEdit({ navigation, route }) {
     setServingsEdit_popup(true);
   }
 
-  const onPress_servingsEditPopup_close = () => {
-    setServingsEdit_popup(false);
-  }
   const onPress_servingsEditPopup_add = () => {
     set_popupServing_Add();
   }
@@ -188,27 +186,20 @@ export default function IngredientEdit({ navigation, route }) {
   return (
     <View style={styles_common.container}>
 
-      <Popup isVisible={servingsEdit_popup}>
-        <View style={{flex: 1}}/>
-        <View style={[styles_common.form, {flex: 4}]}>
-          <View style={{flex: 1}}>
-            <List data={servings}>
-              <ListItem_Serving 
-                gps={gps()} favIndex={servings_fav} 
-                onPressEdit={onPress_servingsEditPopup_list_edit}
-                onPressFavourite={onPress_servingsEditPopup_list_favourite}
-              />
-            </List>
-          </View>
-          <View style={{flexDirection: "row"}}>
-            <Button_Add style={styles_buttons.button_fill} onPress={onPress_servingsEditPopup_add}/>
-          </View>
+      <Popup_ServingList isVisible={servingsEdit_popup} setIsVisible={setServingsEdit_popup}>
+        <View style={{flex: 1}}>
+          <List data={servings}>
+            <ListItem_Serving 
+              gps={gps()} favIndex={servings_fav} 
+              onPressEdit={onPress_servingsEditPopup_list_edit}
+              onPressFavourite={onPress_servingsEditPopup_list_favourite}
+            />
+          </List>
         </View>
-        <View style={styles_buttons.container_footer}>
-          <Button_Close style={styles_buttons.button_fill} onPress={onPress_servingsEditPopup_close} />
+        <View style={{flexDirection: "row"}}>
+          <Button_Add style={styles_buttons.button_fill} onPress={onPress_servingsEditPopup_add}/>
         </View>
-        <View style={{ flex: 1 }}/>
-      </Popup>
+      </Popup_ServingList>
 
       <Popup isVisible={servingsEdit_editServing_popup}>
         <View style={styles_common.form}>
@@ -299,11 +290,9 @@ function ListItem_Serving(props) {
   return (
     <View style={styles_lists.container_item}>
       <View style={[styles_lists.container_label, { flexDirection: "row", alignItems: "center" }]}>
-        <View style={{marginRight: _space_s}}>
-          <Button_Favourite isFavourite={favIndex == index} onPress={onPressFavourite}/>
-        </View>
         <Display_Serving gps={gps} flex={3} amount={item.amount} label={item.label}/>
       </View>
+      <Button_Favourite isFavourite={favIndex == index} onPress={onPressFavourite} style={{marginRight: _space_s}}/>
       <Button_Edit onPress={onPressEdit}/>
     </View>
   );
