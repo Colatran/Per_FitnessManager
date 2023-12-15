@@ -22,10 +22,9 @@ import Button_YesNo from "../../components/screen/Button_YesNo";
 import Button_Add from "../../components/screen/Button_Add";
 import Button_Delete from "../../components/screen/Button_Delete";
 import Button_Edit from "../../components/screen/Button_Edit";
-import Button_Close from "../../components/screen/Button_Close";
 import Button_Favourite from "../../components/screen/Button_Favourite";
 import Display_Serving from "./components/Display_Serving";
-import Popup_ServingList from "../../components/screen/Popup_ServingList";
+import Popup_Flex4_Close from "../../components/screen/Popup_Flex4_Close";
 
 
 
@@ -186,7 +185,7 @@ export default function IngredientEdit({ navigation, route }) {
   return (
     <View style={styles_common.container}>
 
-      <Popup_ServingList isVisible={servingsEdit_popup} setIsVisible={setServingsEdit_popup}>
+      <Popup_Flex4_Close isVisible={servingsEdit_popup} setIsVisible={setServingsEdit_popup}>
         <View style={{flex: 1}}>
           <List data={servings}>
             <ListItem_Serving 
@@ -199,7 +198,7 @@ export default function IngredientEdit({ navigation, route }) {
         <View style={{flexDirection: "row"}}>
           <Button_Add style={styles_buttons.button_fill} onPress={onPress_servingsEditPopup_add}/>
         </View>
-      </Popup_ServingList>
+      </Popup_Flex4_Close>
 
       <Popup isVisible={servingsEdit_editServing_popup}>
         <View style={styles_common.form}>

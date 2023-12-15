@@ -10,8 +10,8 @@ import {
   styles_buttons, styles_common, styles_lists, styles_text } from "../../styles/styles";
 import Label from "../../components/Label";
 import Button_Select from "../../components/screen/Button_Select";
-import Popup_ServingList from "../../components/screen/Popup_ServingList";
 import List from "../../components/List";
+import Popup_Flex4_Close from "../../components/screen/Popup_Flex4_Close";
 
 
 
@@ -69,14 +69,14 @@ export default function IngredientCheck({ navigation, route }) {
 
   return (
     <View style={styles_common.container}>
-      <Popup_ServingList isVisible={servingSelect_popup} setIsVisible={setServingSelect_popup}>
+      <Popup_Flex4_Close isVisible={servingSelect_popup} setIsVisible={setServingSelect_popup}>
         <List data={servings}>
           <ListItem
             gps={gps()}
             onPressSelect={onPress_popupServingSelect_select}
           />
         </List>
-      </Popup_ServingList>
+      </Popup_Flex4_Close>
 
       <View style={styles_common.form}>
         <View style={styles.container_label}>
