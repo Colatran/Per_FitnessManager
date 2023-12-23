@@ -1,33 +1,24 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { ref_food_ingredients, ref_food_recipes } from "../../firebase.config";
 import { addDoc, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 
 import { UserContext } from "../../utils/UserContext";
-import {
-  _color_back_0, _color_back_2, _icon_edit, _icon_edit_list, _space_l, _space_m,
-  _space_s,
-  styles_buttons, styles_common, styles_lists, styles_text
-} from "../../styles/styles";
-import { _recipeEditScreen_deleteIngredient, _recipeEditScreen_deleteRecipe, _ingredientEditScreen_deleteServing } from "../../utils/Messages";
+import { _icon_edit_list, _space_l, _space_m, styles_buttons, styles_common, styles_lists, styles_text } from "../../styles/styles";
+import { _recipeEditScreen_deleteRecipe } from "../../utils/Messages";
 import { getPhysicalState } from "../../utils/Functions";
 import List from "../../components/List";
 import Label from "../../components/Label";
-import Popup from "../../components/Popup";
 import Input_Text from "../../components/input/Input_Text";
 import Input_Boolean from "../../components/input/Input_Boolean";
 import Button_Footer_Form from "../../components/screen/Button_Footer_Form";
 import Button_Footer_Add from "../../components/screen/Button_Footer_Add";
-import Button_YesNo from "../../components/screen/Button_YesNo";
-import Button_Close from "../../components/screen/Button_Close";
-import Button_Add from "../../components/screen/Button_Add";
 import Button_Edit from "../../components/screen/Button_Edit";
-import Button_Delete from "../../components/screen/Button_Delete";
-import Button_Select from "../../components/screen/Button_Select";
-import Display_Serving from "./components/Display_Serving";
 import Button_Icon from "../../components/input/Button_Icon";
-import Button_Favourite from "../../components/screen/Button_Favourite";
-import Popup_Flex4_Close from "../../components/screen/Popup_Flex4_Close";
+import Popup_ServingsEdit_List from "./components/Popup_ServingsEdit_List";
+import Popup_ServingsEdit_Form from "./components/Popup_ServingsEdit_Form";
+import Popup_Ingredient_Add from "./components/Popup_Ingredient_Add";
+import Popup_Ingredient_EditAmount from "./components/Popup_Ingredient_EditAmount";
 
 
 
@@ -180,31 +171,7 @@ export default function RecipeEdit({ navigation, route }) {
     })
   }
 
-  const addIngredient = (index) => {
-    const ingDoc = incIngredientDocs[index];
-    const newIng = { ingredientId: ingDoc.id, amount: `${FloorValue(ingDoc.servings[ingDoc.servings_fav].amount)}`, ingredient: ingDoc };
-    setIngredients([...ingredients, newIng]);
-
-    incIngredientDocs[index].include = false;
-    setIngredientDocs(incIngredientDocs);
-  }
-  const removeIngredient = async (index) => {
-    const ingId = ingredients[index].ingredientId;
-    const indexDoc = incIngredientDocs.findIndex(item => item.id === ingId);
-
-    incIngredientDocs[indexDoc].include = true;
-    setIngredientDocs(incIngredientDocs);
-
-    ingredients.splice(index, 1);
-    setIngredients(ingredients);
-  }
-  const updateIngredientAmount = async (index, value) => {
-    const newIngredients = [...ingredients];
-    newIngredients[index].amount = value;
-    setIngredients(newIngredients);
-  }
-
-  const saveRecipe = async () => {
+  const recipe_save = async () => {
     const ingredietData = ingredients.map((item) => ({ ingredientId: item.ingredientId, amount: item.amount }));
 
     const recipeData = {
@@ -235,7 +202,7 @@ export default function RecipeEdit({ navigation, route }) {
       return await addDoc(ref_food_ingredients, recipeIngredientData);
     }
   }
-  const deleteRecipe = async () => {
+  const recipe_delete = async () => {
     const q = query(ref_food_ingredients, where('recipeId', '==', recipe.id));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((item) => {
@@ -247,7 +214,32 @@ export default function RecipeEdit({ navigation, route }) {
     return deleteDoc(docRef);
   }
 
-  const toggleIsSolid = () => {
+  const ingredients_add = (index) => {
+    console.log(index);
+    const ingDoc = incIngredientDocs[index];
+    const newIng = { ingredientId: ingDoc.id, amount: `${FloorValue(ingDoc.servings[ingDoc.servings_fav].amount)}`, ingredient: ingDoc };
+    setIngredients([...ingredients, newIng]);
+
+    incIngredientDocs[index].include = false;
+    setIngredientDocs(incIngredientDocs);
+  }
+  const ingredients_remove = async (index) => {
+    const ingId = ingredients[index].ingredientId;
+    const indexDoc = incIngredientDocs.findIndex(item => item.id === ingId);
+
+    incIngredientDocs[indexDoc].include = true;
+    setIngredientDocs(incIngredientDocs);
+
+    ingredients.splice(index, 1);
+    setIngredients(ingredients);
+  }
+  const ingredients_updateAmount = async (index, value) => {
+    const newIngredients = [...ingredients];
+    newIngredients[index].amount = value;
+    setIngredients(newIngredients);
+  }
+
+  const isSolid_toggle = () => {
     setIsSolid(!isSolid);
   }
 
@@ -257,21 +249,21 @@ export default function RecipeEdit({ navigation, route }) {
     setAmountEdit_popup(true);
   }
 
-  const set_popupServing_Edit = (index) => {
+  const popupServings_setEdit = (index) => {
     setServingsEdit_editServing_add(false);
     setServingsEdit_editServing_label(servings[index].label);
     setServingsEdit_editServing_amount(servings[index].amount);
     setServingsEdit_editServing_index(index);
     setServingsEdit_editServing_popup(true);
   }
-  const set_popupServing_Add = () => {
+  const popupServings_setAdd = () => {
     setServingsEdit_editServing_add(true);
     setServingsEdit_editServing_label("");
     setServingsEdit_editServing_amount("");
     setServingsEdit_editServing_popup(true);
   }
 
-  const addServing = () => {
+  const servings_add = () => {
     if (servings.length === 0) {
       setServings_fav(0);
     }
@@ -282,13 +274,14 @@ export default function RecipeEdit({ navigation, route }) {
     }
     setServings([...servings, serving]);
   }
-  const deleteServing = (index) => {
+  const servings_delete = (index) => {
     if (servings_fav == index) setServings_fav(0);
+    else if(servings_fav > index) setServings_fav(servings_fav + 1);
 
     servings.splice(index, 1);
     setServings(servings);
   }
-  const updateServing = (index) => {
+  const servings_update = (index) => {
     const newServings = [...servings];
 
     const serving = {
@@ -298,23 +291,17 @@ export default function RecipeEdit({ navigation, route }) {
     newServings[index] = serving;
     setServings(newServings);
   }
-  const setFavouriteServing = (index) => {
+  const servings_setFavourite = (index) => {
     setServings_fav(index);
   }
 
 
 
-
-
-  const gps = () => {
-    return getPhysicalState(isSolid);
-  }
-
   const onPress_Save = () => {
     if (saveLock) return;
     setSaveLock(true);
 
-    saveRecipe()
+    recipe_save()
       .then(() => {
         setSaveLock(false);
         navigation.goBack();
@@ -325,7 +312,7 @@ export default function RecipeEdit({ navigation, route }) {
       });
   }
   const onPress_Delete = () => {
-    deleteRecipe()
+    recipe_delete()
       .then(() => {
         navigation.goBack();
       })
@@ -335,15 +322,8 @@ export default function RecipeEdit({ navigation, route }) {
   }
 
   const onPress_IsSolid = () => {
-    toggleIsSolid();
+    isSolid_toggle();
   }
-
-
-
-
-
-
-
 
   const onPress_IngredientList_AddIngredient = () => {
     setIngredients_call_amountEdit(true);
@@ -352,21 +332,17 @@ export default function RecipeEdit({ navigation, route }) {
   const onPress_IngredientList_ListItem_Edit = (index) => {
     popupAmountEdit_set(index);
   }
-
   const onPress_PopupAddIngredient_ListItem_Add = (index) => {
-    addIngredient(index);
+    ingredients_add(index);
   }
-
-
-
   const onPress_PopupAmountEdit_Save = () => {
     setIngredients_call_amountEdit(false);
-    updateIngredientAmount(amountEdit_index, amountEdit_value);
+    ingredients_updateAmount(amountEdit_index, amountEdit_value);
     setAmountEdit_popup(false);
   }
   const onPress_PopupAmountEdit_Delete = () => {
     setIngredients_call_amountEdit(false);
-    removeIngredient(amountEdit_index);
+    ingredients_remove(amountEdit_index);
     setAmountEdit_popup(false);
   }
   const onPress_PopupAmountEdit_Select = (index) => {
@@ -374,38 +350,27 @@ export default function RecipeEdit({ navigation, route }) {
     setAmountEdit_value((selectedAmount) + "");
   }
 
-
-
-
-
-
-
-
   const onPress_servingsEdit = () => {
     setServingsEdit_popup(true);
   }
-
   const onPress_servingsEditPopup_add = () => {
-    set_popupServing_Add();
+    popupServings_setAdd();
   }
   const onPress_servingsEditPopup_list_edit = (index) => {
-    set_popupServing_Edit(index);
+    popupServings_setEdit(index);
   }
   const onPress_servingsEditPopup_list_favourite = (index) => {
-    setFavouriteServing(index);
+    servings_setFavourite(index);
   }
-
   const onPress_servingsEditPopupEdit_save = () => {
-    if (servingsEdit_editServing_add) addServing();
-    else updateServing(servingsEdit_editServing_index);
+    if (servingsEdit_editServing_add) servings_add();
+    else servings_update(servingsEdit_editServing_index);
     setServingsEdit_editServing_popup(false);
   }
   const onPress_servingsEditPopupEdit_delete = () => {
-    deleteServing(servingsEdit_editServing_index);
+    servings_delete(servingsEdit_editServing_index);
     setServingsEdit_editServing_popup(false);
   }
-
-
 
 
 
@@ -423,14 +388,13 @@ export default function RecipeEdit({ navigation, route }) {
         label={amountEdit_label}
         isSolid={amountEdit_isSolid}
       />
-
       <Popup_Ingredient_Add
         isVisible={addIngredient_popup} setIsVisible={setAddIngredient_popup}
         listData={incIngredientDocs}
         onPressItemAdd={onPress_PopupAddIngredient_ListItem_Add}
       />
 
-      <Popup_ServingsList
+      <Popup_ServingsEdit_List
         isVisible={servingsEdit_popup} setIsVisible={setServingsEdit_popup}
         list={servings}
         favIndex={servings_fav}
@@ -439,21 +403,15 @@ export default function RecipeEdit({ navigation, route }) {
         onPressEdit={onPress_servingsEditPopup_list_edit}
         onPressFavourite={onPress_servingsEditPopup_list_favourite}
       />
-
-      <Popup_ServingsList_Edit
-        isVisible={servingsEdit_editServing_popup}
-        setIsVisible={setServingsEdit_editServing_popup}
-        label={servingsEdit_editServing_label}
-        setLabel={setServingsEdit_editServing_label}
-        amount={servingsEdit_editServing_amount}
-        setAmount={setServingsEdit_editServing_amount}
-        isSolid={isSolid}
+      <Popup_ServingsEdit_Form
+        isVisible={servingsEdit_editServing_popup} setIsVisible={setServingsEdit_editServing_popup}
+        label={servingsEdit_editServing_label} setLabel={setServingsEdit_editServing_label}
+        amount={servingsEdit_editServing_amount} setAmount={setServingsEdit_editServing_amount}
         isEditing={servingsEdit_editServing_add}
         onPressSave={onPress_servingsEditPopupEdit_save}
         onPressDelete={onPress_servingsEditPopupEdit_delete}
+        formLabel={"Servings"}
       />
-
-
 
       <View style={[styles_common.form, { flex: 1 }]}>
         <View style={{ marginBottom: _space_l }}>
@@ -463,9 +421,9 @@ export default function RecipeEdit({ navigation, route }) {
           <Label label="Is Solid">
             <Input_Boolean isOn={isSolid} onPress={onPress_IsSolid} />
           </Label>
-          <Label label={`Servings`}>
+          <Label label={"Serving Types"}>
             <View style={{ flexDirection: "row" }}>
-              <Button_Icon icon={_icon_edit_list} style={[styles_buttons.button_fill, styles_buttons.button_y]} onPress={onPress_servingsEdit} />
+              <Button_Icon icon={_icon_edit_list} style={[styles_buttons.button_fill, styles_buttons.button_y]} onPress={onPress_servingsEdit}/>
             </View>
           </Label>
         </View>
@@ -483,8 +441,6 @@ export default function RecipeEdit({ navigation, route }) {
         </Label>
       </View>
 
-
-
       <Button_Footer_Form
         isEdit={isEdit}
         onPressAdd={() => onPress_Save()}
@@ -492,229 +448,8 @@ export default function RecipeEdit({ navigation, route }) {
         onPressDelete={() => onPress_Delete()}
         message={_recipeEditScreen_deleteRecipe}
       />
+
     </View>
-  );
-}
-
-
-
-
-
-function Popup_Ingredient_Add(props) {
-  const isVisible = props.isVisible;
-  const setIsVisible = props.setIsVisible;
-  const listData = props.listData;
-  const onPressItemAdd = props.onPressItemAdd;
-
-  return (
-    <Popup_Flex4_Close isVisible={isVisible} setIsVisible={setIsVisible}>
-      <List data={listData}>
-        <ListItem_IngredientToAdd onPressAdd={onPressItemAdd} />
-      </List>
-    </Popup_Flex4_Close>
-  );
-}
-function ListItem_IngredientToAdd(props) {
-  const { item, index } = props;
-
-  const onPressAdd = props.onPressAdd;
-
-  return item.include ? (
-    <View style={styles_lists.container_item}>
-      <View style={[styles_lists.container_label, { flexDirection: "row" }]}>
-        <Text style={styles_text.label}>{item.label}</Text>
-      </View>
-      <Button_Add onPress={() => onPressAdd(index)} />
-    </View>
-  ) : (
-    <></>
-  );
-}
-
-function Popup_Ingredient_EditAmount(props) {
-  const isVisible = props.isVisible;
-  const setIsVisible = props.setIsVisible;
-  const amount = props.amount;
-  const setAmount = props.setAmount;
-  const amountMultiply = props.amountMultiply;
-  const setAmountMultiply = props.setAmountMultiply;
-
-  const servingsList = props.servingsList;
-  const label = props.label;
-  const isSolid = props.isSolid;
-
-  const onPressSave = props.onPressSave;
-  const onPressDelete = props.onPressDelete;
-  const onPress_Item_Select = props.onPress_Item_Select;
-
-
-
-  const onPress_Close = () => {
-    setIsVisible(false);
-  }
-
-
-
-  return (
-    <Popup isVisible={isVisible}>
-      <View style={{ flex: 1 }} />
-      <View style={[styles_common.form, { flex: 4 }]}>
-
-        <View style={{ flexDirection: "row" }}>
-          <Text style={[styles_text.bold, { flex: 1 }]}>{label}</Text>
-          <Button_Delete onPress={onPressDelete} message={_recipeEditScreen_deleteIngredient} />
-        </View>
-
-        <Label label={"Amount (" + getPhysicalState(isSolid) + ")"}>
-          <Input_Text
-            value={amount} setValue={setAmount}
-            placeholder={""} keyboardType={"numeric"} style={{ alignItems: "center" }}
-          />
-        </Label>
-
-        <View style={{ flexDirection: "row", flex: 1, marginTop: _space_m }}>
-          <View style={{ flex: 1, paddingRight: _space_m }}>
-            <Label label={"Multiply"}>
-              <Input_Text
-                value={amountMultiply} setValue={setAmountMultiply}
-                placeholder={""} keyboardType={"numeric"} style={{ alignItems: "center" }}
-              />
-            </Label>
-          </View>
-
-          <View style={[styles_common.container_front, styles_lists.container_list, { flex: 2 }]}>
-            <List data={servingsList}>
-              <ListItem_IngredientServing isSolid={isSolid} onPressSelect={onPress_Item_Select} />
-            </List>
-          </View>
-        </View>
-
-      </View>
-      <View style={styles_buttons.container_footer}>
-        <Button_YesNo style={styles_buttons.button_fill} onPressYes={onPressSave} onPressNo={onPress_Close} />
-      </View>
-      <View style={{ flex: 1 }} />
-    </Popup>
-  );
-}
-function ListItem_IngredientServing(props) {
-  const { item, index } = props;
-
-  const isSolid = props.isSolid;
-  const onPressSelect = props.onPressSelect;
-
-  return (
-    <View style={styles_lists.container_item}>
-      <View style={[styles_lists.container_label, { flexDirection: "row" }]}>
-        <Display_Serving isSolid={isSolid} flex={2} amount={item.amount} label={item.label} />
-      </View>
-      <Button_Select onPress={() => { onPressSelect(index) }} />
-    </View>
-  );
-}
-
-
-
-function Popup_ServingsList(props) {
-  const isVisible = props.isVisible;
-  const setIsVisible = props.setIsVisible;
-
-  const list = props.list;
-  const favIndex = props.favIndex;
-  const isSolid = props.isSolid;
-
-  const onPressAdd = props.onPressAdd;
-  const onPressEdit = props.onPressEdit;
-  const onPressFavourite = props.onPressFavourite;
-
-
-
-  return (
-    <Popup_Flex4_Close isVisible={isVisible} setIsVisible={setIsVisible}>
-      <View style={{ flex: 1 }}>
-        <List data={list}>
-          <ListItem_Serving
-            isSolid={isSolid}
-            favIndex={favIndex}
-            onPressEdit={onPressEdit}
-            onPressFavourite={onPressFavourite}
-          />
-        </List>
-      </View>
-      <View style={{ flexDirection: "row" }}>
-        <Button_Add style={styles_buttons.button_fill} onPress={onPressAdd} />
-      </View>
-    </Popup_Flex4_Close>
-  );
-}
-function ListItem_Serving(props) {
-  const { item, index } = props;
-
-  const isSolid = props.isSolid;
-  const favIndex = props.favIndex;
-
-  const onPressEdit = () => {
-    props.onPressEdit(index);
-  };
-  const onPressFavourite = () => {
-    props.onPressFavourite(index);
-  };
-
-  return (
-    <View style={styles_lists.container_item}>
-      <View style={[styles_lists.container_label, { flexDirection: "row", alignItems: "center" }]}>
-        <Display_Serving isSolid={isSolid} flex={3} amount={item.amount} label={item.label} />
-      </View>
-      <Button_Favourite isFavourite={favIndex == index} onPress={onPressFavourite} style={{ marginHorizontal: _space_s }} />
-      <Button_Edit onPress={onPressEdit} />
-    </View>
-  );
-}
-
-function Popup_ServingsList_Edit(props) {
-  const isVisible = props.isVisible;
-  const setIsVisible = props.setIsVisible;
-  const label = props.label;
-  const setLabel = props.setLabel;
-  const amount = props.amount;
-  const setAmount = props.setAmount;
-
-  const isSolid = props.isSolid;
-  const isEditing = props.isEditing;
-
-  const onPressSave = props.onPressSave;
-  const onPressDelete = props.onPressDelete;
-
-
-
-  const onPress_Close = () => {
-    setIsVisible(false);
-  }
-
-
-
-  return (
-    <Popup isVisible={isVisible}>
-      <View style={styles_common.form}>
-        <Label label={"Label"}>
-          <Input_Text value={label} setValue={setLabel} placeholder={""} />
-        </Label>
-        <Label label={"Amount (" + getPhysicalState(isSolid) + ")"}>
-          <Input_Text value={amount} setValue={setAmount} placeholder={""} keyboardType={"numeric"} />
-        </Label>
-        {
-          isEditing ?
-            <></>
-            :
-            <View style={{ alignItems: "flex-end" }}>
-              <Button_Delete onPress={onPressDelete} message={_ingredientEditScreen_deleteServing} />
-            </View>
-        }
-      </View>
-      <View style={styles_buttons.container_footer}>
-        <Button_YesNo style={styles_buttons.button_fill} onPressYes={onPressSave} onPressNo={onPress_Close} />
-      </View>
-    </Popup>
   );
 }
 
@@ -737,5 +472,3 @@ function ListItem_IngredientAdded(props) {
     </View>
   );
 }
-
-
