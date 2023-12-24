@@ -2,7 +2,7 @@ import { View } from "react-native";
 import { useContext } from "react";
 
 import { UserContext } from "../../utils/UserContext";
-import { _icon_checkout, _icon_edit, styles_common } from "../../styles/styles";
+import { styles_common } from "../../styles/styles";
 import List from "../../components/List";
 import ListItem_EditCheck from "../../components/screen/ListItem_EditCheck";
 import Button_Footer_Add from "../../components/screen/Button_Footer_Add";
@@ -11,17 +11,28 @@ import Button_Footer_Add from "../../components/screen/Button_Footer_Add";
 
 export default function RecipeList({ navigation }) {
   const { recipeDocs } = useContext(UserContext);
+  const { ingredientDocs } = useContext(UserContext);
 
-  const handleOnPressAdd = () => {
+  const onPress_add = () => {
     navigation.navigate("RecipeEdit", {});
+  }
+  const onPress_edit = (item) => {
+    navigation.navigate("RecipeEdit", { recipe: item });
+  }
+  const onPress_check = (item) => {
+    const ingredient = ingredientDocs.find(doc => doc.recipeId === item.id);
+    navigation.navigate("IngredientCheck_Recipe", { ingredient: ingredient} );
   }
 
   return (
     <View style={styles_common.container}>
       <List data={recipeDocs}>
-        <ListItem navigation={navigation} />
+        <ListItem 
+          onPressEdit={onPress_edit}
+          onPressCheck={onPress_check}
+        />
       </List>
-      <Button_Footer_Add onPress={handleOnPressAdd} />
+      <Button_Footer_Add onPress={onPress_add} />
     </View>
   );
 }
@@ -30,20 +41,17 @@ export default function RecipeList({ navigation }) {
 
 function ListItem(props) {
   const { item } = props;
-  const navigation = props.navigation;
 
-  const onPress_Edit = (item) => {
-    navigation.navigate("RecipeEdit", { recipe: item });
-  }
-  const onPress_Check = (item) => {}
+  const onPressEdit = props.onPressEdit;
+  const onPressCheck = props.onPressCheck;
 
   return (
     <ListItem_EditCheck
       label={item.label}
       showEdit={true}
       showCheck={true}
-      onPressEdit={() => onPress_Edit(item)}
-      onPressCheck={() => onPress_Check(item)}
+      onPressEdit={() => onPressEdit(item)}
+      onPressCheck={() => onPressCheck(item)}
     />
   );
 }

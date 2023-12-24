@@ -69,7 +69,6 @@ export const make_ingredient = (
 }
 
 export const make_recipe = (label, isSolid, servings, servings_fav, ingredietData) => {
-  
   const servings_ = servings.map((doc) => ({
     amount: FloorValue(parseFloat(doc.amount)),
     label: doc.label,

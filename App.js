@@ -149,6 +149,11 @@ function Stack_Food() {
         name='RecipeEdit'
         component={RecipeEdit}
         options={StackOptions("Recipe")} />
+      <Stack.Screen
+        name='IngredientCheck_Recipe'
+        component={IngredientCheck}
+        options={StackOptions("Recipe")} />
+
 
       <Stack.Screen
         name='MealList'
