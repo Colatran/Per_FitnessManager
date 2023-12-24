@@ -10,7 +10,6 @@ import Button_YesNo from "../../../components/screen/Button_YesNo";
 import Button_Delete from "../../../components/screen/Button_Delete";
 import List from "../../../components/List";
 import Button_Select from "../../../components/screen/Button_Select";
-import Display_Serving from "./Display_Serving";
 
 
 
@@ -23,7 +22,7 @@ export default function Popup_Ingredient_EditAmount(props) {
   const setAmountMultiply = props.setAmountMultiply;
   const servingsList = props.servingsList;
   const label = props.label;
-  const isSolid = props.isSolid;
+  const sufix = props.sufix;
   const onPressSave = props.onPressSave;
   const onPressDelete = props.onPressDelete;
   const onPress_Item_Select = props.onPress_Item_Select;
@@ -46,7 +45,7 @@ export default function Popup_Ingredient_EditAmount(props) {
           <Button_Delete onPress={onPressDelete} message={_recipeEditScreen_deleteIngredient} />
         </View>
 
-        <Label label={"Amount (" + getPhysicalState(isSolid) + ")"}>
+        <Label label={"Amount (" + sufix + ")"}>
           <Input_Text
             value={amount} setValue={setAmount}
             placeholder={""} keyboardType={"numeric"} style={{ alignItems: "center" }}
@@ -65,7 +64,9 @@ export default function Popup_Ingredient_EditAmount(props) {
 
           <View style={[styles_common.container_front, styles_lists.container_list, { flex: 2 }]}>
             <List data={servingsList}>
-              <ListItem isSolid={isSolid} onPressSelect={onPress_Item_Select} />
+              <ListItem 
+                sufix={sufix}
+                onPressSelect={onPress_Item_Select} />
             </List>
           </View>
         </View>
@@ -84,13 +85,19 @@ export default function Popup_Ingredient_EditAmount(props) {
 function ListItem(props) {
   const { item, index } = props;
 
-  const isSolid = props.isSolid;
+  const sufix = item.sufix;
   const onPressSelect = props.onPressSelect;
+
+  const i_amount = item.amount;
+  const i_label = item.label;
 
   return (
     <View style={styles_lists.container_item}>
       <View style={[styles_lists.container_label, { flexDirection: "row" }]}>
-        <Display_Serving isSolid={isSolid} flex={2} amount={item.amount} label={item.label} />
+        <View style={{flexDirection: "row"}}>
+          <Text style={[styles_text.common, {flex: 1}]}>{i_amount} {sufix}</Text>
+          <Text style={[styles_text.label, {flex: 1}]}>{i_label}</Text>
+        </View>
       </View>
       <Button_Select onPress={() => { onPressSelect(index) }} />
     </View>

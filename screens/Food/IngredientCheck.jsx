@@ -186,8 +186,8 @@ function ListItem(props) {
   return (
     <View style={styles_lists.container_item}>
       <View style={[styles_lists.container_label, { flexDirection: "row", alignItems: "center" }]}>
-        <Text style={[styles_text.common, {flex: 1}]}>{item.amount}{gps}</Text>
-        <Text style={[styles_text.label, {flex: 3}]}>{item.label}</Text>
+        <Text style={[styles_text.common, {flex: 1}]}>{item.amount} {gps}</Text>
+        <Text style={[styles_text.label, {flex: 1}]}>{item.label}</Text>
       </View>
       <Button_Select onPress={onPressSelect}/>
     </View>

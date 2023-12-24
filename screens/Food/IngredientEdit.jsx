@@ -178,7 +178,7 @@ export default function IngredientEdit({ navigation, route }) {
         isVisible={servingsEdit_popup} setIsVisible={setServingsEdit_popup}
         list={servings}
         favIndex={servings_fav}
-        isSolid={isSolid}
+        sufix={gps()}
         onPressAdd={onPress_servingsEditPopup_add}
         onPressEdit={onPress_servingsEditPopup_list_edit}
         onPressFavourite={onPress_servingsEditPopup_list_favourite}

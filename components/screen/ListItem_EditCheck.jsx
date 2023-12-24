@@ -11,7 +11,7 @@ export default function ListItem_EditCheck(props) {
   const onPressEdit = props.onPressEdit;
   const onPressCheck = props.onPressCheck;
   const showEdit = props.showEdit;
-  const showCheck = props.showEdit;
+  const showCheck = props.showCheck;
 
   return (
     <View style={styles_lists.container_item}>

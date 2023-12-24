@@ -153,8 +153,10 @@ export default function RecipeEdit({ navigation, route }) {
       nut_salt += parseFloat(amount * ingredient.nut_salt);
     });
 
-    const servings = [/* TODO */];
-
+    const servings_ = servings.map((doc) => ({
+      amount: unit_weight / doc.amount,
+      label: doc.label
+    }));
 
     return (make_ingredient(
       recipeId,
@@ -162,7 +164,7 @@ export default function RecipeEdit({ navigation, route }) {
       isSolid,
       FloorValue(unit_price),
       FloorValue(unit_weight),
-      servings,
+      servings_,
       servings_fav,
       FloorValue(nut_calories) / unit_weight,
       FloorValue(nut_fats) / unit_weight,
@@ -274,7 +276,7 @@ export default function RecipeEdit({ navigation, route }) {
   }
   const servings_delete = (index) => {
     if (servings_fav == index) setServings_fav(0);
-    else if(servings_fav > index) setServings_fav(servings_fav - 1);
+    else if (servings_fav > index) setServings_fav(servings_fav - 1);
 
     servings.splice(index, 1);
     setServings(servings);
@@ -384,7 +386,7 @@ export default function RecipeEdit({ navigation, route }) {
         onPressDelete={onPress_PopupAmountEdit_Delete}
         onPress_Item_Select={onPress_PopupAmountEdit_Select}
         label={amountEdit_label}
-        isSolid={amountEdit_isSolid}
+        sufix={getPhysicalState(amountEdit_isSolid)}
       />
       <Popup_Ingredient_Add
         isVisible={addIngredient_popup} setIsVisible={setAddIngredient_popup}
@@ -396,7 +398,7 @@ export default function RecipeEdit({ navigation, route }) {
         isVisible={servingsEdit_popup} setIsVisible={setServingsEdit_popup}
         list={servings}
         favIndex={servings_fav}
-        isSolid={isSolid}
+        sufix={"x"}
         onPressAdd={onPress_servingsEditPopup_add}
         onPressEdit={onPress_servingsEditPopup_list_edit}
         onPressFavourite={onPress_servingsEditPopup_list_favourite}
@@ -421,7 +423,7 @@ export default function RecipeEdit({ navigation, route }) {
           </Label>
           <Label label={"Serving Types"}>
             <View style={{ flexDirection: "row" }}>
-              <Button_Icon icon={_icon_edit_list} style={[styles_buttons.button_fill, styles_buttons.button_y]} onPress={onPress_servingsEdit}/>
+              <Button_Icon icon={_icon_edit_list} style={[styles_buttons.button_fill, styles_buttons.button_y]} onPress={onPress_servingsEdit} />
             </View>
           </Label>
         </View>
@@ -464,7 +466,7 @@ function ListItem_IngredientAdded(props) {
     <View style={styles_lists.container_item}>
       <View style={[styles_lists.container_label, { flexDirection: "row" }]}>
         <Text style={[styles_text.common, { flex: 1 }]}>{item.amount} {state}</Text>
-        <Text style={[styles_text.label, { flex: 3 }]}>{item.ingredient.label}</Text>
+        <Text style={[styles_text.label, { flex: 2 }]}>{item.ingredient.label}</Text>
       </View>
       <Button_Edit onPress={() => onPressEdit(index)} />
     </View>
