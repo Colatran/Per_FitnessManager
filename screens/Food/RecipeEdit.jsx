@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 import { useContext, useEffect, useState } from "react";
-import { ref_food_ingredients, ref_food_recipes } from "../../firebase.config";
+import { make_ingredient, make_recipe, ref_food_ingredients, ref_food_recipes } from "../../firebase.config";
 import { addDoc, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 
 import { UserContext } from "../../utils/UserContext";
@@ -125,7 +125,7 @@ export default function RecipeEdit({ navigation, route }) {
   const getIngredientFromRecipe = (ingredients, recipeId) => {
     let unit_price = 0;
     let unit_weight = 0;
-    let nut_energy = 0;
+    let nut_calories = 0;
     let nut_fats = 0;
     let nut_saturates = 0;
     let nut_carbs = 0;
@@ -143,7 +143,7 @@ export default function RecipeEdit({ navigation, route }) {
       unit_price += parseFloat(amount * ingUnitPrice / ingUnitWeight);
       unit_weight += parseFloat(amount);
 
-      nut_energy += parseFloat(amount * ingredient.nut_energy);
+      nut_calories += parseFloat(amount * ingredient.nut_calories);
       nut_fats += parseFloat(amount * ingredient.nut_fats);
       nut_saturates += parseFloat(amount * ingredient.nut_saturates);
       nut_carbs += parseFloat(amount * ingredient.nut_carbs);
@@ -153,34 +153,32 @@ export default function RecipeEdit({ navigation, route }) {
       nut_salt += parseFloat(amount * ingredient.nut_salt);
     });
 
-    return ({
-      label: label,
-      recipeId: recipeId,
-      isSolid: isSolid,
-      unit_price: FloorValue(unit_price),
-      unit_weight: FloorValue(unit_weight),
-      unit_servings: parseInt(servings),
-      nut_energy: FloorValue(nut_energy) / unit_weight,
-      nut_fats: FloorValue(nut_fats) / unit_weight,
-      nut_saturates: FloorValue(nut_saturates) / unit_weight,
-      nut_carbs: FloorValue(nut_carbs) / unit_weight,
-      nut_sugars: FloorValue(nut_sugars) / unit_weight,
-      nut_protein: FloorValue(nut_protein) / unit_weight,
-      nut_fiber: FloorValue(nut_fiber) / unit_weight,
-      nut_salt: FloorValue(nut_salt) / unit_weight,
-    })
+    const servings = [/* TODO */];
+
+
+    return (make_ingredient(
+      recipeId,
+      label,
+      isSolid,
+      FloorValue(unit_price),
+      FloorValue(unit_weight),
+      servings,
+      servings_fav,
+      FloorValue(nut_calories) / unit_weight,
+      FloorValue(nut_fats) / unit_weight,
+      FloorValue(nut_saturates) / unit_weight,
+      FloorValue(nut_carbs) / unit_weight,
+      FloorValue(nut_sugars) / unit_weight,
+      FloorValue(nut_protein) / unit_weight,
+      FloorValue(nut_fiber) / unit_weight,
+      FloorValue(nut_salt) / unit_weight,
+    ))
   }
 
   const recipe_save = async () => {
     const ingredietData = ingredients.map((item) => ({ ingredientId: item.ingredientId, amount: item.amount }));
 
-    const recipeData = {
-      label: label,
-      isSolid: isSolid,
-      servings: servings,
-      ingredients: ingredietData,
-    }
-
+    const recipeData = make_recipe(label, isSolid, servings, servings_fav, ingredietData);
 
     if (isEdit) {
       const recipeDocRef = doc(ref_food_recipes, recipe.id);
@@ -245,14 +243,14 @@ export default function RecipeEdit({ navigation, route }) {
 
   const popupAmountEdit_set = (index) => {
     setAmountEdit_index(index);
-    setAmountEdit_value(ingredients[index].amount);
+    setAmountEdit_value(`${ingredients[index].amount}`);
     setAmountEdit_popup(true);
   }
 
   const popupServings_setEdit = (index) => {
     setServingsEdit_editServing_add(false);
     setServingsEdit_editServing_label(servings[index].label);
-    setServingsEdit_editServing_amount(servings[index].amount);
+    setServingsEdit_editServing_amount(`${servings[index].amount}`);
     setServingsEdit_editServing_index(index);
     setServingsEdit_editServing_popup(true);
   }
@@ -276,7 +274,7 @@ export default function RecipeEdit({ navigation, route }) {
   }
   const servings_delete = (index) => {
     if (servings_fav == index) setServings_fav(0);
-    else if(servings_fav > index) setServings_fav(servings_fav + 1);
+    else if(servings_fav > index) setServings_fav(servings_fav - 1);
 
     servings.splice(index, 1);
     setServings(servings);

@@ -122,7 +122,7 @@ export default function IngredientCheck({ navigation, route }) {
                 </View>
               </View>
               <View style={{backgroundColor: _color_back_1}}>
-                <ParameterNut label={"Energy"}        value={nut_calories}  sufix={"cal"} serving={serving_amount}/>
+                <ParameterNut label={"Calories"}      value={nut_calories}  sufix={"cal"} serving={serving_amount}/>
                 <ParameterNut label={"Fats"}          value={nut_fats}      sufix={"g"}   serving={serving_amount}/>
                 <ParameterNut label={"   Saturates"}  value={nut_saturates} sufix={"g"}   serving={serving_amount}/>
                 <ParameterNut label={"Carbs"}         value={nut_carbs}     sufix={"g"}   serving={serving_amount}/>

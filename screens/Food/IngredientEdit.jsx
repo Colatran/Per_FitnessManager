@@ -80,7 +80,7 @@ export default function IngredientEdit({ navigation, route }) {
   }
   const deleteServing = (index) => {
     if (servings_fav == index) setServings_fav(0);
-    else if(servings_fav > index) setServings_fav(servings_fav + 1);
+    else if(servings_fav > index) setServings_fav(servings_fav - 1);
 
     servings.splice(index, 1);
     setServings(servings);
@@ -102,7 +102,7 @@ export default function IngredientEdit({ navigation, route }) {
   const set_popupServing_Edit = (index) => {
     setServingsEdit_editServing_add(false);
     setServingsEdit_editServing_label(servings[index].label);
-    setServingsEdit_editServing_amount(servings[index].amount);
+    setServingsEdit_editServing_amount(`${servings[index].amount}`);
     setServingsEdit_editServing_index(index);
     setServingsEdit_editServing_popup(true);
   }
