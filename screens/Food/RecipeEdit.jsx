@@ -5,7 +5,7 @@ import { addDoc, deleteDoc, doc, getDocs, query, updateDoc, where } from "fireba
 
 import { UserContext } from "../../utils/UserContext";
 import { _icon_edit_list, _space_l, _space_m, styles_buttons, styles_common, styles_lists, styles_text } from "../../styles/styles";
-import { _recipeEditScreen_deleteRecipe } from "../../utils/Messages";
+import { _recipeEditScreen_deleteIngredient, _recipeEditScreen_deleteRecipe } from "../../utils/Messages";
 import { getPhysicalState } from "../../utils/Functions";
 import List from "../../components/List";
 import Label from "../../components/Label";
@@ -215,7 +215,6 @@ export default function RecipeEdit({ navigation, route }) {
   }
 
   const ingredients_add = (index) => {
-    console.log(index);
     const ingDoc = incIngredientDocs[index];
     const newIng = { ingredientId: ingDoc.id, amount: `${FloorValue(ingDoc.servings[ingDoc.servings_fav].amount)}`, ingredient: ingDoc };
     setIngredients([...ingredients, newIng]);
@@ -387,6 +386,7 @@ export default function RecipeEdit({ navigation, route }) {
         onPress_Item_Select={onPress_PopupAmountEdit_Select}
         label={amountEdit_label}
         sufix={getPhysicalState(amountEdit_isSolid)}
+        deleteMessage={_recipeEditScreen_deleteIngredient}
       />
       <Popup_Ingredient_Add
         isVisible={addIngredient_popup} setIsVisible={setAddIngredient_popup}

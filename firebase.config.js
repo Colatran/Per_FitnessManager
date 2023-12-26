@@ -88,3 +88,16 @@ export const make_recipe = (label, isSolid, servings, servings_fav, ingredietDat
   }
   return data;
 }
+
+export const make_meal = (label, ingredietData) => {
+  const ingredietData_ = ingredietData.map((doc) => ({
+    amount: FloorValue(doc.amount),
+    ingredientId: doc.ingredientId,
+  }));
+
+  const data = {
+    label: label,
+    ingredients: ingredietData_,
+  }
+  return data;
+}

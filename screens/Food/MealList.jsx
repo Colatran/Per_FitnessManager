@@ -1,10 +1,10 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { useContext } from "react";
 
 import { UserContext } from "../../utils/UserContext";
-import { _icon_checkout, _icon_edit, styles_common, styles_text, styles_lists } from "../../styles/styles";
+import { styles_common } from "../../styles/styles";
 import List from "../../components/List";
-import Button_Icon from "../../components/input/Button_Icon";
+import ListItem_EditCheck from "../../components/screen/ListItem_EditCheck";
 import Button_Footer_Add from "../../components/screen/Button_Footer_Add";
 
 
@@ -12,16 +12,24 @@ import Button_Footer_Add from "../../components/screen/Button_Footer_Add";
 export default function MealList({ navigation }) {
   const { mealDocs } = useContext(UserContext);
 
-  const handleOnPressAdd = () => {
+  const onPress_add = () => {
     navigation.navigate("MealEdit", {});
+  }
+  const onPress_edit = (item) => {
+    navigation.navigate("MealEdit", { meal: item });
+  }
+  const onPress_check = (item) => {
   }
 
   return (
     <View style={styles_common.container}>
       <List data={mealDocs}>
-        <ListItem navigation={navigation}/>
+        <ListItem 
+          onPressEdit={onPress_edit}
+          onPressCheck={onPress_check}
+        />
       </List>
-      <Button_Footer_Add onPress={handleOnPressAdd}/>
+      <Button_Footer_Add onPress={onPress_add} />
     </View>
   );
 }
@@ -30,29 +38,17 @@ export default function MealList({ navigation }) {
 
 function ListItem(props) {
   const { item } = props;
-  const navigation = props.navigation;
 
-  const handleOnPressCheck = (item) => {
-  }
-  const handleEditOnPress = (item) => {
-    navigation.navigate("MealEdit", { meal: item });
-  }
+  const onPressEdit = props.onPressEdit;
+  const onPressCheck = props.onPressCheck;
 
   return (
-    <View style={styles_lists.container_item}>
-      <Button_Icon
-        icon={_icon_checkout}
-        onPress={() => handleOnPressCheck(item)}
-      />
-
-      <View style={styles_lists.container_label}>
-        <Text style={styles_text.common}>{item.label}</Text>
-      </View>
-
-      <Button_Icon
-        icon={_icon_edit}
-        onPress={() => handleEditOnPress(item)}
-      />
-    </View>
+    <ListItem_EditCheck
+      label={item.label}
+      showEdit={true}
+      showCheck={true}
+      onPressEdit={() => onPressEdit(item)}
+      onPressCheck={() => onPressCheck(item)}
+    />
   );
 }

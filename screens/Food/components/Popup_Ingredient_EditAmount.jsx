@@ -2,7 +2,6 @@ import { View, Text } from "react-native";
 
 import { _space_m, styles_buttons, styles_common, styles_lists, styles_text } from "../../../styles/styles";
 import { _recipeEditScreen_deleteIngredient } from "../../../utils/Messages";
-import { getPhysicalState } from "../../../utils/Functions";
 import Popup from "../../../components/Popup";
 import Label from "../../../components/Label";
 import Input_Text from "../../../components/input/Input_Text";
@@ -26,6 +25,7 @@ export default function Popup_Ingredient_EditAmount(props) {
   const onPressSave = props.onPressSave;
   const onPressDelete = props.onPressDelete;
   const onPress_Item_Select = props.onPress_Item_Select;
+  const deleteMessage = props.deleteMessage;
 
 
 
@@ -42,7 +42,7 @@ export default function Popup_Ingredient_EditAmount(props) {
 
         <View style={{ flexDirection: "row" }}>
           <Text style={[styles_text.bold, { flex: 1 }]}>{label}</Text>
-          <Button_Delete onPress={onPressDelete} message={_recipeEditScreen_deleteIngredient} />
+          <Button_Delete onPress={onPressDelete} message={deleteMessage} />
         </View>
 
         <Label label={"Amount (" + sufix + ")"}>
