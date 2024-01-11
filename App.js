@@ -5,20 +5,11 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { UserProvider } from './utils/UserContext';
 
 import {
-  _color_back_1, _color_back_1_border,
-  _iconSize_m, _space_l, _space_m, _space_s,
-  _textColor, _textShadowColor, _textShadowRadius,
-  styles_text
+  _color_back_1, _color_back_1_border, _iconSize_m, _space_m, _space_s,
+  _textColor, _textShadowColor, _textShadowRadius, styles_text
 } from './styles/styles';
 
 
-
-/*import ExercisesList from './screens/ExercisesList';
-import WorkoutList_Practice from './screens/WorkoutList_Practice';
-import WorkoutList_Manage from './screens/WorkoutList_Manage';
-import WorkoutEdit from './screens/WorkoutEdit';
-import WorkoutEdit_Exercise from './screens/WorkoutEdit_Exercise';
-import WorkoutPractice from './screens/WorkoutPractice';*/
 
 import Food from './screens/Food/Food';
 import IngredientList from './screens/Food/IngredientList';
@@ -152,7 +143,7 @@ function Stack_Food() {
       <Stack.Screen
         name='IngredientCheck_Recipe'
         component={IngredientCheck}
-        options={StackOptions("Recipe")} />
+        options={StackOptions("Nutrition")} />
 
 
       <Stack.Screen
@@ -163,6 +154,10 @@ function Stack_Food() {
         name='MealEdit'
         component={MealEdit}
         options={StackOptions("Meal")} />
+      <Stack.Screen
+        name='IngredientCheck_Meal'
+        component={IngredientCheck}
+        options={StackOptions("Nutrition")} />
     </Stack.Navigator>
   );
 }

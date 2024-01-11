@@ -10,7 +10,23 @@ import Button_Footer_Add from "../../components/screen/Button_Footer_Add";
 
 
 export default function MealList({ navigation }) {
-  const { mealDocs } = useContext(UserContext);
+  const { mealDocs, ingredientDocs } = useContext(UserContext);
+
+
+
+  const getIngredientFromMeal = (meal) => {
+    const ingredients = meal.ingredients;
+    const ingDocs = [];
+
+    ingredients.forEach(element => {
+      const index = ingredientDocs.findIndex(item => item.id === element.ingredientId);
+      ingDocs.push(ingredientDocs[index]);
+    });
+
+    console.log(ingDocs)
+  }
+
+
 
   const onPress_add = () => {
     navigation.navigate("MealEdit", {});
@@ -19,7 +35,11 @@ export default function MealList({ navigation }) {
     navigation.navigate("MealEdit", { meal: item });
   }
   const onPress_check = (item) => {
+    getIngredientFromMeal(item);
+    //navigation.navigate("IngredientCheck_Meal", { meal: getIngredientFromMeal(item) });
   }
+
+
 
   return (
     <View style={styles_common.container}>

@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 import { useContext, useEffect, useState } from "react";
-import { make_meal, ref_food_ingredients, ref_food_meals } from "../../firebase.config";
+import { ref_food_ingredients, ref_food_meals } from "../../firebase.config";
 import { addDoc, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 
 import { UserContext } from "../../utils/UserContext";
 import { _icon_edit_list, _space_l, _space_m, styles_common, styles_lists, styles_text } from "../../styles/styles";
 import { _mealEditScreen_deleteIngredient, _mealEditScreen_deleteMeal } from "../../utils/Messages";
-import { getPhysicalState } from "../../utils/Functions";
+import { getPhysicalState, make_meal } from "../../utils/Functions";
 import List from "../../components/List";
 import Label from "../../components/Label";
 import Input_Text from "../../components/input/Input_Text";

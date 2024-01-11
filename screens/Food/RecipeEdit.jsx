@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 import { useContext, useEffect, useState } from "react";
-import { make_ingredient, make_recipe, ref_food_ingredients, ref_food_recipes } from "../../firebase.config";
+import { ref_food_ingredients, ref_food_recipes } from "../../firebase.config";
 import { addDoc, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 
 import { UserContext } from "../../utils/UserContext";
 import { _icon_edit_list, _space_l, _space_m, styles_buttons, styles_common, styles_lists, styles_text } from "../../styles/styles";
 import { _recipeEditScreen_deleteIngredient, _recipeEditScreen_deleteRecipe } from "../../utils/Messages";
-import { getPhysicalState } from "../../utils/Functions";
+import { getIngredientFromRecipe, getPhysicalState, make_recipe } from "../../utils/Functions";
 import List from "../../components/List";
 import Label from "../../components/Label";
 import Input_Text from "../../components/input/Input_Text";
@@ -122,61 +122,6 @@ export default function RecipeEdit({ navigation, route }) {
 
 
 
-  const getIngredientFromRecipe = (ingredients, recipeId) => {
-    let unit_price = 0;
-    let unit_weight = 0;
-    let nut_calories = 0;
-    let nut_fats = 0;
-    let nut_saturates = 0;
-    let nut_carbs = 0;
-    let nut_sugars = 0;
-    let nut_protein = 0;
-    let nut_fiber = 0;
-    let nut_salt = 0;
-
-    ingredients.forEach(element => {
-      const amount = parseFloat(element.amount);
-      const ingredient = element.ingredient;
-      const ingUnitWeight = ingredient.unit_weight;
-      const ingUnitPrice = ingredient.unit_price;
-
-      unit_price += parseFloat(amount * ingUnitPrice / ingUnitWeight);
-      unit_weight += parseFloat(amount);
-
-      nut_calories += parseFloat(amount * ingredient.nut_calories);
-      nut_fats += parseFloat(amount * ingredient.nut_fats);
-      nut_saturates += parseFloat(amount * ingredient.nut_saturates);
-      nut_carbs += parseFloat(amount * ingredient.nut_carbs);
-      nut_sugars += parseFloat(amount * ingredient.nut_sugars);
-      nut_protein += parseFloat(amount * ingredient.nut_protein);
-      nut_fiber += parseFloat(amount * ingredient.nut_fiber);
-      nut_salt += parseFloat(amount * ingredient.nut_salt);
-    });
-
-    const servings_ = servings.map((doc) => ({
-      amount: unit_weight / doc.amount,
-      label: doc.label
-    }));
-
-    return (make_ingredient(
-      recipeId,
-      label,
-      isSolid,
-      FloorValue(unit_price),
-      FloorValue(unit_weight),
-      servings_,
-      servings_fav,
-      FloorValue(nut_calories) / unit_weight,
-      FloorValue(nut_fats) / unit_weight,
-      FloorValue(nut_saturates) / unit_weight,
-      FloorValue(nut_carbs) / unit_weight,
-      FloorValue(nut_sugars) / unit_weight,
-      FloorValue(nut_protein) / unit_weight,
-      FloorValue(nut_fiber) / unit_weight,
-      FloorValue(nut_salt) / unit_weight,
-    ))
-  }
-
   const recipe_save = async () => {
     const ingredietData = ingredients.map((item) => ({ ingredientId: item.ingredientId, amount: item.amount }));
 
@@ -190,15 +135,15 @@ export default function RecipeEdit({ navigation, route }) {
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((item) => { ingDocRef = doc(ref_food_ingredients, item.id) });
 
-      const recipeIngredientData = getIngredientFromRecipe(ingredients, recipe.id);
-
+      const recipeIngredientData = getIngredientFromRecipe(ingredients, servings, servings_fav, recipe.id, label, isSolid);
+      
       await updateDoc(recipeDocRef, recipeData).then(() => {
         updateDoc(ingDocRef, recipeIngredientData);
       });
     }
     else {
       const recipeId = (await addDoc(ref_food_recipes, recipeData)).id;
-      const recipeIngredientData = getIngredientFromRecipe(ingredients, recipeId);
+      const recipeIngredientData = getIngredientFromRecipe(ingredients, servings, servings_fav, recipeId, label, isSolid);
       return await addDoc(ref_food_ingredients, recipeIngredientData);
     }
   }

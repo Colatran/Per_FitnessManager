@@ -2,8 +2,8 @@ import { StyleSheet, View, Text, ScrollView } from "react-native";
 import { useState } from "react";
 import { addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 
-import { make_ingredient, ref_food_ingredients } from "../../firebase.config";
-import { getPhysicalState } from "../../utils/Functions";
+import { ref_food_ingredients } from "../../firebase.config";
+import { getPhysicalState, make_ingredient } from "../../utils/Functions";
 import {
   _borderWidth_xs, _space_l, _space_m, _space_s, _space_xs, _color_front_0, _icon_edit_list,
   styles_common, styles_text, styles_buttons
