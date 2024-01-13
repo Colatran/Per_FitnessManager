@@ -6,6 +6,7 @@ import { styles_common } from "../../styles/styles";
 import List from "../../components/List";
 import ListItem_EditCheck from "../../components/screen/ListItem_EditCheck";
 import Button_Footer_Add from "../../components/screen/Button_Footer_Add";
+import { getIngredientFromRecipe } from "../../utils/Functions";
 
 
 
@@ -15,15 +16,21 @@ export default function MealList({ navigation }) {
 
 
   const getIngredientFromMeal = (meal) => {
-    const ingredients = meal.ingredients;
-    const ingDocs = [];
+    const ingredients = meal.ingredients.map(ing => {
+      return {
+        ...ing,
+        ingredient: ingredientDocs.find(i => i.id === ing.ingredientId),
+      };
+    })
 
-    ingredients.forEach(element => {
-      const index = ingredientDocs.findIndex(item => item.id === element.ingredientId);
-      ingDocs.push(ingredientDocs[index]);
-    });
-
-    console.log(ingDocs)
+    return getIngredientFromRecipe(
+      ingredients,
+      [{amount: 1, label: "Total"}],
+      0,
+      "",
+      meal.label,
+      true,
+    );
   }
 
 
@@ -35,8 +42,7 @@ export default function MealList({ navigation }) {
     navigation.navigate("MealEdit", { meal: item });
   }
   const onPress_check = (item) => {
-    getIngredientFromMeal(item);
-    //navigation.navigate("IngredientCheck_Meal", { meal: getIngredientFromMeal(item) });
+    navigation.navigate("IngredientCheck_Meal", { ingredient: getIngredientFromMeal(item) });
   }
 
 
