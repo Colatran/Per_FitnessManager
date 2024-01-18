@@ -17,7 +17,7 @@ import Button_Edit from "../../components/screen/Button_Edit";
 import Button_Icon from "../../components/input/Button_Icon";
 import Popup_ServingsEdit_List from "./components/Popup_ServingsEdit_List";
 import Popup_ServingsEdit_Form from "./components/Popup_ServingsEdit_Form";
-import Popup_Ingredient_Add from "./components/Popup_Ingredient_Add";
+import Popup_List_Add from "./components/Popup_List_Add";
 import Popup_Ingredient_EditAmount from "./components/Popup_Ingredient_EditAmount";
 
 
@@ -333,7 +333,7 @@ export default function RecipeEdit({ navigation, route }) {
         sufix={getPhysicalState(amountEdit_isSolid)}
         deleteMessage={_recipeEditScreen_deleteIngredient}
       />
-      <Popup_Ingredient_Add
+      <Popup_List_Add
         isVisible={addIngredient_popup} setIsVisible={setAddIngredient_popup}
         listData={incIngredientDocs}
         onPressItemAdd={onPress_PopupAddIngredient_ListItem_Add}

@@ -47,6 +47,7 @@ export const _textShadowRadius = 5;
 export const _textShadowRadius_title = 10;
 
 export const _color_icon = _color_front_0;
+export const _iconSize_s = 16;
 export const _iconSize_m = 30;
 export const _iconSize_l = 60;
 
@@ -69,8 +70,6 @@ export const _icon_select = 'cursor-pointer';
 export const styles_common = StyleSheet.create({
   container: {
     flex: 1,
-    padding: _space_l,
-    paddingTop: _space_l,
     backgroundColor: _color_back_0,
   },
   container_front: {

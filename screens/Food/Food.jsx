@@ -19,6 +19,10 @@ export default function Food({ navigation }) {
       <View style={styles.container}>
         <Button_Option label="Meals" onPress={() => navigation.navigate("MealList")}/>
       </View>
+
+      <View style={styles.container}>
+        <Button_Option label="Diets" onPress={() => navigation.navigate("DietList")}/>
+      </View>
     </View>
   );
 }

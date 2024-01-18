@@ -7,7 +7,7 @@ import Button_Add from "../../../components/screen/Button_Add";
 
 
 
-export default function Popup_Ingredient_Add(props) {
+export default function Popup_List_Add(props) {
   const isVisible = props.isVisible;
   const setIsVisible = props.setIsVisible;
   const listData = props.listData;

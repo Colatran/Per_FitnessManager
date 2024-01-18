@@ -22,6 +22,8 @@ import MealEdit from './screens/Food/MealEdit';
 
 import Schedule from './screens/Schedule/Schedule';
 import ScheduleList from './screens/Schedule/ScheduleList';
+import DietList from "./screens/Food/DietList";
+import DietEdit from "./screens/Food/DietEdit";
 
 
 
@@ -104,7 +106,7 @@ const TabOptions = (title, icon) => {
   return {
     title: `${title}`,
     tabBarIcon: () => (
-      <Icon name={icon} size={_iconSize_m} color={_textColor}/>
+      <Icon name={icon} size={_iconSize_m} color={_textColor} />
     ),
   }
 }
@@ -158,6 +160,15 @@ function Stack_Food() {
         name='IngredientCheck_Meal'
         component={IngredientCheck}
         options={StackOptions("Nutrition")} />
+
+      <Stack.Screen
+        name='DietList'
+        component={DietList}
+        options={StackOptions("Diets")} />
+      <Stack.Screen
+        name='DietEdit'
+        component={DietEdit}
+        options={StackOptions("Diet")} />
     </Stack.Navigator>
   );
 }

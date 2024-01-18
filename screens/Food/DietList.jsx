@@ -9,23 +9,26 @@ import Button_Footer_Add from "../../components/screen/Button_Footer_Add";
 
 
 
-export default function RecipeList({ navigation }) {
-  const { recipeDocs, ingredientDocs } = useContext(UserContext);
+export default function DietList({ navigation }) {
+  const { dietDocs } = useContext(UserContext);
+
+
 
   const onPress_add = () => {
-    navigation.navigate("RecipeEdit", {});
+    navigation.navigate("DietEdit", {});
   }
   const onPress_edit = (item) => {
-    navigation.navigate("RecipeEdit", { recipe: item });
+    navigation.navigate("DietEdit", { diet: item });
   }
   const onPress_check = (item) => {
-    const ingredient = ingredientDocs.find(doc => doc.recipeId === item.id);
-    navigation.navigate("IngredientCheck_Recipe", { ingredient: ingredient} );
+    //navigation.navigate("DietCheck", { diet: item });
   }
+
+
 
   return (
     <View style={styles_common.container}>
-      <List data={recipeDocs}>
+      <List data={dietDocs}>
         <ListItem 
           onPressEdit={onPress_edit}
           onPressCheck={onPress_check}

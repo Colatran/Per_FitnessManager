@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import React, { createContext, useEffect, useState } from 'react';
-import { ref_food_ingredients, ref_food_meals, ref_food_recipes } from '../firebase.config';
+import { ref_food_diets, ref_food_ingredients, ref_food_meals, ref_food_recipes } from '../firebase.config';
 import { onSnapshot } from 'firebase/firestore';
 
 
@@ -11,6 +11,7 @@ export const UserProvider = ({ children }) => {
   const [ingredientDocs, setIngredientDocs] = useState([]);
   const [recipeDocs, setRecipeDocs] = useState([]);
   const [mealDocs, setMealDocs] = useState([]);
+  const [dietDocs, setDietDocs] = useState([]);
 
 
 
@@ -32,11 +33,13 @@ export const UserProvider = ({ children }) => {
     const ingredientSnap =  SortedListSnapshot(ref_food_ingredients, setIngredientDocs);
     const recipeSnap =      SortedListSnapshot(ref_food_recipes, setRecipeDocs);
     const mealSnap =        SortedListSnapshot(ref_food_meals, setMealDocs);
+    const dietSnap =        SortedListSnapshot(ref_food_diets, setDietDocs);
 
     return () => {
       ingredientSnap();
       recipeSnap();
       mealSnap();
+      dietSnap();
     }
   }, []);
 
@@ -56,6 +59,7 @@ export const UserProvider = ({ children }) => {
           ingredientDocs, setIngredientDocs,
           recipeDocs,     setRecipeDocs,
           mealDocs,       setMealDocs,
+          dietDocs,       setDietDocs,
 
           getExerciseName,
         }}
