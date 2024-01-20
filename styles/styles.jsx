@@ -8,6 +8,7 @@ export const _space_m = 8;
 export const _space_l = 16;
 export const _space_xl = 24;
 
+export const _size_xxs = 24;
 export const _size_xs = 36;
 export const _sixe_s = 64;
 export const _size_m = 100;
