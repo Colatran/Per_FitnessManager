@@ -17,13 +17,13 @@ import IngredientEdit from './screens/Food/IngredientEdit';
 import IngredientCheck from './screens/Food/IngredientCheck';
 import RecipeList from './screens/Food/RecipeList';
 import RecipeEdit from './screens/Food/RecipeEdit';
-import MealList from './screens/Food/MealList';
-import MealEdit from './screens/Food/MealEdit';
-
-import Schedule from './screens/Schedule/Schedule';
-import ScheduleList from './screens/Schedule/ScheduleList';
 import DietList from "./screens/Food/DietList";
 import DietEdit from "./screens/Food/DietEdit";
+
+//import Schedule from './screens/Schedule/Schedule';
+//import ScheduleList from './screens/Schedule/ScheduleList';
+import MealList from './screens/Food/MealList';
+import MealEdit from './screens/Food/MealEdit';
 
 
 
@@ -57,13 +57,15 @@ export default function App() {
             options={TabOptions("Food", "food-drumstick")}
             component={Stack_Food}
           />
-          <Tab.Screen
+
+          
+          {/*<Tab.Screen
             name="Tab_Schedule"
             options={TabOptions("Schedule", "calendar-month")}
             component={Stack_Schedule}
           />
 
-          {/*<Tab.Screen 
+          <Tab.Screen 
               name="Tab_Practice"
               options={TabOptions("Practice", "play")}
               component={Stack_Practice}

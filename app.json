@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "WorkoutManager",
-    "slug": "WorkoutManager",
+    "name": "FitnessManager",
+    "slug": "FitnessManager",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,15 +22,10 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.colatran.WorkoutManager"
+      "package": "com.colatran.FitnessManager"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "96971b59-91b6-4609-a046-061539a6a6e4"
-      }
     }
   }
 }
