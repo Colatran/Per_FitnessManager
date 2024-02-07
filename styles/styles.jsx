@@ -8,7 +8,7 @@ export const _space_m = 8;
 export const _space_l = 16;
 export const _space_xl = 24;
 
-export const _size_xxs = 24;
+export const _size_xxs = 16;
 export const _size_xs = 36;
 export const _sixe_s = 64;
 export const _size_m = 100;
@@ -27,6 +27,10 @@ export const _color_front_1       = '#c0c0c0';
 export const _color_warning_0     = '#cc3300';
 export const _color_warning_1     = '#ffcc00';
 export const _color_favourite     = '#ffd700';
+
+
+
+
 
 
 export const _color_input             = _color_back_1;
@@ -129,6 +133,8 @@ export const styles_text = StyleSheet.create({
     fontWeight: 'bold',
   },
 
+  
+
   centred: {
     textAlign: 'center'
   }
@@ -196,6 +202,9 @@ export const styles_buttons = StyleSheet.create({
     flex: 1,
     flexDirection: "row"
   },
+
+
+
 });
 
 
@@ -204,6 +213,31 @@ export const android_ripple_style = {
   borderless: true,
   color: _color_androidRipple,
 };
+
+
+
+export const _color_listItem      = _color_back_1;
+
+export const _space_container_padding_h   = _space_m;
+export const _space_container_padding_v   = _space_s;
+
+export const _space_item_margin_h = _space_m;
+export const _space_item_margin_v = _space_s;
+
+export const _space_listItem_margin = _space_m;
+export const _space_list_margin_v = _space_m;
+
+export const _border_color_section = _color_back_2;
+
+export const _border_size_section = 1;
+
+
+
+
+
+
+
+
 
 
 
@@ -220,3 +254,6 @@ export const android_ripple_style = {
  const nut_green_02   = '#add683';
  const nut_green_03   = '#4d9605';
  const nut_silver     = '#c0c0c0';
+
+
+
