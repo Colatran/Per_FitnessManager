@@ -4,7 +4,7 @@ import { ref_food_diets, ref_food_ingredients, ref_food_meals } from "../../fire
 import { addDoc, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 
 import { UserContext } from "../../utils/UserContext";
-import { _borderRadius_m, _borderWidth_xs, _border_size_section, _color_back_0, _color_back_1, _color_back_1_border, _border_color_section, _color_listItem, _icon_edit_list, _size_xs, _size_xxs, _space_container_h, _space_container_padding_h, _space_container_padding_v, _space_container_v, _space_item_margin_h, _space_item_margin_v, _space_l, _space_listItem_margin, _space_list_margin_bottom, _space_list_margin_v, _space_m, _space_s, _space_xs, styles_buttons, styles_common, styles_text } from "../../styles/styles";
+import { _borderRadius_m, _borderWidth_xs, _border_size_section, _color_back_0, _color_back_1, _color_back_1_border, _border_color_section, _color_listItem, _icon_edit_list, _size_xs, _size_xxs, _space_container_h, _space_container_padding_h, _space_container_padding_v, _space_container_v, _space_item_margin_h, _space_item_margin_v, _space_l, _space_listItem_margin, _space_list_margin_bottom, _space_list_margin_v, _space_m, _space_s, _space_xs, styles_buttons, styles_common, styles_text, _icon_add } from "../../styles/styles";
 import { _mealEditScreen_deleteIngredient, _mealEditScreen_deleteMeal } from "../../utils/Messages";
 import Button_Icon from "../../components/input/Button_Icon";
 import Button_IconFill from "../../components/input/Button_IconFill";
@@ -90,18 +90,18 @@ function Day(props) {
       <View style={{flexDirection: "row"}}>
         <View style={{flex: ratio_dayMeals_day}}>
           <Text style={styles_text.bold}>{day.name}</Text>      
-          <Button_Icon style={{marginBottom: _space_item_margin_v, backgroundColor: "#040"}}/>
+          <Button_Icon style={{marginBottom: _space_item_margin_v}}/>
           <View style={{flex: 1, justifyContent: "flex-end"}}>
-            <Button_Icon style={{backgroundColor: "#040"}}/>
+            <Button_Icon/>
           </View>
         </View>
 
-        <View style={{flex: ratio_dayMeals_meals, paddingLeft: _space_item_margin_h}}>
+        <View style={{flex: ratio_dayMeals_meals, marginLeft: _space_item_margin_h}}>
           <FlatList
             data={day.meals}
             renderItem={({ item, index }) => (<Meal data={item}/>)}
           />
-          <Button_IconFill style={{marginTop: _space_m, backgroundColor: "#000"}}/>
+          <Button_IconFill style={{marginTop: _space_item_margin_h}} icon={_icon_add}/>
         </View>
       </View>
 
@@ -120,7 +120,7 @@ function Meal(props) {
       <View style={{flex: ratio_mealIngredient_meal}}>
         <Text style={styles_text.common}>{meal.name}</Text>
         
-        <Button_Icon style={{marginBottom: _space_item_margin_v, backgroundColor: "#048"}}/>
+        <Button_Icon style={{marginBottom: _space_item_margin_v}}/>
       </View>
 
       <View style={{flex: ratio_mealIngredient_ing, marginBottom: _space_item_margin_v}}>
@@ -143,9 +143,10 @@ function Ingredient(props) {
   return (
     <View style={{flexDirection: "row"}}>
       <View style={{flex: 1, flexDirection: "row", alignItems: "center"}}>
-        <Button_Icon style={{marginTop: _space_item_margin_v, marginRight: _space_item_margin_h, backgroundColor: "#048"}}/>
         <Text style={[styles_text.common, {flex: ratio_ingredientAmount_ing}]}>{ingredient.label}</Text>
         <Text style={[styles_text.label, {flex: ratio_ingredientAmount_amount, marginLeft: _space_item_margin_h}]}>{ingredient.label}</Text>
+  
+        <Button_Icon style={{marginTop: _space_item_margin_v, marginRight: _space_item_margin_h}}/>
       </View>
     </View>
   );

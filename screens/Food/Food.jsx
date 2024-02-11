@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text } from "react-native";
 
-import { _color_button, _size_m, _space_m, styles_common, styles_text } from "../../styles/styles";
+import { _borderRadius_m, _color_button, _size_m, _space_m, styles_common, styles_text } from "../../styles/styles";
 import Button from "../../components/input/Button";
 
 
@@ -8,21 +8,14 @@ import Button from "../../components/input/Button";
 export default function Food({ navigation }) {
   return (
     <View style={styles_common.container}>
-      <View style={styles.container}>
-        <Button_Option label="Ingredients" onPress={() => navigation.navigate("IngredientList")}/>  
-      </View>
+      <Button_Option label="Ingredients" onPress={() => navigation.navigate("IngredientList")}/>  
 
-      <View style={styles.container}>
-        <Button_Option label="Recipes" onPress={() => navigation.navigate("RecipeList")}/>
-      </View>
+      <Button_Option label="Recipes" onPress={() => navigation.navigate("RecipeList")}/>
 
-      <View style={styles.container}>
-        <Button_Option label="Meals" onPress={() => navigation.navigate("MealList")}/>
-      </View>
+      <Button_Option label="Meals" onPress={() => navigation.navigate("MealList")}/>
 
-      <View style={styles.container}>
-        <Button_Option label="Diets" onPress={() => navigation.navigate("DietEdit")}/>
-      </View>
+      <Button_Option label="Diets" onPress={() => navigation.navigate("DietEdit")}/>
+
     </View>
   );
 }
@@ -34,18 +27,20 @@ function Button_Option(props) {
   const onPress = props.onPress;
   
   return (
-    <Button style={{flex: 1}} onPress={onPress}>
-      <Text style={styles_text.bold}>{label}</Text>
-    </Button>
+    <View style={{flexDirection: "row"}}>
+      <Button style={styles.button} onPress={onPress}>
+        <Text style={styles_text.bold}>{label}</Text>
+      </Button>
+    </View>
   );
 }
 
 
 
 const styles = StyleSheet.create({
-  container: {
+  button: {
+    flex: 1,
     marginTop: _space_m,
     height: _size_m,
-    flexDirection: "row",
   },
 });
