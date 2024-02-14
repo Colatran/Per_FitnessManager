@@ -12,7 +12,7 @@ import Label from "../../components/Label";
 import Input_Text from "../../components/input/Input_Text";
 import Button_Footer_Form from "../../components/screen/Button_Footer_Form";
 import Button_Footer_Add from "../../components/screen/Button_Footer_Add";
-import Button_Edit from "../../components/screen/Button_Edit";
+import Button_Edit from "../../components/buttons/Button_Edit";
 import Popup_List_Add from "./components/Popup_List_Add";
 import Popup_Ingredient_EditAmount from "./components/Popup_Ingredient_EditAmount";
 

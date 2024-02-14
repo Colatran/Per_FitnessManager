@@ -6,9 +6,11 @@ import { addDoc, deleteDoc, doc, getDocs, query, updateDoc, where } from "fireba
 import { UserContext } from "../../utils/UserContext";
 import { _borderRadius_m, _borderWidth_xs, _border_size_section, _color_back_0, _color_back_1, _color_back_1_border, _border_color_section, _color_listItem, _icon_edit_list, _size_xs, _size_xxs, _space_container_h, _space_container_padding_h, _space_container_padding_v, _space_container_v, _space_item_margin_h, _space_item_margin_v, _space_l, _space_listItem_margin, _space_list_margin_bottom, _space_list_margin_v, _space_m, _space_s, _space_xs, styles_buttons, styles_common, styles_text, _icon_add } from "../../styles/styles";
 import { _mealEditScreen_deleteIngredient, _mealEditScreen_deleteMeal } from "../../utils/Messages";
-import Button_Icon from "../../components/input/Button_Icon";
-import Button_IconFill from "../../components/input/Button_IconFill";
+import Button_Icon from "../../components/buttons/Button_Icon";
+import Button_IconFill from "../../components/buttons/Button_IconFill";
 import Button_Footer_Add from "../../components/screen/Button_Footer_Add";
+import Button_Edit from "../../components/buttons/Button_Edit";
+import Button_Edit_S from "../../components/buttons/Button_Edit_S";
 
 
 
@@ -90,7 +92,7 @@ function Day(props) {
       <View style={{flexDirection: "row"}}>
         <View style={{flex: ratio_dayMeals_day}}>
           <Text style={styles_text.bold}>{day.name}</Text>      
-          <Button_Icon style={{marginBottom: _space_item_margin_v}}/>
+          <Button_Edit style={{marginBottom: _space_item_margin_v}}/>
           <View style={{flex: 1, justifyContent: "flex-end"}}>
             <Button_Icon/>
           </View>
@@ -101,7 +103,10 @@ function Day(props) {
             data={day.meals}
             renderItem={({ item, index }) => (<Meal data={item}/>)}
           />
-          <Button_IconFill style={{marginTop: _space_item_margin_h}} icon={_icon_add}/>
+
+          <View style={{flex: 1, flexDirection: "row", marginTop: _space_item_margin_h}}>
+            <Button_Edit style={{flex: 1}}/>
+          </View>
         </View>
       </View>
 
@@ -120,7 +125,7 @@ function Meal(props) {
       <View style={{flex: ratio_mealIngredient_meal}}>
         <Text style={styles_text.common}>{meal.name}</Text>
         
-        <Button_Icon style={{marginBottom: _space_item_margin_v}}/>
+        <Button_Edit style={{marginBottom: _space_item_margin_v}}/>
       </View>
 
       <View style={{flex: ratio_mealIngredient_ing, marginBottom: _space_item_margin_v}}>
@@ -144,9 +149,9 @@ function Ingredient(props) {
     <View style={{flexDirection: "row"}}>
       <View style={{flex: 1, flexDirection: "row", alignItems: "center"}}>
         <Text style={[styles_text.common, {flex: ratio_ingredientAmount_ing}]}>{ingredient.label}</Text>
-        <Text style={[styles_text.label, {flex: ratio_ingredientAmount_amount, marginLeft: _space_item_margin_h}]}>{ingredient.label}</Text>
+        <Text style={[styles_text.label, {flex: ratio_ingredientAmount_amount, marginLeft: _space_item_margin_h}]}>{ingredient.amount}</Text>
   
-        <Button_Icon style={{marginTop: _space_item_margin_v, marginRight: _space_item_margin_h}}/>
+        <Button_Edit_S style={{marginTop: _space_item_margin_v, marginRight: _space_item_margin_h}}/>
       </View>
     </View>
   );

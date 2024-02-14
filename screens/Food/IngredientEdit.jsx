@@ -12,7 +12,7 @@ import { _ingredientEditScreen_deleteIngredient, _ingredientEditScreen_deleteSer
 import Label from "../../components/Label";
 import Input_Text from "../../components/input/Input_Text";
 import Input_Boolean from "../../components/input/Input_Boolean";
-import Button_Icon from "../../components/input/Button_Icon";
+import Button_Icon from "../../components/buttons/Button_Icon";
 import Button_Footer_Form from "../../components/screen/Button_Footer_Form";
 import Popup_ServingsEdit_List from "./components/Popup_ServingsEdit_List";
 import Popup_ServingsEdit_Form from "./components/Popup_ServingsEdit_Form";

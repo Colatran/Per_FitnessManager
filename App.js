@@ -20,8 +20,7 @@ import RecipeEdit from './screens/Food/RecipeEdit';
 import DietList from "./screens/Food/DietList";
 import DietEdit from "./screens/Food/DietEdit";
 
-//import Schedule from './screens/Schedule/Schedule';
-//import ScheduleList from './screens/Schedule/ScheduleList';
+
 import MealList from './screens/Food/MealList';
 import MealEdit from './screens/Food/MealEdit';
 
@@ -57,34 +56,6 @@ export default function App() {
             options={TabOptions("Food", "food-drumstick")}
             component={Stack_Food}
           />
-
-          
-          {/*<Tab.Screen
-            name="Tab_Schedule"
-            options={TabOptions("Schedule", "calendar-month")}
-            component={Stack_Schedule}
-          />
-
-          <Tab.Screen 
-              name="Tab_Practice"
-              options={TabOptions("Practice", "play")}
-              component={Stack_Practice}
-            />
-            <Tab.Screen 
-              name="Tab_Exercises"
-              options={TabOptions("Exercises", "format-list-text")}
-              component={Stack_Exercises}
-            />
-            <Tab.Screen 
-              name="Tab_Workouts"
-              options={TabOptions("Workouts", "dumbbell")}
-              component={Stack_Workouts}
-            />
-            <Tab.Screen 
-              name="Tab_History"
-              options={TabOptions("History", "history")}
-              component={Stack_Exercises}
-            />*/}
         </Tab.Navigator>
       </NavigationContainer>
     </UserProvider>
@@ -175,65 +146,5 @@ function Stack_Food() {
   );
 }
 
-function Stack_Schedule() {
-  return (
-    <Stack.Navigator initialRouteName='ScheduleList'>
-      <Stack.Screen
-        name='ScheduleList'
-        component={ScheduleList}
-        options={StackOptions("Schedules")} />
-      <Stack.Screen
-        name='Schedule'
-        component={Schedule}
-        options={StackOptions("Schedule")} />
-    </Stack.Navigator>
-  );
-}
 
 
-
-
-
-/*
-function Stack_Practice() {
-  return (
-    <Stack.Navigator initialRouteName='WorkoutList'>
-      <Stack.Screen
-        name='WorkoutList'
-        component={WorkoutList_Practice}
-        options={StackOptions("Select a Workout")}/>
-      <Stack.Screen
-        name='Practice'
-        component={WorkoutPractice}
-        options={StackOptions("Practice")}/>
-    </Stack.Navigator>
-  );
-}
-function Stack_Exercises() {
-  return (
-    <Stack.Navigator initialRouteName='Exercises'>
-      <Stack.Screen
-        name='Exercises'
-        component={ExercisesList}
-        options={StackOptions("Exercises")}/>
-    </Stack.Navigator>
-  );
-}
-function Stack_Workouts() {
-  return (
-    <Stack.Navigator initialRouteName='Workouts'>
-      <Stack.Screen 
-        name='WorkoutList'
-        component={WorkoutList_Manage}
-        options={StackOptions("Workouts")}/>
-      <Stack.Screen
-        name='WorkoutEdit'
-        component={WorkoutEdit}
-        options={StackOptions("Editing")}/>
-      <Stack.Screen
-        name='WorkoutEdit_Exercise'
-        component={WorkoutEdit_Exercise}
-        options={StackOptions("Exercise")}/>
-    </Stack.Navigator>
-  );
-}*/

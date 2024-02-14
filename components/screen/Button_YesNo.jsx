@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { _icon_no, _icon_yes, styles_buttons } from '../../styles/styles';
-import Button_Icon from '../input/Button_Icon';
+import Button_Icon from '../buttons/Button_Icon';
 
 
 

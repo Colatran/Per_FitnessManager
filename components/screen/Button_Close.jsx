@@ -1,5 +1,5 @@
 import { _icon_no, styles_buttons } from '../../styles/styles';
-import Button_Icon from '../input/Button_Icon';
+import Button_Icon from '../buttons/Button_Icon';
 
 export default function Button_Close(props) {
   const style = props.style;

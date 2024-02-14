@@ -8,7 +8,7 @@ export const _space_m = 8;
 export const _space_l = 16;
 export const _space_xl = 24;
 
-export const _size_xxs = 16;
+export const _size_xxs = 24;
 export const _size_xs = 36;
 export const _sixe_s = 64;
 export const _size_m = 100;
@@ -73,8 +73,10 @@ export const _border_size_section = 1;
 
 
 
-export const _stlBtt_height = _size_xs;
-export const _stlBtt_width = _size_xs;
+export const _stlBtt_height_s = _size_xxs;
+export const _stlBtt_height_m = _size_xs;
+export const _stlBtt_width_s = _size_xxs;
+export const _stlBtt_width_m = _size_xs;
 export const _stlBtt_base_borderRadius = 16;
 export const _stlBtt_button_borderRadius = 2;
 export const _stlBtt_button_color = "#777";
@@ -94,23 +96,23 @@ export const android_ripple_style = {
 
 
 export const _color_icon = _color_front_0;
-export const _iconSize_s = 16;
+export const _iconSize_s = 20;
 export const _iconSize_m = 30;
 export const _iconSize_l = 60;
 
-export const _icon_add = 'plus';
-export const _icon_edit = 'pencil';
-export const _icon_checkout = 'eye';
 export const _icon_yes = 'check';
 export const _icon_no = 'close';
-export const _icon_save = 'content-save';
+export const _icon_add = 'plus';
 export const _icon_delete = 'delete-forever';
-export const _icon_boolean_true = 'check';
-export const _icon_boolean_false = '';
+export const _icon_edit = 'pencil';
+export const _icon_checkout = 'eye';
+export const _icon_save = 'content-save';
 export const _icon_alert = 'alert';
 export const _icon_edit_list = 'file-document-edit';
 export const _icon_favourite = 'star';
 export const _icon_select = 'cursor-pointer';
+export const _icon_boolean_true = 'check';
+export const _icon_boolean_false = '';
 
 
 
@@ -249,16 +251,6 @@ export const styles_buttons = StyleSheet.create({
     flexDirection: "row"
   },
 });
-
-
- const nut_blue       = '#5588ff';
- const nut_yellow_01  = '#f9a73e';
- const nut_yellow_02  = '#bf710d';
- const nut_red        = '#bf212f';
- const nut_green_01   = '#79d61c';
- const nut_green_02   = '#add683';
- const nut_green_03   = '#4d9605';
- const nut_silver     = '#c0c0c0';
 
 
 

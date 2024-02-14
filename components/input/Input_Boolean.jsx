@@ -1,5 +1,5 @@
 import { _color_input, _icon_boolean_false, _icon_boolean_true } from "../../styles/styles";
-import Button_Icon from "../../components/input/Button_Icon";
+import Button_Icon from "../../components/buttons/Button_Icon";
 
 
 export default function Input_Boolean(props) {

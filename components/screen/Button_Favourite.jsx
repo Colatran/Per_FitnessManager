@@ -1,5 +1,5 @@
 import { _color_back_1, _color_favourite, _icon_favourite } from "../../styles/styles";
-import Button_Icon from "../input/Button_Icon";
+import Button_Icon from "../buttons/Button_Icon";
 
 
 export default function Button_Favourite(props) {

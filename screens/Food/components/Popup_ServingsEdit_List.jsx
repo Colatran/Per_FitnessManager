@@ -4,7 +4,7 @@ import { styles_buttons, styles_lists, _space_s, styles_text } from "../../../st
 import List from "../../../components/List";
 import Popup_Flex4_Close from "../../../components/screen/Popup_Flex4_Close";
 import Button_Add from "../../../components/screen/Button_Add";
-import Button_Edit from "../../../components/screen/Button_Edit";
+import Button_Edit from "../../../components/buttons/Button_Edit";
 import Button_Favourite from "../../../components/screen/Button_Favourite";
 
 
