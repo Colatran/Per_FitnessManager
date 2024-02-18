@@ -3,7 +3,7 @@ import Button_Icon from "./Button_Icon";
 
 
 
-export default function Button_IconFill(props) {
+export default function Button_IconFill_S(props) {
   {/**@description Use style to set up buttons height, width and flex*/}
   {/**@description Use styleButton to set button's design and content alignament*/}
   const style = props.style;

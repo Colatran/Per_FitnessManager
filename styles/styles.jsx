@@ -10,7 +10,7 @@ export const _space_xl = 24;
 
 export const _size_xxs = 24;
 export const _size_xs = 36;
-export const _sixe_s = 64;
+export const _size_s = 64;
 export const _size_m = 100;
 
 export const _borderRadius_m = 12;
@@ -75,8 +75,10 @@ export const _border_size_section = 1;
 
 export const _stlBtt_height_s = _size_xxs;
 export const _stlBtt_height_m = _size_xs;
+export const _stlBtt_height_l = _size_s;
 export const _stlBtt_width_s = _size_xxs;
 export const _stlBtt_width_m = _size_xs;
+export const _stlBtt_width_l = _size_s;
 export const _stlBtt_base_borderRadius = 16;
 export const _stlBtt_button_borderRadius = 2;
 export const _stlBtt_button_color = "#777";
@@ -100,6 +102,7 @@ export const _iconSize_s = 20;
 export const _iconSize_m = 30;
 export const _iconSize_l = 60;
 
+export const _icon_null = 'square';
 export const _icon_yes = 'check';
 export const _icon_no = 'close';
 export const _icon_add = 'plus';
@@ -113,6 +116,8 @@ export const _icon_favourite = 'star';
 export const _icon_select = 'cursor-pointer';
 export const _icon_boolean_true = 'check';
 export const _icon_boolean_false = '';
+export const _icon_section_show = 'chevron-down';
+export const _icon_section_hide = 'chevron-up';
 
 
 

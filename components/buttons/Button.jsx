@@ -6,22 +6,25 @@ import { stlButtons } from "../../styles/stlButtons";
 
 
 export default function Button(props) {
-  {/**@description Use style to set up buttons height, width and flex*/}
-  {/**@description Use styleButton to set button's design and content alignament*/}
-  const style = props.style;
-  {/**@description Use style to set up buttons height, width and flex*/}
-  {/**@description Use styleButton to set button's design and content alignament*/}
-  const styleButton = props.styleButton;
-  
   const onPress = props.onPress;
+  /**
+   * @description Use style to set up buttons height, width and flex
+   * @description Use styleButton to set button's design and content alignament
+   */
+  const style = props.style;
+  /**
+   * @description Use style to set up buttons height, width and flex
+   * @description Use styleButton to set button's design and content alignament
+   */
+  const styleButton = props.styleButton;
 
 
 
-  const [press, setPress] = useState(false);  
+  const [press, setPress] = useState(false);
   const elevationStyle = press ? stlButtons.u_press_press : stlButtons.u_press_idle;
 
 
-  
+
   const handlePressIn = () => {
     setPress(true);
   }

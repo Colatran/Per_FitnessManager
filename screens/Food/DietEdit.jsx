@@ -4,7 +4,7 @@ import { ref_food_diets, ref_food_ingredients, ref_food_meals } from "../../fire
 import { addDoc, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 
 import { UserContext } from "../../utils/UserContext";
-import { _borderRadius_m, _borderWidth_xs, _border_size_section, _color_back_0, _color_back_1, _color_back_1_border, _border_color_section, _color_listItem, _icon_edit_list, _size_xs, _size_xxs, _space_container_h, _space_container_padding_h, _space_container_padding_v, _space_container_v, _space_item_margin_h, _space_item_margin_v, _space_l, _space_listItem_margin, _space_list_margin_bottom, _space_list_margin_v, _space_m, _space_s, _space_xs, styles_buttons, styles_common, styles_text, _icon_add } from "../../styles/styles";
+import { _borderRadius_m, _borderWidth_xs, _border_size_section, _color_back_0, _color_back_1, _color_back_1_border, _border_color_section, _color_listItem, _icon_edit_list, _size_xs, _size_xxs, _space_container_h, _space_container_padding_h, _space_container_padding_v, _space_container_v, _space_item_margin_h, _space_item_margin_v, _space_l, _space_listItem_margin, _space_list_margin_bottom, _space_list_margin_v, _space_m, _space_s, _space_xs, styles_buttons, styles_common, styles_text, _icon_add, _icon_section_hide, _icon_section_show } from "../../styles/styles";
 import { _mealEditScreen_deleteIngredient, _mealEditScreen_deleteMeal } from "../../utils/Messages";
 import Button_Icon from "../../components/buttons/Button_Icon";
 import Button_IconFill from "../../components/buttons/Button_IconFill";
@@ -62,20 +62,42 @@ export default function DietEdit({ navigation, route }) {
     ]
   });
 
+  const [selectedIndex, setSelectedIndex] = useState(-1);
 
 
+
+  const handle_day_showHide = (index) => {
+    console.log(index + "   " + selectedIndex);
+
+    if (selectedIndex === -1 || selectedIndex != index) {
+      setSelectedIndex(index);
+    }
+    else {
+      setSelectedIndex(-1);
+    }
+  }
+
+
+ 
   return (
     <View style={styles_common.container}>
-      <View style={{flex: 1}}>
-        <View style={{flex: 1 }}>
+      <View style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
           <FlatList
-            style={{paddingVertical: _space_list_margin_v}}
+            style={{ paddingVertical: _space_list_margin_v }}
             data={diet.days}
-            renderItem={({ item, index }) => (<Day data={item}/>)}
+            renderItem={({ item, index }) => (
+              <Day
+                data={item}
+                index={index}
+                isSelected={selectedIndex === index}
+                onPressShow={handle_day_showHide}
+              />
+            )}
           />
         </View>
 
-        <Button_IconFill style={{marginTop: _space_listItem_margin, marginBottom: _space_list_margin_v, marginHorizontal: _space_item_margin_h}}/>
+        <Button_IconFill style={{ marginTop: _space_listItem_margin, marginBottom: _space_list_margin_v, marginHorizontal: _space_item_margin_h }} />
       </View>
     </View>
   )
@@ -85,31 +107,50 @@ export default function DietEdit({ navigation, route }) {
 
 function Day(props) {
   const day = props.data;
-  
+  const index = props.index;
+  const isSelected = props.isSelected;
+  const onPressSelect = props.onPressShow;
+
+
+
+  const onPress_showHide = () => {
+    onPressSelect(index);
+  }
+
+
+
   return (
     <View style={styles.container_day}>
+      {
+        isSelected ?
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ flex: ratio_dayMeals_day }}>
+            <Text style={styles_text.bold}>{day.name}</Text>
+            <Button_Edit style={{ marginBottom: _space_item_margin_v }} />
+            <View style={{ flex: 1, justifyContent: "flex-end" }}>
+              <Button_Icon icon={_icon_section_hide} onPress={() => onPress_showHide()} />
+            </View>
+          </View>
 
-      <View style={{flexDirection: "row"}}>
-        <View style={{flex: ratio_dayMeals_day}}>
-          <Text style={styles_text.bold}>{day.name}</Text>      
-          <Button_Edit style={{marginBottom: _space_item_margin_v}}/>
-          <View style={{flex: 1, justifyContent: "flex-end"}}>
-            <Button_Icon/>
+          <View style={{ flex: ratio_dayMeals_meals, marginLeft: _space_item_margin_h }}>
+            <FlatList
+              data={day.meals}
+              renderItem={({ item, index }) => (<Meal data={item} />)}
+            />
+
+            <View style={{ flex: 1, flexDirection: "row", marginTop: _space_item_margin_h }}>
+              <Button_Edit style={{ flex: 1 }} />
+            </View>
           </View>
         </View>
-
-        <View style={{flex: ratio_dayMeals_meals, marginLeft: _space_item_margin_h}}>
-          <FlatList
-            data={day.meals}
-            renderItem={({ item, index }) => (<Meal data={item}/>)}
-          />
-
-          <View style={{flex: 1, flexDirection: "row", marginTop: _space_item_margin_h}}>
-            <Button_Edit style={{flex: 1}}/>
+        :
+        <View style={{ flex: ratio_dayMeals_day }}>
+          <Text style={styles_text.bold}>{day.name}</Text>
+          <View style={{ flex: 1, justifyContent: "flex-end" }}>
+            <Button_Icon icon={_icon_section_show} onPress={() => onPress_showHide()} />
           </View>
         </View>
-      </View>
-
+      }
     </View>
   );
 }
@@ -118,20 +159,20 @@ function Day(props) {
 
 function Meal(props) {
   const meal = props.data;
-  
-  return (
-    <View style={{flexDirection: "row", borderColor: _border_color_section, borderBottomWidth: _border_size_section}}>
 
-      <View style={{flex: ratio_mealIngredient_meal}}>
+  return (
+    <View style={{ flexDirection: "row", borderColor: _border_color_section, borderBottomWidth: _border_size_section }}>
+
+      <View style={{ flex: ratio_mealIngredient_meal }}>
         <Text style={styles_text.common}>{meal.name}</Text>
-        
-        <Button_Edit style={{marginBottom: _space_item_margin_v}}/>
+
+        <Button_Edit style={{ marginBottom: _space_item_margin_v }} />
       </View>
 
-      <View style={{flex: ratio_mealIngredient_ing, marginBottom: _space_item_margin_v}}>
+      <View style={{ flex: ratio_mealIngredient_ing, marginBottom: _space_item_margin_v }}>
         <FlatList
           data={meal.ingredients}
-          renderItem={({ item, index }) => (<Ingredient data={item}/>
+          renderItem={({ item, index }) => (<Ingredient data={item} />
           )}
         />
       </View>
@@ -146,12 +187,12 @@ function Ingredient(props) {
   const ingredient = props.data;
 
   return (
-    <View style={{flexDirection: "row"}}>
-      <View style={{flex: 1, flexDirection: "row", alignItems: "center"}}>
-        <Text style={[styles_text.common, {flex: ratio_ingredientAmount_ing}]}>{ingredient.label}</Text>
-        <Text style={[styles_text.label, {flex: ratio_ingredientAmount_amount, marginLeft: _space_item_margin_h}]}>{ingredient.amount}</Text>
-  
-        <Button_Edit_S style={{marginTop: _space_item_margin_v, marginRight: _space_item_margin_h}}/>
+    <View style={{ flexDirection: "row" }}>
+      <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+        <Text style={[styles_text.common, { flex: ratio_ingredientAmount_ing }]}>{ingredient.label}</Text>
+        <Text style={[styles_text.label, { flex: ratio_ingredientAmount_amount, marginLeft: _space_item_margin_h }]}>{ingredient.amount}</Text>
+
+        <Button_Edit_S style={{ marginTop: _space_item_margin_v, marginRight: _space_item_margin_h }} />
       </View>
     </View>
   );

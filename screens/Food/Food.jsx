@@ -14,7 +14,7 @@ export default function Food({ navigation }) {
 
       <Button_Option label="Meals" onPress={() => navigation.navigate("MealList")}/>
 
-      <Button_Option label="Diets" onPress={() => navigation.navigate("DietEdit")}/>
+      <Button_Option label="Diets" onPress={() => navigation.navigate("DietList")}/>
 
     </View>
   );

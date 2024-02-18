@@ -8,10 +8,18 @@ import {
   _stlBtt_pressHeight,
   _stlBtt_shadowColor_idle,
   _stlBtt_shadowColor_press,
+  _stlBtt_width_s,
+  _stlBtt_height_s,
   _stlBtt_width_m,
   _stlBtt_height_m,
-  _stlBtt_height_s,
-  _stlBtt_width_s
+  _stlBtt_width_l,
+  _stlBtt_height_l,
+  _iconSize_m,
+  _iconSize_s,
+  _icon_edit,
+  _icon_add,
+  _icon_null,
+  _iconSize_l,
 } from "./styles";
 
 
@@ -40,7 +48,6 @@ export const stlButtons = StyleSheet.create({
   },
 
 
-
   c_default: {
     justifyContent: "center",
     alignItems: "center",
@@ -52,7 +59,14 @@ export const stlButtons = StyleSheet.create({
     height: _stlBtt_height_s,
     width: _stlBtt_width_s,
   },
-
+  c_size_m: {
+    height: _stlBtt_height_m,
+    width: _stlBtt_width_m,
+  },
+  c_size_l: {
+    height: _stlBtt_height_l,
+    width: _stlBtt_width_l,
+  },
 
 
   b_default: {
@@ -61,8 +75,35 @@ export const stlButtons = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  b_type_edit: {
-    
-  }
+  b_type_add: {
+    backgroundColor: "#383"
+  },
+  b_type_edit: {},
 });
 
+export const stlButtons_size = {
+  size_s: {
+    style: stlButtons.c_size_s,
+    iconSize: _iconSize_s
+  },
+  size_m: {
+    iconSize: _iconSize_m,
+  },
+  size_l: {
+    style: stlButtons.c_size_l,
+    iconSize: _iconSize_l,
+  }
+}
+
+export const stlButtons_type = {
+  null: {
+    icon: ""
+  },
+  add: {
+    icon: _icon_add,
+    style: stlButtons.b_type_add,
+  },
+  edit: {
+    icon: _icon_edit,
+  }
+}

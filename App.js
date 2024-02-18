@@ -23,6 +23,8 @@ import DietEdit from "./screens/Food/DietEdit";
 
 import MealList from './screens/Food/MealList';
 import MealEdit from './screens/Food/MealEdit';
+import Diet_Edit_DayEdit from "./screens/Food/Diet_Edit_DayEdit";
+import Day_MealList from "./screens/Food/Diet/Day_MealList";
 
 
 
@@ -136,12 +138,16 @@ function Stack_Food() {
 
       <Stack.Screen
         name='DietList'
-        component={DietList}
+        component={Day_MealList}
         options={StackOptions("Diets")} />
       <Stack.Screen
         name='DietEdit'
         component={DietEdit}
         options={StackOptions("Diet")} />
+      <Stack.Screen
+        name='Diet_Edit_DayEdit'
+        component={Diet_Edit_DayEdit}
+        options={StackOptions("Diet Day")} />
     </Stack.Navigator>
   );
 }
