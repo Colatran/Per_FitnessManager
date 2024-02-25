@@ -1,7 +1,8 @@
+import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { _color_icon, _iconSize_l, _iconSize_m, _iconSize_s, _icon_add, _icon_edit, _icon_null } from '../../styles/styles';
-import { stlButtons, stlButtons_size, stlButtons_type } from '../../styles/stlButtons';
 import Button from './Button';
+import { _color_icon } from '../../styles/styles';
+import { stlButtons_size, stlButtons_type } from '../../styles/stlButtons';
 
 
 
@@ -37,10 +38,27 @@ export default function Button_Icon(props) {
    */
   const type = props.type ? props.type : stlButtons_type.null;
 
- 
+  const isFill = props.isFill;
 
-  
-  return (
+
+  if (isFill) return (
+    <View style={{ flexDirection: "row" }}>
+      <Button
+        onPress={onPress}
+        style={[size.style, {flex: 1}, c_style]}
+        styleButton={[type.style, c_styleButton]}
+      >
+        <Icon
+          name={c_icon_type ? c_icon_type : type.icon}
+          size={c_icon_size ? c_icon_size : size.iconSize}
+          color={c_icon_color ? c_icon_color : _color_icon}
+        />
+        {props.children}
+      </Button>
+    </View>
+  );
+
+  else return (
     <Button
       onPress={onPress}
       style={[size.style, c_style]}
